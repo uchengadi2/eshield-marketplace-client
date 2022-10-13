@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Field, reduxForm } from "redux-form";
+import { useDispatch } from "react-redux";
 import Grid from "@material-ui/core/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -13,6 +15,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
+import api from "./../../../apis/local";
+import { CREATE_COUNTRY } from "../../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,11 +40,136 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderCountryNameField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Enter Country Name"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+
+      // style={{ marginTop: 10 }}
+
+      //onChange={handleInput}
+    />
+  );
+};
+
+const renderCountryCodeField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Enter Country Code"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderCountryDescriptionField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Provide a description of this country"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      multiline={true}
+      minRows={5}
+      onChange={input.onChange}
+
+ 
+    />
+  );
+};
+
+const renderCountryFlagField = ({
+  floatingLabelText,
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  // if (input.value && input.value[0] && input.value[0].name) {
+  //   floatingLabelText = input.value[0].name;
+  // }
+  delete input.value;
+  return (
+    <TextField
+      id={input.name}
+      variant="outlined"
+      type={type}
+      fullWidth
+      style={{ marginTop: 20 }}
+      helperText="Upload Country Flag"
+      {...custom}
+      onChange={input.onChange}
+
+      // inputProps={{ type: "file" }}
+    />
+  );
+};
+
 function CountryForm(props) {
   const classes = useStyles();
 
   const [continent, setContinent] = useState();
   const [region, setRegion] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handleContinentChange = (event) => {
     setContinent(event.target.value);
@@ -48,64 +177,6 @@ function CountryForm(props) {
 
   const handleRegionChange = (event) => {
     setRegion(event.target.value);
-  };
-
-  const renderCountryNameField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Enter Country Name"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        //value={formInput.name}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        {...input}
-
-        // style={{ marginTop: 10 }}
-
-        //onChange={handleInput}
-      />
-    );
-  };
-
-  const renderCountryCodeField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Enter Country Code"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        //value={formInput.name}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        {...input}
-
-        // style={{ marginTop: 10 }}
-
-        //onChange={handleInput}
-      />
-    );
   };
 
   const renderContinentField = ({
@@ -126,8 +197,7 @@ function CountryForm(props) {
             value={continent}
             onChange={handleContinentChange}
             label="Prefered Currency"
-            style={{ width: 300 }}
-            {...input}
+            style={{ width: 300, height: 38 }}
           >
             <MenuItem value="">
               <em>None</em>
@@ -162,8 +232,7 @@ function CountryForm(props) {
             value={region}
             onChange={handleRegionChange}
             label="Continent Region"
-            style={{ width: 190 }}
-            {...input}
+            style={{ width: 190, height: 38 }}
           >
             <MenuItem value="">
               <em>None</em>
@@ -188,92 +257,56 @@ function CountryForm(props) {
     );
   };
 
-  const renderCountryDescriptionField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Provide a description of this country"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        //value={formInput.name}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        multiline={true}
-        minRows={4}
-        {...input}
-
-        // style={{ marginTop: 10 }}
-
-        //onChange={handleInput}
-      />
-    );
-  };
-
-  const renderCountryFlagField = ({
-    floatingLabelText,
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    // if (input.value && input.value[0] && input.value[0].name) {
-    //   floatingLabelText = input.value[0].name;
-    // }
-    delete input.value;
-    return (
-      <TextField
-        id={input.name}
-        variant="outlined"
-        type={type}
-        fullWidth
-        style={{ marginTop: 20 }}
-        helperText="Upload Country Flag"
-        {...custom}
-        {...input}
-
-        // inputProps={{ type: "file" }}
-      />
-    );
-  };
-
-  //script to upload multiple images at once
-  let images = [];
-  const uploadScreenshotFile = (event) => {
-    for (let size = 0; size < event.target.files.length; size++) {
-      console.log("Selected file:", event.target.files[size]);
-      let file = event.target.files[size];
-      console.log("uploading screenshot file...", file);
-      images.push(file);
-
-      // Do necessary request to upload here.......
-    }
+  const buttonContent = () => {
+    return <React.Fragment> Add Country</React.Fragment>;
   };
 
   const onSubmit = (formValues) => {
+    setLoading(true);
+
+    if (!formValues["code"]) {
+      formValues["code"] = "ES-" + Math.floor(Math.random() * 10000);
+    }
     const form = new FormData();
     form.append("name", formValues.name);
     form.append("code", formValues.code);
     form.append("description", formValues.description);
-    form.append("continent", formValues.continent);
-    form.append("region", formValues.region);
+    form.append("continent", continent);
+    form.append("region", region);
     form.append("createdBy", props.userId);
     if (formValues.flag) {
       form.append("flag", formValues.flag[0]);
     }
 
-    props.onSubmit(form);
+    if (form) {
+      const createForm = async () => {
+        api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+        const response = await api.post(`/countries`, form);
+
+        if (response.data.status === "success") {
+          dispatch({
+            type: CREATE_COUNTRY,
+            payload: response.data.data.data,
+          });
+
+          props.handleSuccessfulCreateSnackbar(
+            `${response.data.data.data.name} Country is added successfully!!!`
+          );
+          props.handleDialogOpenStatus();
+          setLoading(false);
+        } else {
+          props.handleFailedSnackbar(
+            "Something went wrong, please try again!!!"
+          );
+        }
+      };
+      createForm().catch((err) => {
+        props.handleFailedSnackbar();
+        console.log("err:", err.message);
+      });
+    } else {
+      props.handleFailedSnackbar("Something went wrong, please try again!!!");
+    }
   };
 
   return (
@@ -365,7 +398,11 @@ function CountryForm(props) {
           className={classes.submitButton}
           onClick={props.handleSubmit(onSubmit)}
         >
-          Add Country
+          {loading ? (
+            <CircularProgress size={30} color="inherit" />
+          ) : (
+            buttonContent()
+          )}
         </Button>
       </Box>
       {/* </form> */}

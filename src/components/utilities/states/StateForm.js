@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Field, reduxForm } from "redux-form";
 import Grid from "@material-ui/core/Grid";
+import { useDispatch } from "react-redux";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField, Typography } from "@material-ui/core";
@@ -10,10 +12,9 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import data from "./../../../apis/local";
+
+import api from "./../../../apis/local";
+import { CREATE_STATE } from "../../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,12 +37,102 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderStateNameField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Enter State Name"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderStateCodeField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Enter State Code"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderStateDescriptionField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Provide a description of this state"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      multiline={true}
+      minRows={5}
+      onChange={input.onChange}
+    />
+  );
+};
+
 function StateForm(props) {
   const classes = useStyles();
 
   const [country, setCountry] = useState();
   const [region, setRegion] = useState();
   const [countryList, setCountryList] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handleCountryChange = (event) => {
     setCountry(event.target.value);
@@ -54,8 +145,8 @@ function StateForm(props) {
   useEffect(() => {
     const fetchData = async () => {
       let allData = [];
-      data.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await data.get("/countries");
+      api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+      const response = await api.get("/countries");
       const workingData = response.data.data.data;
       workingData.map((country) => {
         allData.push({ id: country._id, name: country.name });
@@ -79,56 +170,6 @@ function StateForm(props) {
     });
   };
 
-  const renderStateNameField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Enter State Name"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        //value={formInput.name}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        {...input}
-      />
-    );
-  };
-
-  const renderStateCodeField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Enter State Code"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        //value={formInput.name}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        {...input}
-      />
-    );
-  };
-
   const renderCountryField = ({
     input,
     label,
@@ -147,8 +188,7 @@ function StateForm(props) {
             value={country}
             onChange={handleCountryChange}
             label="Country"
-            style={{ width: 300 }}
-            {...input}
+            style={{ width: 300, height: 38 }}
           >
             {renderCountryList()}
           </Select>
@@ -176,8 +216,7 @@ function StateForm(props) {
             value={region}
             onChange={handleRegionChange}
             label="Country Region"
-            style={{ width: 190 }}
-            {...input}
+            style={{ width: 190, height: 38 }}
           >
             <MenuItem value={"west"}>West</MenuItem>
             <MenuItem value={"east"}>East</MenuItem>
@@ -199,44 +238,52 @@ function StateForm(props) {
     );
   };
 
-  const renderStateDescriptionField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Provide a description of this state"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        //value={formInput.name}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        multiline={true}
-        minRows={4}
-        {...input}
-      />
-    );
+  const buttonContent = () => {
+    return <React.Fragment> Add State</React.Fragment>;
   };
 
   const onSubmit = (formValues) => {
+    setLoading(true);
     const data = {
       name: formValues.name,
-      region: formValues.region,
+      region: region,
       description: formValues.description,
-      country: formValues.country,
-      code: formValues.code,
+      country: country,
+      code: formValues.code
+        ? formValues.code
+        : "ST-" + Math.floor(Math.random() * 10000),
       createdBy: props.userId,
     };
 
-    props.onSubmit(data);
+    if (data) {
+      const createForm = async () => {
+        api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+        const response = await api.post(`/states`, data);
+
+        if (response.data.status === "success") {
+          dispatch({
+            type: CREATE_STATE,
+            payload: response.data.data.data,
+          });
+
+          props.handleSuccessfulCreateSnackbar(
+            `${response.data.data.data.name} State is added successfully!!!`
+          );
+          props.handleDialogOpenStatus();
+          setLoading(false);
+        } else {
+          props.handleFailedSnackbar(
+            "Something went wrong, please try again!!!"
+          );
+        }
+      };
+      createForm().catch((err) => {
+        props.handleFailedSnackbar();
+        console.log("err:", err.message);
+      });
+    } else {
+      props.handleFailedSnackbar("Something went wrong, please try again!!!");
+    }
   };
 
   return (
@@ -314,7 +361,11 @@ function StateForm(props) {
           className={classes.submitButton}
           onClick={props.handleSubmit(onSubmit)}
         >
-          Add State
+          {loading ? (
+            <CircularProgress size={30} color="inherit" />
+          ) : (
+            buttonContent()
+          )}
         </Button>
       </Box>
       {/* </form> */}

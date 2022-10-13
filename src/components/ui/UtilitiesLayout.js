@@ -118,14 +118,14 @@ function UtilitiesLayout({ token, userId }) {
             history.push(`/utilities/currencies`);
           }}
         />
-        <Tab
+        {/* <Tab
           label="Clusters"
           {...a11yProps(3)}
           onClick={(event) => {
             event.preventDefault();
             history.push(`/utilities/clusters`);
           }}
-        />
+        /> */}
       </Tabs>
       <TabPanel value={value} index={0}>
         <CountryLayout token={token} userId={userId} />
@@ -136,9 +136,9 @@ function UtilitiesLayout({ token, userId }) {
       <TabPanel value={value} index={2}>
         <CurrencyLayout token={token} userId={userId} />
       </TabPanel>
-      <TabPanel value={value} index={3}>
+      {/* <TabPanel value={value} index={3}>
         <ClustersLayout token={token} userId={userId} />
-      </TabPanel>
+      </TabPanel> */}
     </div>
   );
 }

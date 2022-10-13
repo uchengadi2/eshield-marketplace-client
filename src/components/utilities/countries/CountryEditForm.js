@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Field, reduxForm } from "redux-form";
+import { useDispatch } from "react-redux";
 import Grid from "@material-ui/core/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -13,6 +15,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
+import api from "./../../../apis/local";
+import { EDIT_COUNTRY } from "../../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,11 +40,139 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderCountryNameField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Enter Country Name"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+
+      // style={{ marginTop: 10 }}
+
+      //onChange={handleInput}
+    />
+  );
+};
+
+const renderCountryCodeField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Enter Country Code"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderCountryDescriptionField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Provide a description of this country"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      multiline={true}
+      minRows={5}
+      onChange={input.onChange}
+
+      // style={{ marginTop: 10 }}
+
+      //onChange={handleInput}
+    />
+  );
+};
+
+const renderCountryFlagField = ({
+  floatingLabelText,
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  // if (input.value && input.value[0] && input.value[0].name) {
+  //   floatingLabelText = input.value[0].name;
+  // }
+  delete input.value;
+  return (
+    <TextField
+      id={input.name}
+      variant="outlined"
+      type={type}
+      fullWidth
+      style={{ marginTop: 20 }}
+      helperText="Upload Country Flag"
+      {...custom}
+      onChange={input.onChange}
+
+      // inputProps={{ type: "file" }}
+    />
+  );
+};
+
 function CountryEditForm(props) {
+  const { params } = props;
   const classes = useStyles();
 
-  const [continent, setContinent] = useState();
-  const [region, setRegion] = useState();
+  const [continent, setContinent] = useState(params.continent);
+  const [region, setRegion] = useState(params.region);
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handleContinentChange = (event) => {
     setContinent(event.target.value);
@@ -48,64 +180,6 @@ function CountryEditForm(props) {
 
   const handleRegionChange = (event) => {
     setRegion(event.target.value);
-  };
-
-  const params = props.params;
-
-  const renderCountryNameField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Enter Country Name"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        value={params.name}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-
-        // style={{ marginTop: 10 }}
-
-        //onChange={handleInput}
-      />
-    );
-  };
-
-  const renderCountryCodeField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Enter Country Code"
-        variant="outlined"
-        //label={label}
-        id={input.code}
-        value={params.code}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-
-        // style={{ marginTop: 10 }}
-
-        //onChange={handleInput}
-      />
-    );
   };
 
   const renderContinentField = ({
@@ -123,10 +197,10 @@ function CountryEditForm(props) {
           <Select
             labelId="continent"
             id="continent"
-            value={params.continent}
+            value={continent}
             onChange={handleContinentChange}
             label="Prefered Currency"
-            style={{ width: 300 }}
+            style={{ width: 300, height: 38 }}
           >
             <MenuItem value="">
               <em>None</em>
@@ -158,10 +232,10 @@ function CountryEditForm(props) {
           <Select
             labelId="region"
             id="region"
-            value={params.region}
+            value={region}
             onChange={handleRegionChange}
             label="Continent Region"
-            style={{ width: 190 }}
+            style={{ width: 190, height: 38 }}
           >
             <MenuItem value="">
               <em>None</em>
@@ -186,58 +260,59 @@ function CountryEditForm(props) {
     );
   };
 
-  const renderCountryDescriptionField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Provide a description of this country"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        value={params.description}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        multiline={true}
-        minRows={7}
-
-        // style={{ marginTop: 10 }}
-
-        //onChange={handleInput}
-      />
-    );
-  };
-
-  const renderCountryFlagField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        id={input.name}
-        variant="outlined"
-        type={type}
-        fullWidth
-        style={{ marginTop: 20 }}
-        helperText="Upload Country Flag"
-      />
-    );
+  const buttonContent = () => {
+    return <React.Fragment> Update Country</React.Fragment>;
   };
 
   const onSubmit = (formValues) => {
-    props.onSubmit(formValues);
+    setLoading(true);
+
+    if (!formValues["code"]) {
+      formValues["code"] = params.code;
+    }
+    const form = new FormData();
+    form.append("name", formValues.name ? formValues.name : params.name);
+    form.append("code", formValues.code ? formValues.code : params.name);
+    form.append(
+      "description",
+      formValues.description ? formValues.description : params.description
+    );
+    form.append("continent", continent);
+    form.append("region", region);
+    form.append("createdBy", props.userId);
+    if (formValues.flag) {
+      form.append("flag", formValues.flag[0]);
+    }
+
+    if (form) {
+      const createForm = async () => {
+        api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+        const response = await api.patch(`/countries/${params.id}`, form);
+
+        if (response.data.status === "success") {
+          dispatch({
+            type: EDIT_COUNTRY,
+            payload: response.data.data.data,
+          });
+
+          props.handleSuccessfulEditSnackbar(
+            `${response.data.data.data.name} Country is updated successfully!!!`
+          );
+          props.handleEditDialogOpenStatus();
+          setLoading(false);
+        } else {
+          props.handleFailedSnackbar(
+            "Something went wrong, please try again!!!"
+          );
+        }
+      };
+      createForm().catch((err) => {
+        props.handleFailedSnackbar();
+        console.log("err:", err.message);
+      });
+    } else {
+      props.handleFailedSnackbar("Something went wrong, please try again!!!");
+    }
   };
 
   return (
@@ -247,16 +322,16 @@ function CountryEditForm(props) {
           style={{ color: "blue", fontSize: "1.5em" }}
           component="legend"
         >
-          Country Details
+          Enter Country Details
         </FormLabel>
       </Grid>
       <Box
         component="form"
-        id="countryForm"
+        id="countryEditForm"
         // onSubmit={onSubmit}
         sx={{
           width: 500,
-          height: 420,
+          height: 450,
         }}
         noValidate
         autoComplete="off"
@@ -268,6 +343,7 @@ function CountryEditForm(props) {
               label=""
               id="name"
               name="name"
+              defaultValue={params.name}
               type="text"
               component={renderCountryNameField}
             />
@@ -275,8 +351,9 @@ function CountryEditForm(props) {
           <Grid item style={{ width: "28%", marginLeft: 10 }}>
             <Field
               label=""
-              id="name"
-              name="name"
+              id="code"
+              name="code"
+              defaultValue={params.code}
               type="text"
               component={renderCountryCodeField}
             />
@@ -296,7 +373,7 @@ function CountryEditForm(props) {
             <Field
               label=""
               id="region"
-              name="egion"
+              name="region"
               type="text"
               component={renderContinentRegionsField}
             />
@@ -306,6 +383,7 @@ function CountryEditForm(props) {
           label=""
           id="description"
           name="description"
+          defaultValue={params.description}
           type="text"
           component={renderCountryDescriptionField}
           style={{ marginTop: 10 }}
@@ -315,8 +393,14 @@ function CountryEditForm(props) {
           id="flag"
           name="flag"
           type="file"
+          defaultValue={params.flag}
+          accept="image/*"
           component={renderCountryFlagField}
+          floatingLabelText={"Upload Image"}
+          fullWidth={true}
           style={{ marginTop: 10 }}
+
+          // onChange={uploadScreenshotFile}
         />
 
         <Button
@@ -324,7 +408,11 @@ function CountryEditForm(props) {
           className={classes.submitButton}
           onClick={props.handleSubmit(onSubmit)}
         >
-          Update Country
+          {loading ? (
+            <CircularProgress size={30} color="inherit" />
+          ) : (
+            buttonContent()
+          )}
         </Button>
       </Box>
       {/* </form> */}
@@ -333,5 +421,5 @@ function CountryEditForm(props) {
 }
 
 export default reduxForm({
-  form: "countryForm",
+  form: "countryEditForm",
 })(CountryEditForm);

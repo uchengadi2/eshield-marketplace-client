@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Field, formValueSelector, reduxForm } from "redux-form";
+import { Field, reduxForm } from "redux-form";
 import { useDispatch } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";

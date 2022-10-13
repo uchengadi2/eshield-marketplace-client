@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Dialog from "@material-ui/core/Dialog";
+import Snackbar from "@material-ui/core/Snackbar";
 import DialogContent from "@material-ui/core/DialogContent";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
@@ -11,6 +12,7 @@ import { fetchStates } from "../../../actions";
 import DataGridContainer from "../../DataGridContainer";
 import StateEdit from "./StateEdit";
 import StateDelete from "./StateDelete";
+import StateEditForm from "./StateEditForm";
 
 class StateList extends React.Component {
   constructor(props) {
@@ -21,6 +23,11 @@ class StateList extends React.Component {
       blacklistOpen: false,
       id: null,
       params: {},
+      alert: {
+        open: false,
+        message: "",
+        backgroundColor: "",
+      },
     };
   }
   componentDidMount() {
@@ -37,6 +44,29 @@ class StateList extends React.Component {
     this.setState({ editOpen: false });
   };
 
+  handleSuccessfulEditSnackbar = (message) => {
+    // history.push("/categories/new");
+    this.setState({ editOpen: false });
+    this.setState({
+      alert: {
+        open: true,
+        message: message,
+        backgroundColor: "#4BB543",
+      },
+    });
+  };
+
+  handleFailedSnackbar = (message) => {
+    this.setState({
+      alert: {
+        open: true,
+        message: message,
+        backgroundColor: "#FF3232",
+      },
+    });
+    this.setState({ editOpen: false });
+  };
+
   renderEditDialogForm = () => {
     //token will be used here
     return (
@@ -50,11 +80,13 @@ class StateList extends React.Component {
           ]}
         >
           <DialogContent>
-            <StateEdit
+            <StateEditForm
               token={this.props.token}
-              userId={this.props.userId}
               params={this.state.params}
+              userId={this.props.userId}
               handleEditDialogOpenStatus={this.handleEditDialogOpenStatus}
+              handleSuccessfulEditSnackbar={this.handleSuccessfulEditSnackbar}
+              handleFailedSnackbar={this.handleFailedSnackbar}
             />
           </DialogContent>
         </Dialog>
@@ -112,7 +144,7 @@ class StateList extends React.Component {
     const columns = [
       { field: "numbering", headerName: "S/n", width: 100 },
       { field: "name", headerName: "State Name", width: 200 },
-      { field: "code", headerName: "State Code", width: 200 },
+      { field: "code", headerName: "State Code", width: 150 },
       { field: "country", headerName: "Country", width: 200 },
       { field: "region", headerName: "Country Region", width: 200 },
 
@@ -137,24 +169,7 @@ class StateList extends React.Component {
           </strong>
         ),
       },
-      {
-        field: "blacklistaction",
-        headerName: "",
-        width: 30,
-        description: "Blacklist state",
-        renderCell: (params) => (
-          <strong>
-            {/* {params.value.getFullYear()} */}
-            <CancelRoundedIcon
-              style={{ color: "black" }}
-              onClick={() => [
-                this.setState({ blacklistOpen: true, id: params.id }),
-                history.push(`/utilities/states/blacklist/${params.id}`),
-              ]}
-            />
-          </strong>
-        ),
-      },
+
       {
         field: "deleteaction",
         headerName: "",
@@ -195,6 +210,16 @@ class StateList extends React.Component {
         {this.renderEditDialogForm()}
         {this.renderProductList()}
         {this.renderBlackListDialogForm()}
+        <Snackbar
+          open={this.state.alert.open}
+          message={this.state.alert.message}
+          ContentProps={{
+            style: { backgroundColor: this.state.alert.backgroundColor },
+          }}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => this.setState({ alert: { ...alert, open: false } })}
+          autoHideDuration={4000}
+        />
       </>
     );
   }

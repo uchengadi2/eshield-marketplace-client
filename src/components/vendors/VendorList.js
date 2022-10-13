@@ -167,24 +167,7 @@ class VendorList extends React.Component {
           </strong>
         ),
       },
-      {
-        field: "blacklistaction",
-        headerName: "",
-        width: 30,
-        description: "Blacklist city",
-        renderCell: (params) => (
-          <strong>
-            {/* {params.value.getFullYear()} */}
-            <CancelRoundedIcon
-              style={{ color: "black" }}
-              onClick={() => [
-                this.setState({ blacklistOpen: true, id: params.id }),
-                history.push(`/vendors/blacklist/${params.id}`),
-              ]}
-            />
-          </strong>
-        ),
-      },
+
       {
         field: "deleteaction",
         headerName: "",
@@ -215,12 +198,9 @@ class VendorList extends React.Component {
         type: vendor.type,
         logo: vendor.logo,
         vendorCountry: vendor.vendorCountry,
-        location: vendor.location,
         contactPerson: vendor.contactPerson,
         bankDetails: vendor.bankDetails,
-        contract: vendor.contract,
-        exemptedCities: vendor.exemptedCities,
-        product: vendor.product,
+        location: vendor.location,
       };
       rows.push(row);
     });

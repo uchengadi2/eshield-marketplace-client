@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
+import Snackbar from "@material-ui/core/Snackbar";
 
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -11,6 +12,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import history from "../../history";
 import CountryList from "../utilities/countries/CountryList";
 import CountryFormContainer from "../utilities/countries/CountryFormContainer";
+import CountryForm from "../utilities/countries/CountryForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,6 +62,11 @@ const useStyles = makeStyles((theme) => ({
 function CountryLayout({ token, userId }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    backgroundColor: "",
+  });
   const theme = useTheme();
   const matchesMD = useMediaQuery(theme.breakpoints.down("md"));
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"));
@@ -68,6 +75,25 @@ function CountryLayout({ token, userId }) {
   const handleDialogOpenStatus = () => {
     // history.push("/categories/new");
     setOpen(false);
+  };
+
+  const handleSuccessfulCreateSnackbar = (message) => {
+    // history.push("/categories/new");
+    setOpen({ open: false });
+    setAlert({
+      open: true,
+      message: message,
+      backgroundColor: "#4BB543",
+    });
+  };
+
+  const handleFailedSnackbar = (message) => {
+    setAlert({
+      open: true,
+      message,
+      backgroundColor: "#FF3232",
+    });
+    setOpen({ open: false });
   };
 
   const width = 12;
@@ -107,10 +133,12 @@ function CountryLayout({ token, userId }) {
         onClose={() => [setOpen(false), history.push("/utilities/countries")]}
       >
         <DialogContent>
-          <CountryFormContainer
+          <CountryForm
             token={token}
             userId={userId}
             handleDialogOpenStatus={handleDialogOpenStatus}
+            handleSuccessfulCreateSnackbar={handleSuccessfulCreateSnackbar}
+            handleFailedSnackbar={handleFailedSnackbar}
           />
         </DialogContent>
       </Dialog>
@@ -132,6 +160,16 @@ function CountryLayout({ token, userId }) {
           <Typography>This is the fourth Inner Container</Typography>
         </Grid>
       </Grid>
+      <Snackbar
+        open={alert.open}
+        message={alert.message}
+        ContentProps={{
+          style: { backgroundColor: alert.backgroundColor },
+        }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        onClose={() => setAlert({ ...alert, open: false })}
+        autoHideDuration={4000}
+      />
     </Grid>
   );
 }

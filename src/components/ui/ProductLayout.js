@@ -217,7 +217,7 @@ function ProductLayout(props) {
               className={classes.addButton}
               onClick={() => [setOpen(true), history.push("/products/new")]}
             >
-              Add Vehicle
+              Add Product
             </Button>
           </Toolbar>
         </Grid>

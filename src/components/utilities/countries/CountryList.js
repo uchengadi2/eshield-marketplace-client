@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Dialog from "@material-ui/core/Dialog";
+import Snackbar from "@material-ui/core/Snackbar";
 import DialogContent from "@material-ui/core/DialogContent";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
@@ -11,6 +12,7 @@ import { fetchCountries } from "../../../actions";
 import DataGridContainer from "../../DataGridContainer";
 import CountryEdit from "./CountryEdit";
 import CountryDelete from "./CountryDelete";
+import CountryEditForm from "./CountryEditForm";
 
 class CountryList extends React.Component {
   constructor(props) {
@@ -21,6 +23,11 @@ class CountryList extends React.Component {
       blacklistOpen: false,
       id: null,
       params: {},
+      alert: {
+        open: false,
+        message: "",
+        backgroundColor: "",
+      },
     };
   }
   componentDidMount() {
@@ -37,6 +44,29 @@ class CountryList extends React.Component {
     this.setState({ editOpen: false });
   };
 
+  handleSuccessfulEditSnackbar = (message) => {
+    // history.push("/categories/new");
+    this.setState({ editOpen: false });
+    this.setState({
+      alert: {
+        open: true,
+        message: message,
+        backgroundColor: "#4BB543",
+      },
+    });
+  };
+
+  handleFailedSnackbar = (message) => {
+    this.setState({
+      alert: {
+        open: true,
+        message: message,
+        backgroundColor: "#FF3232",
+      },
+    });
+    this.setState({ editOpen: false });
+  };
+
   renderEditDialogForm = () => {
     //token will be used here
     return (
@@ -50,10 +80,13 @@ class CountryList extends React.Component {
           ]}
         >
           <DialogContent>
-            <CountryEdit
+            <CountryEditForm
               token={this.props.token}
               params={this.state.params}
+              userId={this.props.userId}
               handleEditDialogOpenStatus={this.handleEditDialogOpenStatus}
+              handleSuccessfulEditSnackbar={this.handleSuccessfulEditSnackbar}
+              handleFailedSnackbar={this.handleFailedSnackbar}
             />
           </DialogContent>
         </Dialog>
@@ -110,10 +143,9 @@ class CountryList extends React.Component {
     const columns = [
       { field: "numbering", headerName: "S/n", width: 100 },
       { field: "name", headerName: "Country Name", width: 200 },
-      { field: "code", headerName: "Country Code", width: 200 },
-      { field: "continent", headerName: "Continent", width: 200 },
+      { field: "code", headerName: "Country Code", width: 150 },
+      { field: "continent", headerName: "Continent", width: 150 },
       { field: "region", headerName: "Continent Region", width: 200 },
-      { field: "description", headerName: "Description", width: 200 },
 
       {
         field: "editaction",
@@ -137,24 +169,7 @@ class CountryList extends React.Component {
           </strong>
         ),
       },
-      {
-        field: "blacklistaction",
-        headerName: "",
-        width: 30,
-        description: "Blacklist country",
-        renderCell: (params) => (
-          <strong>
-            {/* {params.value.getFullYear()} */}
-            <CancelRoundedIcon
-              style={{ color: "black" }}
-              onClick={() => [
-                this.setState({ blacklistOpen: true, id: params.id }),
-                history.push(`/utilities/countries/blacklist/${params.id}`),
-              ]}
-            />
-          </strong>
-        ),
-      },
+
       {
         field: "deleteaction",
         headerName: "",
@@ -195,6 +210,16 @@ class CountryList extends React.Component {
         {this.renderEditDialogForm()}
         {this.renderProductList()}
         {this.renderBlackListDialogForm()}
+        <Snackbar
+          open={this.state.alert.open}
+          message={this.state.alert.message}
+          ContentProps={{
+            style: { backgroundColor: this.state.alert.backgroundColor },
+          }}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => this.setState({ alert: { ...alert, open: false } })}
+          autoHideDuration={4000}
+        />
       </>
     );
   }

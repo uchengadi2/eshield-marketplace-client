@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const renderVechicleNameField = ({
+const renderProductNameField = ({
   input,
   label,
   meta: { touched, error, invalid },
@@ -58,7 +58,7 @@ const renderVechicleNameField = ({
   return (
     <TextField
       //error={touched && invalid}
-      helperText="Vehicle Label"
+      helperText="Product name"
       variant="outlined"
       label={label}
       id={input.name}
@@ -79,7 +79,7 @@ const renderVechicleNameField = ({
   );
 };
 
-const renderVehicleUniqueIdField = ({
+const renderProductRefNumberField = ({
   input,
   label,
   meta: { touched, error, invalid },
@@ -90,7 +90,7 @@ const renderVehicleUniqueIdField = ({
   return (
     <TextField
       //error={touched && invalid}
-      helperText="Vehicle Unique Number"
+      helperText="Reference Number"
       variant="outlined"
       label={label}
       id={input.name}
@@ -118,6 +118,7 @@ const renderMultilineField = ({
   type,
   helperText,
   id,
+  rows,
   ...custom
 }) => {
   return (
@@ -133,14 +134,14 @@ const renderMultilineField = ({
       type={type}
       style={{ marginTop: 20 }}
       multiline={true}
-      minRows={5}
+      minRows={rows}
       {...custom}
       onChange={input.onChange}
     />
   );
 };
 
-const renderLatituteField = ({
+const renderProductMakeField = ({
   input,
   label,
   meta: { touched, error, invalid },
@@ -151,7 +152,7 @@ const renderLatituteField = ({
   return (
     <TextField
       //error={touched && invalid}
-      helperText="Enter the address location latitute"
+      helperText="Product Make"
       variant="outlined"
       label={label}
       id={input.name}
@@ -170,7 +171,7 @@ const renderLatituteField = ({
   );
 };
 
-const renderLongtituteField = ({
+const renderProductModelField = ({
   input,
   label,
   meta: { touched, error, invalid },
@@ -181,7 +182,7 @@ const renderLongtituteField = ({
   return (
     <TextField
       //error={touched && invalid}
-      helperText="Enter the address location longtitude"
+      helperText="Product model"
       variant="outlined"
       label={label}
       id={input.name}
@@ -200,7 +201,7 @@ const renderLongtituteField = ({
   );
 };
 
-const renderVehicleMakeField = ({
+const renderProductSizeField = ({
   input,
   label,
   meta: { touched, error, invalid },
@@ -211,7 +212,7 @@ const renderVehicleMakeField = ({
   return (
     <TextField
       //error={touched && invalid}
-      helperText="Vehicle Make"
+      helperText="Product Size"
       variant="outlined"
       label={label}
       id={input.name}
@@ -230,7 +231,7 @@ const renderVehicleMakeField = ({
   );
 };
 
-const renderVehicleModelField = ({
+const renderProductColourField = ({
   input,
   label,
   meta: { touched, error, invalid },
@@ -241,7 +242,7 @@ const renderVehicleModelField = ({
   return (
     <TextField
       //error={touched && invalid}
-      helperText="Vehicle model"
+      helperText="Product color"
       variant="outlined"
       label={label}
       id={input.name}
@@ -260,7 +261,7 @@ const renderVehicleModelField = ({
   );
 };
 
-const renderVehicleChassisField = ({
+const renderProductDesignField = ({
   input,
   label,
   meta: { touched, error, invalid },
@@ -271,7 +272,7 @@ const renderVehicleChassisField = ({
   return (
     <TextField
       //error={touched && invalid}
-      helperText="Vehicle Chasis"
+      helperText="Product design"
       variant="outlined"
       label={label}
       id={input.name}
@@ -286,6 +287,449 @@ const renderVehicleChassisField = ({
           height: 1,
         },
       }}
+    />
+  );
+};
+
+const renderProductContentField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product content"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductTasteField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product taste"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductSmellField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product smell"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductFeelField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product feel"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductIngredientsField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product ingredients"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductReliabilityField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product reliability"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductSafetyField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product safety"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductPackagingField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product packaging"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductDurabilityField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product durability"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductMarketClaimsField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Market Claims"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductPricePerUnitField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product Price per Unit"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductKeyword1Field = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Keyword"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductKeyword2Field = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Keyword"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductKeyword3Field = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Keyword"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductFirstImageField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  delete input.value;
+  return (
+    <TextField
+      id={input.name}
+      variant="outlined"
+      type={type}
+      name={input.name}
+      fullWidth
+      style={{ marginTop: 20 }}
+      helperText="Upload Product First Image(1000px x 1000 px, jpg/png)"
+      onChange={input.onChange}
     />
   );
 };
@@ -307,13 +751,13 @@ const renderImageCoverField = ({
       name={input.name}
       fullWidth
       style={{ marginTop: 20 }}
-      helperText="Upload Vehicle Image Cover"
+      helperText="Upload Product Image Cover(1000px x 1000 px, jpg/png)"
       onChange={input.onChange}
     />
   );
 };
 
-const renderProductImagesField = ({
+const renderProductSecondImageField = ({
   input,
   label,
   meta: { touched, error, invalid },
@@ -330,13 +774,238 @@ const renderProductImagesField = ({
       name={input.name}
       fullWidth
       style={{ marginTop: 20 }}
-      //onChange={onImageChange}
-      helperText="Upload This Vehicle Other Images (maximum of 5)"
-      {...input}
-      inputProps={{ multiple: true }}
+      helperText="Upload Product Second Image(1000px x 1000 px, jpg/png)"
+      onChange={input.onChange}
     />
   );
 };
+
+const renderProductThirdImageField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  delete input.value;
+  return (
+    <TextField
+      id={input.name}
+      variant="outlined"
+      type={type}
+      name={input.name}
+      fullWidth
+      style={{ marginTop: 20 }}
+      helperText="Upload Product Third Image(1000px x 1000 px, jpg/png)"
+      onChange={input.onChange}
+    />
+  );
+};
+
+const renderProductFourthImageField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  delete input.value;
+  return (
+    <TextField
+      id={input.name}
+      variant="outlined"
+      type={type}
+      name={input.name}
+      fullWidth
+      style={{ marginTop: 20 }}
+      helperText="Upload Product Fourth Image(1000px x 1000 px, jpg/png)"
+      onChange={input.onChange}
+    />
+  );
+};
+
+const renderSkuField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Sku"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderWeightPerUnitField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Weight per Unit(kg)"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderTotalUnitField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Total Product Units"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderRemainingTotalUnitField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Remaining Product Units"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      disabled
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductMinimumOrderingQuantityField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Minimum Order Unit"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+// const renderProductUnitField = ({
+//   input,
+//   label,
+//   meta: { touched, error, invalid },
+//   type,
+//   id,
+//   ...custom
+// }) => {
+//   return (
+//     <TextField
+//       //error={touched && invalid}
+//       helperText="Measurement Unit"
+//       variant="outlined"
+//       label={label}
+//       id={input.name}
+//       //value={formInput.name}
+//       fullWidth
+//       //required
+//       type={type}
+//       {...custom}
+//       onChange={input.onChange}
+//       inputProps={{
+//         style: {
+//           height: 1,
+//         },
+//       }}
+//     />
+//   );
+// };
 
 function ProductForm(props) {
   const classes = useStyles();
@@ -347,12 +1016,52 @@ function ProductForm(props) {
   const [cityList, setCityList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [vendorList, setVendorList] = useState([]);
-  const [selectedVendor, setSelectedVendor] = useState();
-  const [selectedCity, setSelectedCity] = useState();
-  const [selectedCategory, setSelectedCategory] = useState();
+  const [currencyList, setCurrencyList] = useState([]);
+  const [stateList, setStateList] = useState([]);
+  const [countryList, setCountryList] = useState([]);
+  const [currency, setCurrency] = useState();
+  const [location, setLocation] = useState();
+  const [country, setCountry] = useState();
+
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let allData = [];
+      api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+      const response = await api.get(`/countries`);
+      const workingData = response.data.data.data;
+      workingData.map((state) => {
+        allData.push({ id: state._id, name: state.name });
+      });
+      setCountryList(allData);
+    };
+
+    //call the function
+
+    fetchData().catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let allData = [];
+      api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+      const response = await api.get(`/states`, {
+        params: { country: country },
+      });
+      const workingData = response.data.data.data;
+      workingData.map((state) => {
+        allData.push({ id: state._id, name: state.name });
+      });
+      setStateList(allData);
+    };
+
+    //call the function
+
+    fetchData().catch(console.error);
+  }, [country]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -405,6 +1114,23 @@ function ProductForm(props) {
     fetchData().catch(console.error);
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      let allData = [];
+      api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+      const response = await api.get(`/currencies`);
+      const workingData = response.data.data.data;
+      workingData.map((vendor) => {
+        allData.push({ id: vendor._id, name: vendor.name });
+      });
+      setCurrencyList(allData);
+    };
+
+    //call the function
+
+    fetchData().catch(console.error);
+  }, []);
+
   //get the vendor list
   const renderVendorList = () => {
     return vendorList.map((item) => {
@@ -438,6 +1164,39 @@ function ProductForm(props) {
     });
   };
 
+  //get the currency list
+  const renderCurencyList = () => {
+    return currencyList.map((item) => {
+      return (
+        <MenuItem key={item.id} value={item.id}>
+          {item.name}
+        </MenuItem>
+      );
+    });
+  };
+
+  //get the state list
+  const renderLocationList = () => {
+    return stateList.map((item) => {
+      return (
+        <MenuItem key={item.id} value={item.id}>
+          {item.name}
+        </MenuItem>
+      );
+    });
+  };
+
+  //get the country list
+  const renderCountryList = () => {
+    return countryList.map((item) => {
+      return (
+        <MenuItem key={item.id} value={item.id}>
+          {item.name}
+        </MenuItem>
+      );
+    });
+  };
+
   const onImageChange = (e) => {
     setImage(e.target.value);
     console.log("the image is:", image);
@@ -445,17 +1204,84 @@ function ProductForm(props) {
 
   const handleVendorChange = (event) => {
     setVendor(event.target.value);
-    setSelectedVendor(event.target.value);
   };
 
   const handleCityChange = (event) => {
     setCity(event.target.value);
-    setSelectedCity(event.target.value);
   };
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
-    setSelectedCategory(event.target.value);
+  };
+
+  const handleCurrencyChange = (event) => {
+    setCurrency(event.target.value);
+  };
+
+  const handleLocationChange = (event) => {
+    setLocation(event.target.value);
+  };
+
+  const handleCountryChange = (event) => {
+    setCountry(event.target.value);
+  };
+
+  const renderProductCountryField = ({
+    input,
+    label,
+    meta: { touched, error, invalid },
+    type,
+    id,
+    ...custom
+  }) => {
+    return (
+      <Box>
+        <FormControl variant="outlined">
+          {/* <InputLabel id="vendor_city">City</InputLabel> */}
+          <Select
+            labelId="locationCountry"
+            id="locationCountry"
+            value={country}
+            onChange={handleCountryChange}
+            label="Country"
+            style={{ width: 170, marginTop: 0, height: 38 }}
+            //{...input}
+          >
+            {renderCountryList()}
+          </Select>
+          <FormHelperText>Product Country</FormHelperText>
+        </FormControl>
+      </Box>
+    );
+  };
+
+  const renderProductLocationField = ({
+    input,
+    label,
+    meta: { touched, error, invalid },
+    type,
+    id,
+    ...custom
+  }) => {
+    return (
+      <Box>
+        <FormControl variant="outlined">
+          {/* <InputLabel id="vendor_city">City</InputLabel> */}
+          <Select
+            labelId="location"
+            id="location"
+            value={location}
+            onChange={handleLocationChange}
+            label="Location"
+            style={{ width: 170, marginTop: 0, height: 38 }}
+            //{...input}
+          >
+            {renderLocationList()}
+          </Select>
+          <FormHelperText>Product Location</FormHelperText>
+        </FormControl>
+      </Box>
+    );
   };
 
   const renderVendorField = ({
@@ -476,12 +1302,41 @@ function ProductForm(props) {
             value={vendor}
             onChange={handleVendorChange}
             label="Vendor"
-            style={{ width: 500, marginTop: 10, height: 38 }}
+            style={{ width: 170, marginTop: 0, height: 38 }}
             //{...input}
           >
             {renderVendorList()}
           </Select>
           <FormHelperText>Vendor</FormHelperText>
+        </FormControl>
+      </Box>
+    );
+  };
+
+  const renderProductPriceCurrencyField = ({
+    input,
+    label,
+    meta: { touched, error, invalid },
+    type,
+    id,
+    ...custom
+  }) => {
+    return (
+      <Box>
+        <FormControl variant="outlined">
+          {/* <InputLabel id="vendor_city">City</InputLabel> */}
+          <Select
+            labelId="currency"
+            id="currency"
+            value={currency}
+            onChange={handleCurrencyChange}
+            label="Currency"
+            style={{ width: 190, marginTop: 0, height: 38 }}
+            //{...input}
+          >
+            {renderCurencyList()}
+          </Select>
+          <FormHelperText>Price Currency</FormHelperText>
         </FormControl>
       </Box>
     );
@@ -505,7 +1360,7 @@ function ProductForm(props) {
             value={category}
             onChange={handleCategoryChange}
             label="Category"
-            style={{ marginTop: 20, width: 500, height: 38 }}
+            style={{ marginTop: 0, width: 150, height: 38, marginLeft: 10 }}
             //{...input}
           >
             {renderCategoryList()}
@@ -559,26 +1414,66 @@ function ProductForm(props) {
 
     form.append("category", category);
     form.append("vendor", vendor);
+    form.append("currency", currency);
+    form.append("location", location);
+    form.append("locationCountry", country);
     form.append("createdBy", props.userId);
 
     form.append("make", formValues.make);
     form.append("model", formValues.model);
-    form.append("chassis", formValues.chassis);
-    form.append("address", formValues.address);
-    form.append("city", city);
+    form.append("color", formValues.color);
+    form.append("weightPerUnit", formValues.weightPerUnit);
+    form.append("totalUnits", formValues.totalUnits);
+    form.append("remainingTotalUnits", formValues.totalUnits);
+    form.append("size", formValues.size);
+    form.append("design", formValues.design);
+    form.append("content", formValues.content);
+    form.append("smell", formValues.smell);
+    form.append("taste", formValues.taste);
+    form.append("feel", formValues.feel);
+    form.append("ingredients", formValues.ingredients);
+    form.append("reliability", formValues.reliability);
+    form.append("safety", formValues.safety);
+    form.append("packaging", formValues.packaging);
+    form.append("marketingClaims", formValues.marketingClaims);
+    form.append("durability", formValues.durability);
+    form.append("pricePerUnit", formValues.pricePerUnit);
+    form.append("keyword1", formValues.keyword1);
+    form.append("keyword2", formValues.keyword2);
+    form.append("keyword3", formValues.keyword3);
+    form.append("minimumQuantity", formValues.minimumQuantity);
 
-    if (!formValues["plateNumber"]) {
+    if (!formValues["refNumber"]) {
       const refNum =
-        "PR" + "-" + Math.floor(Math.random() * 100000000) + "-" + "VHL";
+        "ELS" + "-" + Math.floor(Math.random() * 100000000) + "-" + "PR";
 
-      form.append("plateNumber", refNum);
+      form.append("refNumber", refNum);
+    }
+
+    if (!formValues["sku"]) {
+      const sku =
+        "SKU" + "-" + Math.floor(Math.random() * 100000000) + "-" + "PR";
+
+      form.append("sku", sku);
     }
 
     if (formValues.imageCover) {
       form.append("imageCover", formValues.imageCover[0]);
     }
+    if (formValues.firstImage) {
+      form.append("firstImage", formValues.firstImage[0]);
+    }
+    if (formValues.secondImage) {
+      form.append("secondImage", formValues.secondImage[0]);
+    }
+    if (formValues.thirdImage) {
+      form.append("thirdImage", formValues.thirdImage[0]);
+    }
+    if (formValues.fourthImage) {
+      form.append("fourthImage", formValues.fourthImage[0]);
+    }
 
-    if (formValues) {
+    if (form) {
       const createForm = async () => {
         api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
         const response = await api.post(`/products`, form);
@@ -590,7 +1485,7 @@ function ProductForm(props) {
           });
 
           props.handleSuccessfulCreateSnackbar(
-            `${response.data.data.data.name} Vehicle is added successfully!!!`
+            `${response.data.data.data.name} Product is added successfully!!!`
           );
           props.handleDialogOpenStatus();
           setLoading(false);
@@ -617,7 +1512,7 @@ function ProductForm(props) {
             style={{ color: "grey", fontSize: "1.3em" }}
             component="legend"
           >
-            <Typography variant="h5">Add Vehicle</Typography>
+            <Typography variant="h5">Add Product</Typography>
           </FormLabel>
         </Grid>
         <Box
@@ -628,28 +1523,51 @@ function ProductForm(props) {
           noValidate
           autoComplete="off"
         >
-          <Field
-            label=""
-            id="vendor"
-            name="vendor"
-            type="text"
-            component={renderVendorField}
-          />
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: 160 }}>
+              <Field
+                label=""
+                id="vendor"
+                name="vendor"
+                type="text"
+                component={renderVendorField}
+              />
+            </Grid>
+            <Grid item style={{ marginLeft: 10, width: 150 }}>
+              <Field
+                label=""
+                id="category"
+                name="category"
+                type="text"
+                component={renderCategoryField}
+              />
+            </Grid>
+            <Grid item style={{ width: 165, marginLeft: 15 }}>
+              <Field
+                label=""
+                id="sku"
+                name="sku"
+                type="text"
+                component={renderSkuField}
+              />
+            </Grid>
+          </Grid>
+
           <Field
             label=""
             id="name"
             name="name"
             type="text"
-            component={renderVechicleNameField}
+            component={renderProductNameField}
             autoComplete="off"
             style={{ marginTop: 20 }}
           />
           <Field
             label=""
-            id="plateNumber"
-            name="plateNumber"
+            id="refNumber"
+            name="refNumber"
             type="text"
-            component={renderVehicleUniqueIdField}
+            component={renderProductRefNumberField}
             autoComplete="off"
             style={{ marginTop: 20 }}
           />
@@ -659,6 +1577,7 @@ function ProductForm(props) {
             id="shortDescription"
             name="shortDescription"
             helperText="Short Description"
+            rows={4}
             type="text"
             component={renderMultilineField}
           />
@@ -666,38 +1585,46 @@ function ProductForm(props) {
             label=""
             id="fullDescription"
             name="fullDescription"
+            rows={8}
             type="text"
-            helperText="Full Description"
+            helperText="Detail Description"
             component={renderMultilineField}
           />
 
-          <Field
-            label=""
-            id="category"
-            name="category"
-            type="text"
-            component={renderCategoryField}
-          />
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
-              Vehicle Permanent Location
+              Product Features & Attributes
             </FormLabel>
           </Grid>
-          <Field
-            label=""
-            id="address"
-            name="address"
-            helperText="Address"
-            type="text"
-            component={renderMultilineField}
-          />
-          <Field
-            label=""
-            id="city"
-            name="city"
-            type="text"
-            component={renderLocationCityField}
-          />
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "30%" }}>
+              <Field
+                label=""
+                id="weightPerUnit"
+                name="weightPerUnit"
+                type="number"
+                component={renderWeightPerUnitField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="totalUnits"
+                name="totalUnits"
+                type="number"
+                component={renderTotalUnitField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="remainingTotalUnits"
+                name="remainingTotalUnits"
+                type="number"
+                component={renderRemainingTotalUnitField}
+              />
+            </Grid>
+          </Grid>
 
           <Grid container direction="row" style={{ marginTop: 20 }}>
             <Grid item style={{ width: "30%" }}>
@@ -706,7 +1633,7 @@ function ProductForm(props) {
                 id="make"
                 name="make"
                 type="text"
-                component={renderVehicleMakeField}
+                component={renderProductMakeField}
               />
             </Grid>
             <Grid item style={{ width: "33%", marginLeft: 10 }}>
@@ -715,18 +1642,223 @@ function ProductForm(props) {
                 id="model"
                 name="model"
                 type="text"
-                component={renderVehicleModelField}
+                component={renderProductModelField}
               />
             </Grid>
             <Grid item style={{ width: "33%", marginLeft: 10 }}>
               <Field
                 label=""
-                id="chassis"
-                name="chassis"
+                id="size"
+                name="size"
                 type="text"
-                component={renderVehicleChassisField}
+                component={renderProductSizeField}
               />
             </Grid>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "30%" }}>
+              <Field
+                label=""
+                id="color"
+                name="color"
+                type="text"
+                component={renderProductColourField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="design"
+                name="design"
+                type="text"
+                component={renderProductDesignField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="content"
+                name="content"
+                type="text"
+                component={renderProductContentField}
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "30%" }}>
+              <Field
+                label=""
+                id="taste"
+                name="taste"
+                type="text"
+                component={renderProductTasteField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="smell"
+                name="smell"
+                type="text"
+                component={renderProductSmellField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="feel"
+                name="feel"
+                type="text"
+                component={renderProductFeelField}
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "30%" }}>
+              <Field
+                label=""
+                id="ingredients"
+                name="ingredients"
+                type="text"
+                component={renderProductIngredientsField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="reliability"
+                name="reliability"
+                type="text"
+                component={renderProductReliabilityField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="safety"
+                name="safety"
+                type="text"
+                component={renderProductSafetyField}
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "30%" }}>
+              <Field
+                label=""
+                id="packaging"
+                name="packaging"
+                type="text"
+                component={renderProductPackagingField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="durability"
+                name="durability"
+                type="text"
+                component={renderProductDurabilityField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="marketingClaims"
+                name="marketingClaims"
+                type="text"
+                component={renderProductMarketClaimsField}
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "60%" }}>
+              <Field
+                label=""
+                id="pricePerUnit"
+                name="pricePerUnit"
+                type="number"
+                component={renderProductPricePerUnitField}
+              />
+            </Grid>
+            <Grid item style={{ width: "35%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="currency"
+                name="currency"
+                type="text"
+                component={renderProductPriceCurrencyField}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "29%" }}>
+              <Field
+                label=""
+                id="minimumQuantity"
+                name="minimumQuantity"
+                type="number"
+                component={renderProductMinimumOrderingQuantityField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="locationCountry"
+                name="locationCountry"
+                type="text"
+                component={renderProductCountryField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="location"
+                name="location"
+                type="text"
+                component={renderProductLocationField}
+              />
+            </Grid>
+          </Grid>
+          <Grid item container style={{ marginTop: 20 }}>
+            <FormLabel style={{ color: "blue" }} component="legend">
+              Product Keywords for Discoverability
+            </FormLabel>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "30%" }}>
+              <Field
+                label=""
+                id="keyword1"
+                name="keyword1"
+                type="text"
+                component={renderProductKeyword1Field}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="keyword2"
+                name="keyword2"
+                type="text"
+                component={renderProductKeyword2Field}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="keyword3"
+                name="keyword3"
+                type="text"
+                component={renderProductKeyword3Field}
+              />
+            </Grid>
+          </Grid>
+          <Grid item container style={{ marginTop: 20 }}>
+            <FormLabel style={{ color: "blue" }} component="legend">
+              Producti mages
+            </FormLabel>
           </Grid>
           <Field
             name="imageCover"
@@ -735,10 +1867,28 @@ function ProductForm(props) {
             component={renderImageCoverField}
           />
           {/* <Field
-            name="images"
+            name="firstImage"
             type="file"
             accept="image/*"
-            component={renderProductImagesField}
+            component={renderProductFirstImageField}
+          />
+          <Field
+            name="secondImage"
+            type="file"
+            accept="image/*"
+            component={renderProductSecondImageField}
+          />
+          <Field
+            name="thirdImage"
+            type="file"
+            accept="image/*"
+            component={renderProductThirdImageField}
+          />
+          <Field
+            name="fourthImage"
+            type="file"
+            accept="image/*"
+            component={renderProductFourthImageField}
           /> */}
           <Button
             variant="contained"

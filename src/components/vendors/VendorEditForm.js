@@ -686,6 +686,7 @@ const renderBankNameField = ({
 
 function VendorEditForm(props) {
   const { params } = props;
+  console.log("this is params:", params);
   const classes = useStyles();
   const [locationCity, setLocationCity] = useState(
     params.location.locationCity
@@ -706,27 +707,12 @@ function VendorEditForm(props) {
     params.bankDetails.bankAccountType
   );
   const [vendorType, setVendorType] = useState(params.type);
-  const [
-    enforceGlobalPlatformPolicyContract,
-    setEnforceGlobalPlatformPolicyContract,
-  ] = useState(params.contract.enforceGlobalPlatformPolicyContract.toString());
-  const [
-    permittableMaximumNumberOfPaymentInstallments,
-    setPermittableMaximumNumberOfPaymentInstallments,
-  ] = useState(
-    params.contract.permittableMaximumNumberOfPaymentInstallments.toString()
-  );
+
   const [loading, setLoading] = useState(false);
 
   //spool the vendor document & data
 
   const dispatch = useDispatch();
-
-  console.log("this is params:", params);
-  console.log(
-    " params.location.locationCity:",
-    params.location.locationCity[0]
-  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -811,14 +797,6 @@ function VendorEditForm(props) {
 
   const handleBankCountryChange = (event) => {
     setBankCountry(event.target.value);
-  };
-
-  const handleGlobalPolicyChange = (event) => {
-    setEnforceGlobalPlatformPolicyContract(event.target.value);
-  };
-
-  const handleMaximumPaymentInstallmentChange = (event) => {
-    setPermittableMaximumNumberOfPaymentInstallments(event.target.value);
   };
 
   //get the city list
@@ -1039,92 +1017,6 @@ function VendorEditForm(props) {
     );
   };
 
-  const renderEnforceGlobalPlatformPolicyField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <Box>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">
-            Enforce Platform Global Policy Contract?
-          </FormLabel>
-          <RadioGroup
-            aria-label="enforceGlobalPlatformPolicyContract"
-            name="enforceGlobalPlatformPolicyContract"
-            value={enforceGlobalPlatformPolicyContract}
-            onChange={handleGlobalPolicyChange}
-            style={{ height: 38 }}
-          >
-            <Grid item container direction="row">
-              <Grid item>
-                <FormControlLabel
-                  value={"true"}
-                  control={<Radio />}
-                  label="Yes"
-                />
-              </Grid>
-
-              <Grid item></Grid>
-              <FormControlLabel
-                value={"false"}
-                control={<Radio />}
-                label="No"
-              />
-            </Grid>
-          </RadioGroup>
-        </FormControl>
-      </Box>
-    );
-  };
-
-  const rendermaxNumberOfPaymentInstallmentAllowed = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <Box>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">
-            Choose maximum number of payment installments
-          </FormLabel>
-          <RadioGroup
-            aria-label="permittableMaximumNumberOfPaymentInstallments"
-            name="permittableMaximumNumberOfPaymentInstallments"
-            value={permittableMaximumNumberOfPaymentInstallments}
-            onChange={handleMaximumPaymentInstallmentChange}
-            style={{ height: 38 }}
-          >
-            <Grid item container direction="row">
-              <Grid item>
-                <FormControlLabel value={"1"} control={<Radio />} label="One" />
-              </Grid>
-
-              <Grid item>
-                <FormControlLabel value={"2"} control={<Radio />} label="Two" />
-              </Grid>
-              <Grid item>
-                <FormControlLabel
-                  value={"3"}
-                  control={<Radio />}
-                  label="Three"
-                />
-              </Grid>
-            </Grid>
-          </RadioGroup>
-        </FormControl>
-      </Box>
-    );
-  };
-
   const onSubmit = (formValues) => {
     setLoading(true);
     const data = {
@@ -1176,72 +1068,6 @@ function VendorEditForm(props) {
         bankAccountIBAN: formValues["bankAccountIBAN"]
           ? formValues["bankAccountIBAN"]
           : params.bankDetails.bankAccountIBAN,
-      },
-      contract: {
-        enforceGlobalPlatformPolicyContract:
-          enforceGlobalPlatformPolicyContract,
-        permittableMaximumNumberOfPaymentInstallments:
-          permittableMaximumNumberOfPaymentInstallments,
-        initialPaymentInstallment: {
-          initialPaymentAgreedRemittablePercentage: formValues[
-            "initialPaymentAgreedRemittablePercentage"
-          ]
-            ? formValues["initialPaymentAgreedRemittablePercentage"]
-            : params.contract.initialPaymentInstallment
-                .initialPaymentAgreedRemittablePercentage,
-          initialPaymentAgreedDaysToPaymentRemittance: formValues[
-            "initialPaymentAgreedDaysToPaymentRemittance"
-          ]
-            ? formValues["initialPaymentAgreedDaysToPaymentRemittance"]
-            : params.contract.initialPaymentInstallment
-                .initialPaymentAgreedDaysToPaymentRemittance,
-          initialPaymentPlatformPercentageForRetention: formValues[
-            "initialPaymentPlatformPercentageForRetention"
-          ]
-            ? formValues["initialPaymentPlatformPercentageForRetention"]
-            : params.contract.initialPaymentInstallment
-                .initialPaymentPlatformPercentageForRetention,
-        },
-        secondPaymentInstallment: {
-          secondPaymentAgreedRemittablePercentage: formValues[
-            "secondPaymentAgreedRemittablePercentage"
-          ]
-            ? formValues["secondPaymentAgreedRemittablePercentage"]
-            : params.contract.secondPaymentInstallment
-                .secondPaymentAgreedRemittablePercentage,
-          secondPaymentAgreedDaysToPaymentRemittance: formValues[
-            "secondPaymentAgreedDaysToPaymentRemittance"
-          ]
-            ? formValues["secondPaymentAgreedDaysToPaymentRemittance"]
-            : params.contract.secondPaymentInstallment
-                .secondPaymentAgreedDaysToPaymentRemittance,
-          secondPaymentPlatformPercentageForRetention: formValues[
-            "secondPaymentPlatformPercentageForRetention"
-          ]
-            ? formValues["secondPaymentPlatformPercentageForRetention"]
-            : params.contract.secondPaymentInstallment
-                .secondPaymentPlatformPercentageForRetention,
-        },
-        thirdPaymentInstallment: {
-          thirdPaymentAgreedRemittablePercentage: formValues[
-            "thirdPaymentAgreedRemittablePercentage"
-          ]
-            ? formValues["thirdPaymentAgreedRemittablePercentage"]
-            : params.contract.thirdPaymentInstallment
-                .thirdPaymentAgreedRemittablePercentage,
-          thirdPaymentAgreedDaysToPaymentRemittance: formValues[
-            "thirdPaymentAgreedDaysToPaymentRemittance"
-          ]
-            ? formValues["thirdPaymentAgreedDaysToPaymentRemittance"]
-            : params.contract.thirdPaymentInstallment
-                .thirdPaymentAgreedDaysToPaymentRemittance,
-          thirdPaymentPlatformPercentageForRetention: formValues[
-            "thirdPaymentPlatformPercentageForRetention"
-          ]
-            ? formValues["thirdPaymentPlatformPercentageForRetention"]
-            : params.contract.thirdPaymentInstallment
-                .thirdPaymentPlatformPercentageForRetention,
-        },
       },
     };
 
@@ -1481,191 +1307,6 @@ function VendorEditForm(props) {
                 type="text"
                 component={renderBankNameField}
               />
-            </Grid>
-            <FormLabel
-              style={{ color: "blue", marginTop: 30 }}
-              component="legend"
-            >
-              Vendor Contract
-            </FormLabel>
-
-            <Grid item style={{ marginTop: 20 }}>
-              <Field
-                label=""
-                id="enforceGlobalPlatformPolicyContract"
-                name="enforceGlobalPlatformPolicyContract"
-                // type="text"
-                component={renderEnforceGlobalPlatformPolicyField}
-              />
-            </Grid>
-            <Grid item style={{ marginTop: 20 }}>
-              <Field
-                label=""
-                id="permittableMaximumNumberOfPaymentInstallments"
-                name="permittableMaximumNumberOfPaymentInstallments"
-                defaultValue={
-                  params.contract.initialPaymentInstallment
-                    .permittableMaximumNumberOfPaymentInstallments
-                }
-                //type="number"
-                component={rendermaxNumberOfPaymentInstallmentAllowed}
-              />
-            </Grid>
-            <FormLabel style={{ marginTop: 20 }} component="legend">
-              Initial Payment Details
-            </FormLabel>
-            <Grid item container direction="row">
-              <Grid item container direction="row">
-                <Grid item style={{ marginTop: 20, width: "28%" }}>
-                  <Field
-                    label="Enter agreed initial percentage payment"
-                    id="initialPaymentAgreedRemittablePercentage"
-                    name="initialPaymentAgreedRemittablePercentage"
-                    defaultValue={
-                      params.contract.initialPaymentInstallment
-                        .initialPaymentAgreedRemittablePercentage
-                    }
-                    type="number"
-                    component={renderAgreedInitialPercentagePaymentField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "38%" }}
-                >
-                  <Field
-                    label="Enter agreed number of days to remittance"
-                    id="initialPaymentAgreedDaysToPaymentRemittance"
-                    name="initialPaymentAgreedDaysToPaymentRemittance"
-                    defaultValue={
-                      params.contract.initialPaymentInstallment
-                        .initialPaymentAgreedDaysToPaymentRemittance
-                    }
-                    type="number"
-                    component={renderAgreedDaysToPaymentRemittanceField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "31%" }}
-                >
-                  <Field
-                    label="Enter Platform Percentage Charge"
-                    id="initialPaymentPlatformPercentageForRetention"
-                    name="initialPaymentPlatformPercentageForRetention"
-                    defaultValue={
-                      params.contract.initialPaymentInstallment
-                        .initialPaymentPlatformPercentageForRetention
-                    }
-                    type="number"
-                    component={renderPlatformPercentageChargeField}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <FormLabel style={{ marginTop: 20 }} component="legend">
-              Second Payment Details
-            </FormLabel>
-            <Grid item container direction="row">
-              <Grid item container direction="row">
-                <Grid item style={{ marginTop: 20, width: "28%" }}>
-                  <Field
-                    label="Enter agreed initial percentage payment"
-                    id="secondPaymentAgreedRemittablePercentage"
-                    name="secondPaymentAgreedRemittablePercentage"
-                    defaultValue={
-                      params.contract.secondPaymentInstallment
-                        .secondPaymentAgreedRemittablePercentage
-                    }
-                    type="number"
-                    component={renderAgreedSecondPercentagePaymentField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "38%" }}
-                >
-                  <Field
-                    label="Enter agreed number of days to remittance"
-                    id="secondPaymentAgreedDaysToPaymentRemittance"
-                    name="secondPaymentAgreedDaysToPaymentRemittance"
-                    defaultValue={
-                      params.contract.secondPaymentInstallment
-                        .secondPaymentAgreedDaysToPaymentRemittance
-                    }
-                    type="number"
-                    component={renderAgreedSecondDaysToPaymentRemittanceField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "31%" }}
-                >
-                  <Field
-                    label="Enter Platform Percentage Charge"
-                    id="secondPaymentPlatformPercentageForRetention"
-                    name="secondPaymentPlatformPercentageForRetention"
-                    defaultValue={
-                      params.contract.secondPaymentInstallment
-                        .secondPaymentPlatformPercentageForRetention
-                    }
-                    type="number"
-                    component={renderSecondPlatformPercentageChargeField}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <FormLabel style={{ marginTop: 20 }} component="legend">
-              Third Payment Details
-            </FormLabel>
-            <Grid item container direction="row">
-              <Grid item container direction="row">
-                <Grid item style={{ marginTop: 20, width: "28%" }}>
-                  <Field
-                    label="Enter agreed initial percentage payment"
-                    id="thirdPaymentAgreedRemittablePercentage"
-                    name="thirdPaymentAgreedRemittablePercentage"
-                    defaultValue={
-                      params.contract.thirdPaymentInstallment
-                        .thirdPaymentAgreedRemittablePercentage
-                    }
-                    type="number"
-                    component={renderAgreedThirdPercentagePaymentField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "38%" }}
-                >
-                  <Field
-                    label="Enter agreed number of days to remittance"
-                    id="thirdPaymentAgreedDaysToPaymentRemittance"
-                    name="thirdPaymentAgreedDaysToPaymentRemittance"
-                    defaultValue={
-                      params.contract.thirdPaymentInstallment
-                        .thirdPaymentAgreedDaysToPaymentRemittance
-                    }
-                    type="number"
-                    component={renderAgreedThirdDaysToPaymentRemittanceField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "31%" }}
-                >
-                  <Field
-                    label="Enter Platform Percentage Charge"
-                    id="thirdPaymentPlatformPercentageForRetention"
-                    name="thirdPaymentPlatformPercentageForRetention"
-                    defaultValue={
-                      params.contract.thirdPaymentInstallment
-                        .thirdPaymentPlatformPercentageForRetention
-                    }
-                    type="number"
-                    component={renderThirdPlatformPercentageChargeField}
-                  />
-                </Grid>
-              </Grid>
             </Grid>
           </Grid>
           <Button

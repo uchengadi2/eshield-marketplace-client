@@ -382,7 +382,7 @@ const renderDescriptionField = ({
       type={type}
       style={{ marginTop: 20 }}
       multiline={true}
-      minRows={4}
+      minRows={6}
       {...custom}
       onChange={input.onChange}
     />
@@ -1233,14 +1233,6 @@ function VendorForm(props) {
             style={{ marginTop: 20 }}
           />
 
-          <Field
-            label=""
-            id="description"
-            name="description"
-            type="text"
-            component={renderDescriptionField}
-          />
-
           <Grid container direction="column" style={{ marginTop: 30 }}>
             <Grid item>
               <Field
@@ -1392,152 +1384,15 @@ function VendorForm(props) {
                 component={renderBankNameField}
               />
             </Grid>
-            <FormLabel
-              style={{ color: "blue", marginTop: 30 }}
-              component="legend"
-            >
-              Vendor Contract
-            </FormLabel>
-
-            <Grid item style={{ marginTop: 20 }}>
-              <Field
-                label=""
-                id="enforceGlobalPlatformPolicyContract"
-                name="enforceGlobalPlatformPolicyContract"
-                // type="text"
-                component={renderEnforceGlobalPlatformPolicyField}
-              />
-            </Grid>
-            <Grid item style={{ marginTop: 20 }}>
-              <Field
-                label=""
-                id="permittableMaximumNumberOfPaymentInstallments"
-                name="permittableMaximumNumberOfPaymentInstallments"
-                //type="number"
-                component={rendermaxNumberOfPaymentInstallmentAllowed}
-              />
-            </Grid>
-            <FormLabel style={{ marginTop: 20 }} component="legend">
-              Initial Payment Details
-            </FormLabel>
-            <Grid item container direction="row">
-              <Grid item container direction="row">
-                <Grid item style={{ marginTop: 20, width: "28%" }}>
-                  <Field
-                    label="Enter agreed initial percentage payment"
-                    id="initialPaymentAgreedRemittablePercentage"
-                    name="initialPaymentAgreedRemittablePercentage"
-                    type="number"
-                    component={renderAgreedInitialPercentagePaymentField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "38%" }}
-                >
-                  <Field
-                    label="Enter agreed number of days to remittance"
-                    id="initialPaymentAgreedDaysToPaymentRemittance"
-                    name="initialPaymentAgreedDaysToPaymentRemittance"
-                    type="number"
-                    component={renderAgreedDaysToPaymentRemittanceField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "31%" }}
-                >
-                  <Field
-                    label="Enter Platform Percentage Charge"
-                    id="initialPaymentPlatformPercentageForRetention"
-                    name="initialPaymentPlatformPercentageForRetention"
-                    type="number"
-                    component={renderPlatformPercentageChargeField}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <FormLabel style={{ marginTop: 20 }} component="legend">
-              Second Payment Details
-            </FormLabel>
-            <Grid item container direction="row">
-              <Grid item container direction="row">
-                <Grid item style={{ marginTop: 20, width: "28%" }}>
-                  <Field
-                    label="Enter agreed initial percentage payment"
-                    id="secondPaymentAgreedRemittablePercentage"
-                    name="secondPaymentAgreedRemittablePercentage"
-                    type="number"
-                    component={renderAgreedSecondPercentagePaymentField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "38%" }}
-                >
-                  <Field
-                    label="Enter agreed number of days to remittance"
-                    id="secondPaymentAgreedDaysToPaymentRemittance"
-                    name="secondPaymentAgreedDaysToPaymentRemittance"
-                    type="number"
-                    component={renderAgreedSecondDaysToPaymentRemittanceField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "31%" }}
-                >
-                  <Field
-                    label="Enter Platform Percentage Charge"
-                    id="secondPaymentPlatformPercentageForRetention"
-                    name="secondPaymentPlatformPercentageForRetention"
-                    type="number"
-                    component={renderSecondPlatformPercentageChargeField}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-            <FormLabel style={{ marginTop: 20 }} component="legend">
-              Third Payment Details
-            </FormLabel>
-            <Grid item container direction="row">
-              <Grid item container direction="row">
-                <Grid item style={{ marginTop: 20, width: "28%" }}>
-                  <Field
-                    label="Enter agreed initial percentage payment"
-                    id="thirdPaymentAgreedRemittablePercentage"
-                    name="thirdPaymentAgreedRemittablePercentage"
-                    type="number"
-                    component={renderAgreedThirdPercentagePaymentField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "38%" }}
-                >
-                  <Field
-                    label="Enter agreed number of days to remittance"
-                    id="thirdPaymentAgreedDaysToPaymentRemittance"
-                    name="thirdPaymentAgreedDaysToPaymentRemittance"
-                    type="number"
-                    component={renderAgreedThirdDaysToPaymentRemittanceField}
-                  />
-                </Grid>
-                <Grid
-                  item
-                  style={{ marginLeft: 5, marginTop: 20, width: "31%" }}
-                >
-                  <Field
-                    label="Enter Platform Percentage Charge"
-                    id="thirdPaymentPlatformPercentageForRetention"
-                    name="thirdPaymentPlatformPercentageForRetention"
-                    type="number"
-                    component={renderThirdPlatformPercentageChargeField}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
           </Grid>
+          <Field
+            label=""
+            id="description"
+            name="description"
+            type="text"
+            component={renderDescriptionField}
+          />
+
           <Button
             variant="contained"
             className={classes.submitButton}

@@ -169,7 +169,7 @@ const Header = (props) => {
       link: "/vendors",
       activeIndex: 1,
     },
-    { name: "Vehicles", link: "/products", activeIndex: 2 },
+    { name: "Products", link: "/products", activeIndex: 2 },
     { name: "Cities", link: "/cities", activeIndex: 3 },
     { name: "Users", link: "/users", activeIndex: 4 },
     { name: "Orders", link: "/orders", activeIndex: 5 },

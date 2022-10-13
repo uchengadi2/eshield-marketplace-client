@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Field, reduxForm } from "redux-form";
+import { useDispatch } from "react-redux";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -13,7 +15,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import data from "./../../../apis/local";
+import api from "./../../../apis/local";
+import { CREATE_CURRENCY } from "../../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,17 +40,129 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const renderCurrencyNameField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Enter Currency Name"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderCurrencyCodeField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Enter Currency Code"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderCurrencyDescriptionField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Provide a description of this currency"
+      variant="outlined"
+      //label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      multiline={true}
+      minRows={5}
+      onChange={input.onChange}
+    />
+  );
+};
+
+const renderCurrencySymbolField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  delete input.value;
+  return (
+    <TextField
+      id={input.name}
+      variant="outlined"
+      type={type}
+      fullWidth
+      style={{ marginTop: 20 }}
+      helperText="Upload Currency Symbol"
+      onChange={input.onChange}
+    />
+  );
+};
+
 function CurrencyForm(props) {
   const classes = useStyles();
 
   const [country, setCountry] = useState();
   const [countryList, setCountryList] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
       let allData = [];
-      data.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await data.get("/countries");
+      api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+      const response = await api.get("/countries");
       const workingData = response.data.data.data;
       workingData.map((country) => {
         allData.push({ id: country._id, name: country.name });
@@ -75,58 +190,6 @@ function CurrencyForm(props) {
     });
   };
 
-  console.log("this is the country list", countryList);
-
-  const renderCurrencyNameField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Enter Currency Name"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        //value={formInput.name}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        {...input}
-      />
-    );
-  };
-
-  const renderCurrencyCodeField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Enter Currency Code"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        //value={formInput.name}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        {...input}
-      />
-    );
-  };
-
   const renderCurrencyCountryField = ({
     input,
     label,
@@ -145,8 +208,7 @@ function CurrencyForm(props) {
             value={country}
             onChange={handleCountryChange}
             label="Country"
-            style={{ width: 500 }}
-            {...input}
+            style={{ width: 500, height: 38 }}
           >
             {renderCountryList()}
           </Select>
@@ -156,74 +218,56 @@ function CurrencyForm(props) {
     );
   };
 
-  const renderCurrencyDescriptionField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Provide a description of this currency"
-        variant="outlined"
-        //label={label}
-        id={input.name}
-        //value={formInput.name}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        multiline={true}
-        minRows={4}
-        {...input}
-
-        // style={{ marginTop: 10 }}
-
-        //onChange={handleInput}
-      />
-    );
-  };
-
-  const renderCurrencySymbolField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    delete input.value;
-    return (
-      <TextField
-        id={input.name}
-        variant="outlined"
-        type={type}
-        fullWidth
-        style={{ marginTop: 20 }}
-        helperText="Upload Currency Symbol"
-        {...input}
-      />
-    );
+  const buttonContent = () => {
+    return <React.Fragment> Add Currency</React.Fragment>;
   };
 
   const onSubmit = (formValues) => {
+    setLoading(true);
     const form = new FormData();
     form.append("name", formValues.name);
-    form.append("code", formValues.code);
+    form.append(
+      "code",
+      formValues.code
+        ? formValues.code
+        : "CUR-" + Math.floor(Math.random() * 10000)
+    );
     form.append("description", formValues.description);
-    form.append("country", formValues.country);
+    form.append("country", country);
     form.append("createdBy", props.userId);
     if (formValues.symbol) {
       form.append("symbol", formValues.symbol[0]);
     }
 
-    console.log("currency form values are:", formValues);
-    console.log("currency created by:", props.userId);
+    if (form) {
+      const createForm = async () => {
+        api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+        const response = await api.post(`/currencies`, form);
 
-    props.onSubmit(form);
+        if (response.data.status === "success") {
+          dispatch({
+            type: CREATE_CURRENCY,
+            payload: response.data.data.data,
+          });
+
+          props.handleSuccessfulCreateSnackbar(
+            `${response.data.data.data.name} Currency is added successfully!!!`
+          );
+          props.handleDialogOpenStatus();
+          setLoading(false);
+        } else {
+          props.handleFailedSnackbar(
+            "Something went wrong, please try again!!!"
+          );
+        }
+      };
+      createForm().catch((err) => {
+        props.handleFailedSnackbar();
+        console.log("err:", err.message);
+      });
+    } else {
+      props.handleFailedSnackbar("Something went wrong, please try again!!!");
+    }
   };
 
   return (
@@ -302,7 +346,11 @@ function CurrencyForm(props) {
           className={classes.submitButton}
           onClick={props.handleSubmit(onSubmit)}
         >
-          Add Currency
+          {loading ? (
+            <CircularProgress size={30} color="inherit" />
+          ) : (
+            buttonContent()
+          )}
         </Button>
       </Box>
       {/* </form> */}

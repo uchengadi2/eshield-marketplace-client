@@ -142,9 +142,14 @@ class ProductList extends React.Component {
     let counter = 0;
     const columns = [
       { field: "numbering", headerName: "S/n", width: 100 },
-      { field: "name", headerName: "Vehicle Name", width: 300 },
-      { field: "description", headerName: "Description", width: 350 },
-      { field: "vendor", headerName: "Vendor", width: 250 },
+      { field: "name", headerName: "Product Name", width: 220 },
+      { field: "sku", headerName: "SKU", width: 100 },
+      { field: "weightPerUnit", headerName: "Weight Per Unit(kg)", width: 120 },
+      { field: "totalUnits", headerName: "Total Units", width: 100 },
+      { field: "pricePerUnit", headerName: "Price per Units", width: 150 },
+      { field: "currency", headerName: "Currency", width: 150 },
+      { field: "size", headerName: "Product Size", width: 100 },
+      { field: "vendor", headerName: "Vendor", width: 150 },
       {
         field: "editaction",
         headerName: "",
@@ -166,24 +171,7 @@ class ProductList extends React.Component {
           </strong>
         ),
       },
-      {
-        field: "blacklistaction",
-        headerName: "",
-        width: 30,
-        description: "Blacklist city",
-        renderCell: (params) => (
-          <strong>
-            {/* {params.value.getFullYear()} */}
-            <CancelRoundedIcon
-              style={{ color: "black" }}
-              onClick={() => [
-                this.setState({ blacklistOpen: true, id: params.id }),
-                history.push(`/products/blacklist/${params.id}`),
-              ]}
-            />
-          </strong>
-        ),
-      },
+
       {
         field: "deleteaction",
         headerName: "",
@@ -208,23 +196,45 @@ class ProductList extends React.Component {
         numbering: ++counter,
         id: product.id,
         name: product.name,
-        description: product.fullDescription,
+        weightPerUnit: product.weightPerUnit,
+        totalUnits: product.totalUnits,
+        remainingTotalUnits: product.remainingTotalUnits,
         vendor: product.vendor,
         shortDescription: product.shortDescription,
         fullDescription: product.fullDescription,
-        plateNumber: product.plateNumber,
+        sku: product.sku,
+        refNumber: product.refNumber,
         imageCover: product.imageCover,
-        quantity: product.quantity,
+        firstImage: product.firstImage,
+        secondImage: product.secondImage,
+        thirdImage: product.thirdImage,
+        fourthImage: product.fourthImage,
         make: product.make,
         model: product.model,
-        chassis: product.chassis,
+        category: product.category,
         createdAt: product.createdAt,
         createdBy: product.createdBy,
-        address: product.address,
-        city: product.city,
-        state: product.state,
-        country: product.country,
-        category: product.category,
+        color: product.color,
+        size: product.size,
+        design: product.design,
+        content: product.content,
+        smell: product.smell,
+        taste: product.taste,
+        feel: product.feel,
+        ingredients: product.ingredients,
+        reliability: product.reliability,
+        safety: product.safety,
+        packaging: product.packaging,
+        marketingClaims: product.marketingClaims,
+        durability: product.durability,
+        pricePerUnit: product.pricePerUnit,
+        currency: product.currency,
+        keyword1: product.keyword1,
+        keyword2: product.keyword2,
+        keyword3: product.keyword3,
+        minimumQuantity: product.minimumQuantity,
+        location: product.location,
+        locationCountry: product.locationCountry,
       };
       rows.push(row);
     });

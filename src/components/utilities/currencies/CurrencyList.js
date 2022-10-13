@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Dialog from "@material-ui/core/Dialog";
+import Snackbar from "@material-ui/core/Snackbar";
 import DialogContent from "@material-ui/core/DialogContent";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
@@ -11,6 +12,7 @@ import { fetchCurrencies } from "../../../actions";
 import DataGridContainer from "../../DataGridContainer";
 import CurrencyEdit from "./CurrencyEdit";
 import CurrencyDelete from "./CurrencyDelete";
+import CurrencyEditForm from "./CurrencyEditForm";
 
 class CurrencyList extends React.Component {
   constructor(props) {
@@ -21,6 +23,11 @@ class CurrencyList extends React.Component {
       blacklistOpen: false,
       id: null,
       params: {},
+      alert: {
+        open: false,
+        message: "",
+        backgroundColor: "",
+      },
     };
   }
   componentDidMount() {
@@ -37,6 +44,29 @@ class CurrencyList extends React.Component {
     this.setState({ editOpen: false });
   };
 
+  handleSuccessfulEditSnackbar = (message) => {
+    // history.push("/categories/new");
+    this.setState({ editOpen: false });
+    this.setState({
+      alert: {
+        open: true,
+        message: message,
+        backgroundColor: "#4BB543",
+      },
+    });
+  };
+
+  handleFailedSnackbar = (message) => {
+    this.setState({
+      alert: {
+        open: true,
+        message: message,
+        backgroundColor: "#FF3232",
+      },
+    });
+    this.setState({ editOpen: false });
+  };
+
   renderEditDialogForm = () => {
     //token will be used here
     return (
@@ -50,10 +80,13 @@ class CurrencyList extends React.Component {
           ]}
         >
           <DialogContent>
-            <CurrencyEdit
+            <CurrencyEditForm
               token={this.props.token}
               params={this.state.params}
+              userId={this.props.userId}
               handleEditDialogOpenStatus={this.handleEditDialogOpenStatus}
+              handleSuccessfulEditSnackbar={this.handleSuccessfulEditSnackbar}
+              handleFailedSnackbar={this.handleFailedSnackbar}
             />
           </DialogContent>
         </Dialog>
@@ -112,7 +145,6 @@ class CurrencyList extends React.Component {
       { field: "name", headerName: "Currency Name", width: 200 },
       { field: "code", headerName: "Currency Code", width: 200 },
       { field: "country", headerName: "Country", width: 200 },
-      { field: "description", headerName: "Description", width: 200 },
 
       {
         field: "editaction",
@@ -135,24 +167,7 @@ class CurrencyList extends React.Component {
           </strong>
         ),
       },
-      {
-        field: "blacklistaction",
-        headerName: "",
-        width: 30,
-        description: "Blacklist state",
-        renderCell: (params) => (
-          <strong>
-            {/* {params.value.getFullYear()} */}
-            <CancelRoundedIcon
-              style={{ color: "black" }}
-              onClick={() => [
-                this.setState({ blacklistOpen: true, id: params.id }),
-                history.push(`/utilities/currencies/blacklist/${params.id}`),
-              ]}
-            />
-          </strong>
-        ),
-      },
+
       {
         field: "deleteaction",
         headerName: "",
@@ -193,6 +208,16 @@ class CurrencyList extends React.Component {
         {this.renderEditDialogForm()}
         {this.renderProductList()}
         {this.renderBlackListDialogForm()}
+        <Snackbar
+          open={this.state.alert.open}
+          message={this.state.alert.message}
+          ContentProps={{
+            style: { backgroundColor: this.state.alert.backgroundColor },
+          }}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => this.setState({ alert: { ...alert, open: false } })}
+          autoHideDuration={4000}
+        />
       </>
     );
   }
