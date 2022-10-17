@@ -977,35 +977,185 @@ const renderProductMinimumOrderingQuantityField = ({
   );
 };
 
-// const renderProductUnitField = ({
-//   input,
-//   label,
-//   meta: { touched, error, invalid },
-//   type,
-//   id,
-//   ...custom
-// }) => {
-//   return (
-//     <TextField
-//       //error={touched && invalid}
-//       helperText="Measurement Unit"
-//       variant="outlined"
-//       label={label}
-//       id={input.name}
-//       //value={formInput.name}
-//       fullWidth
-//       //required
-//       type={type}
-//       {...custom}
-//       onChange={input.onChange}
-//       inputProps={{
-//         style: {
-//           height: 1,
-//         },
-//       }}
-//     />
-//   );
-// };
+const renderDeliveryCostPerUnitWithinProductLocationField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Subsequent Delivery Cost per Unit"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderEstimatedDeliveryPeriodInDaysField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Estimated Delivery Period(in days)"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderEstimatedDeliveryPeriodInHoursField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Estimated Delivery Period(in hours)"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderEstimatedDeliveryPeriodInMinutesField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Estimated Delivery Period(in minutes)"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductMaximumQuantityForBaselineDeliveryField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Maximum Quantity for Baseline Delivery"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductBaselineDeliveryCostWithinProductLocationField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Baseline Delivery Cost"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
 
 function ProductForm(props) {
   const classes = useStyles();
@@ -1442,6 +1592,33 @@ function ProductForm(props) {
     form.append("keyword2", formValues.keyword2);
     form.append("keyword3", formValues.keyword3);
     form.append("minimumQuantity", formValues.minimumQuantity);
+    form.append(
+      "deliveryCostPerUnitWithinProductLocation",
+      formValues.deliveryCostPerUnitWithinProductLocation
+    );
+    form.append(
+      "maxmumQuantityForBaselineDelivery",
+      formValues.maxmumQuantityForBaselineDelivery
+    );
+    form.append(
+      "baselineDeliveryCostWithinProductLocation",
+      formValues.baselineDeliveryCostWithinProductLocation
+    );
+
+    form.append(
+      "estimatedDeliveryPeriodInDays",
+      formValues.estimatedDeliveryPeriodInDays
+    );
+
+    form.append(
+      "estimatedDeliveryPeriodInHours",
+      formValues.estimatedDeliveryPeriodInHours
+    );
+
+    form.append(
+      "estimatedDeliveryPeriodInMinutes",
+      formValues.estimatedDeliveryPeriodInMinutes
+    );
 
     if (!formValues["refNumber"]) {
       const refNum =
@@ -1821,6 +1998,74 @@ function ProductForm(props) {
               />
             </Grid>
           </Grid>
+          <Grid item container style={{ marginTop: 20 }}>
+            <FormLabel style={{ color: "blue" }} component="legend">
+              Delivery Within Product Location
+            </FormLabel>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "29%" }}>
+              <Field
+                label=""
+                id="maxmumQuantityForBaselineDelivery"
+                name="maxmumQuantityForBaselineDelivery"
+                type="number"
+                component={renderProductMaximumQuantityForBaselineDeliveryField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="baselineDeliveryCostWithinProductLocation"
+                name="baselineDeliveryCostWithinProductLocation"
+                type="number"
+                component={
+                  renderProductBaselineDeliveryCostWithinProductLocationField
+                }
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="deliveryCostPerUnitWithinProductLocation"
+                name="deliveryCostPerUnitWithinProductLocation"
+                type="number"
+                component={renderDeliveryCostPerUnitWithinProductLocationField}
+                //style={{ marginTop: 10 }}
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "29%" }}>
+              <Field
+                label=""
+                id="estimatedDeliveryPeriodInDays"
+                name="estimatedDeliveryPeriodInDays"
+                type="number"
+                component={renderEstimatedDeliveryPeriodInDaysField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="estimatedDeliveryPeriodInHours"
+                name="estimatedDeliveryPeriodInHours"
+                type="number"
+                component={renderEstimatedDeliveryPeriodInHoursField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="estimatedDeliveryPeriodInMinutes"
+                name="estimatedDeliveryPeriodInMinutes"
+                type="number"
+                component={renderEstimatedDeliveryPeriodInMinutesField}
+                //style={{ marginTop: 10 }}
+              />
+            </Grid>
+          </Grid>
+
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Product Keywords for Discoverability

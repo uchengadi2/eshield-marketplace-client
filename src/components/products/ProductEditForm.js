@@ -977,6 +977,186 @@ const renderProductMinimumOrderingQuantityField = ({
   );
 };
 
+const renderDeliveryCostPerUnitWithinProductLocationField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Subsequent Delivery Cost per Unit"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductMaximumQuantityForBaselineDeliveryField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Maximum Quantity for Baseline Delivery"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderProductBaselineDeliveryCostWithinProductLocationField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Baseline Delivery Cost"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderEstimatedDeliveryPeriodInDaysField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Estimated Delivery Period(in days)"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderEstimatedDeliveryPeriodInHoursField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Estimated Delivery Period(in hours)"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
+const renderEstimatedDeliveryPeriodInMinutesField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Estimated Delivery Period(in minutes)"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
 function ProductEditForm(props) {
   const { params } = props;
   const classes = useStyles();
@@ -1108,8 +1288,8 @@ function ProductEditForm(props) {
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
       const response = await api.get(`/currencies`);
       const workingData = response.data.data.data;
-      workingData.map((vendor) => {
-        allData.push({ id: vendor._id, name: vendor.name });
+      workingData.map((currency) => {
+        allData.push({ id: currency._id, name: currency.name });
       });
       setCurrencyList(allData);
     };
@@ -1461,6 +1641,42 @@ function ProductEditForm(props) {
     form.append(
       "packaging",
       formValues.packaging ? formValues.packaging : params.packaging
+    );
+    form.append(
+      "deliveryCostPerUnitWithinProductLocation",
+      formValues.deliveryCostPerUnitWithinProductLocation
+        ? formValues.deliveryCostPerUnitWithinProductLocation
+        : params.deliveryCostPerUnitWithinProductLocation
+    );
+    form.append(
+      "maxmumQuantityForBaselineDelivery",
+      formValues.maxmumQuantityForBaselineDelivery
+        ? formValues.maxmumQuantityForBaselineDelivery
+        : params.maxmumQuantityForBaselineDelivery
+    );
+    form.append(
+      "estimatedDeliveryPeriodInDays",
+      formValues.estimatedDeliveryPeriodInDays
+        ? formValues.estimatedDeliveryPeriodInDays
+        : params.estimatedDeliveryPeriodInDays
+    );
+    form.append(
+      "estimatedDeliveryPeriodInHours",
+      formValues.estimatedDeliveryPeriodInHours
+        ? formValues.estimatedDeliveryPeriodInHours
+        : params.estimatedDeliveryPeriodInHours
+    );
+    form.append(
+      "baselineDeliveryCostWithinProductLocation",
+      formValues.baselineDeliveryCostWithinProductLocation
+        ? formValues.baselineDeliveryCostWithinProductLocation
+        : params.baselineDeliveryCostWithinProductLocation
+    );
+    form.append(
+      "estimatedDeliveryPeriodInMinutes",
+      formValues.estimatedDeliveryPeriodInMinutes
+        ? formValues.estimatedDeliveryPeriodInMinutes
+        : params.estimatedDeliveryPeriodInMinutes
     );
     form.append(
       "marketingClaims",
@@ -1886,6 +2102,79 @@ function ProductEditForm(props) {
                 name="location"
                 type="text"
                 component={renderProductLocationField}
+              />
+            </Grid>
+          </Grid>
+          <Grid item container style={{ marginTop: 20 }}>
+            <FormLabel style={{ color: "blue" }} component="legend">
+              Delivery Within Product Location
+            </FormLabel>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "29%" }}>
+              <Field
+                label=""
+                id="maxmumQuantityForBaselineDelivery"
+                name="maxmumQuantityForBaselineDelivery"
+                defaultValue={params.maxmumQuantityForBaselineDelivery}
+                type="number"
+                component={renderProductMaximumQuantityForBaselineDeliveryField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="baselineDeliveryCostWithinProductLocation"
+                name="baselineDeliveryCostWithinProductLocation"
+                defaultValue={params.baselineDeliveryCostWithinProductLocation}
+                type="number"
+                component={
+                  renderProductBaselineDeliveryCostWithinProductLocationField
+                }
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="deliveryCostPerUnitWithinProductLocation"
+                name="deliveryCostPerUnitWithinProductLocation"
+                defaultValue={params.deliveryCostPerUnitWithinProductLocation}
+                type="number"
+                component={renderDeliveryCostPerUnitWithinProductLocationField}
+                //style={{ marginTop: 10 }}
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: "29%" }}>
+              <Field
+                label=""
+                id="estimatedDeliveryPeriodInDays"
+                name="estimatedDeliveryPeriodInDays"
+                defaultValue={params.estimatedDeliveryPeriodInDays}
+                type="number"
+                component={renderEstimatedDeliveryPeriodInDaysField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="estimatedDeliveryPeriodInHours"
+                name="estimatedDeliveryPeriodInHours"
+                defaultValue={params.estimatedDeliveryPeriodInHours}
+                type="number"
+                component={renderEstimatedDeliveryPeriodInHoursField}
+              />
+            </Grid>
+            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+              <Field
+                label=""
+                id="estimatedDeliveryPeriodInMinutes"
+                name="estimatedDeliveryPeriodInMinutes"
+                defaultValue={params.estimatedDeliveryPeriodInMinutes}
+                type="number"
+                component={renderEstimatedDeliveryPeriodInMinutesField}
+                //style={{ marginTop: 10 }}
               />
             </Grid>
           </Grid>

@@ -235,6 +235,16 @@ class ProductList extends React.Component {
         minimumQuantity: product.minimumQuantity,
         location: product.location,
         locationCountry: product.locationCountry,
+        deliveryCostPerUnitWithinProductLocation:
+          product.deliveryCostPerUnitWithinProductLocation,
+        baselineDeliveryCostWithinProductLocation:
+          product.baselineDeliveryCostWithinProductLocation,
+        maxmumQuantityForBaselineDelivery:
+          product.maxmumQuantityForBaselineDelivery,
+        estimatedDeliveryPeriodInDays: product.estimatedDeliveryPeriodInDays,
+        estimatedDeliveryPeriodInHours: product.estimatedDeliveryPeriodInHours,
+        estimatedDeliveryPeriodInMinutes:
+          product.estimatedDeliveryPeriodInMinutes,
       };
       rows.push(row);
     });
