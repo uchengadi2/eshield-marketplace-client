@@ -352,7 +352,7 @@ function UserForm(props) {
       type: type,
       vendor: vendor,
     };
-    console.log("the data is:", data);
+
     if (data) {
       const createForm = async () => {
         api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;

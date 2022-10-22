@@ -7,7 +7,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
 import { TextField } from "@material-ui/core";
-import background from "./../../logistic_assets/cover_image_1.png";
+import background from "./../../assets/images/covers/footage_image.png";
 
 const useStyles = makeStyles((theme) => ({
   sendButton: {
