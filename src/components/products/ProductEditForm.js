@@ -79,6 +79,38 @@ const renderProductNameField = ({
   );
 };
 
+const renderPriceMarkUpPerUnitField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Price Markup Per Unit"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+
+      //onChange={handleInput}
+    />
+  );
+};
+
 const renderProductRefNumberField = ({
   input,
   label,
@@ -1533,7 +1565,7 @@ function ProductEditForm(props) {
           >
             {renderCategoryList()}
           </Select>
-          <FormHelperText>Vehicle Category</FormHelperText>
+          <FormHelperText>Product Category</FormHelperText>
         </FormControl>
       </Box>
     );
@@ -1624,6 +1656,12 @@ function ProductEditForm(props) {
       formValues.content ? formValues.content : params.content
     );
     form.append("smell", formValues.smell ? formValues.smell : params.smell);
+    form.append(
+      "priceMarkupPerUnit",
+      formValues.priceMarkupPerUnit
+        ? formValues.priceMarkupPerUnit
+        : params.priceMarkupPerUnit
+    );
     form.append("taste", formValues.taste ? formValues.taste : params.taste);
     form.append("feel", formValues.feel ? formValues.feel : params.feel);
     form.append(
@@ -2215,6 +2253,20 @@ function ProductEditForm(props) {
               />
             </Grid>
           </Grid>
+          <Grid item container style={{ marginTop: 20 }}>
+            <FormLabel style={{ color: "blue" }} component="legend">
+              Price Markup Per Unit
+            </FormLabel>
+          </Grid>
+          <Field
+            label=""
+            id="priceMarkupPerUnit"
+            name="priceMarkupPerUnit"
+            defaultValue={params.priceMarkupPerUnit}
+            type="number"
+            component={renderPriceMarkUpPerUnitField}
+            style={{ marginTop: 10 }}
+          />
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Producti mages

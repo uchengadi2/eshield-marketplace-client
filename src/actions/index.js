@@ -122,6 +122,49 @@ import {
   FETCH_COMPLETE_REMITTANCE,
   DELETE_COMPLETE_REMITTANCE,
   EDIT_COMPLETE_REMITTANCE,
+  CREATE_RELATEDPRODUCT,
+  FETCH_RELATEDPRODUCTS,
+  FETCH_RELATEDPRODUCT,
+  EDIT_RELATEDPRODUCT,
+  DELETE_RELATEDPRODUCT,
+  CREATE_PRODUCTONSALE,
+  FETCH_PRODUCTONSSALE,
+  FETCH_PRODUCTONSALE,
+  EDIT_PRODUCTONSALE,
+  DELETE_PRODUCTONSALE,
+  FETCH_ORDERSFORDELIVERY,
+  FETCH_ORDERFORDELIVERY,
+  EDIT_ORDERFORDELIVERY,
+  DELETE_ORDERFORDELIVERY,
+  FETCH_REJECTEDORDERS,
+  FETCH_REJECTEDORDER,
+  EDIT_REJECTEDORDER,
+  DELETE_REJECTEDORDER,
+  CREATE_LOGISTICSPARTNER,
+  FETCH_LOGISTICSPARTNERS,
+  FETCH_LOGISTICSPARTNER,
+  EDIT_LOGISTICSPARTNER,
+  DELETE_LOGISTICSPARTNER,
+  CREATE_DELIVERY,
+  FETCH_DELIVERIES,
+  FETCH_DELIVERY,
+  EDIT_DELIVERY,
+  DELETE_DELIVERY,
+  CREATE_ONTRANSITDELIVERY,
+  FETCH_ONTRANSITDELIVERIES,
+  FETCH_ONTRANSITDELIVERY,
+  EDIT_ONTRANSITDELIVERY,
+  DELETE_ONTRANSITDELIVERY,
+  CREATE_COMPLETEDDELIVERY,
+  FETCH_COMPLETEDDELIVERIES,
+  FETCH_COMPLETEDDELIVERY,
+  EDIT_COMPLETEDDELIVERY,
+  DELETE_COMPLETEDDELIVERY,
+  CREATE_RETURNDELIVERY,
+  FETCH_RETURNDELIVERIES,
+  FETCH_RETURNDELIVERY,
+  EDIT_RETURNDELIVERY,
+  DELETE_RETURNDELIVERY,
 } from "./types";
 
 //authentication and authorization  operations
@@ -468,7 +511,9 @@ export const createOrder = (formValues, token) => {
 export const fetchOrders = (tokens, status) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
   return async (dispatch) => {
-    const response = await data.get("/orders", { params: { status: status } });
+    const response = await data.get("/orders", {
+      params: { status: "unprocessed" },
+    });
     dispatch({ type: FETCH_ORDERS, payload: response.data.data.data });
   };
 };
@@ -476,7 +521,9 @@ export const fetchOrders = (tokens, status) => {
 export const fetchAssignedOrders = (tokens) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
   return async (dispatch) => {
-    const response = await data.get("/orderassignments");
+    const response = await data.get("/orderassignments", {
+      params: { status: "unprocessed" },
+    });
     dispatch({ type: FETCH_ASSIGNED_ORDERS, payload: response.data.data.data });
   };
 };
@@ -767,8 +814,6 @@ export const deleteCountry = (id, token) => {
 
 export const createState = (formValues, token) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  console.log("this is the token at indexjs:", token);
-  console.log("this is the form data at inexjs:", formValues);
   return async (dispatch) => {
     const response = await data.post("/states", formValues);
 
@@ -1382,5 +1427,472 @@ export const createCompletedOrder = (formValues, token) => {
       type: CREATE_COMPLETED_ORDER,
       payload: response.data.data.data,
     });
+  };
+};
+
+///////////////////////////////// RELATED PRODUCTS //////////////////////////////////////
+
+//related products resource crud operation
+export const createRelatedProduct = (formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch, getState) => {
+    const { userId } = getState().auth;
+    const response = await data.post("/relatedproducts", {
+      ...formValues,
+      userId,
+    });
+
+    //console.log(response);
+    dispatch({ type: CREATE_RELATEDPRODUCT, payload: response.data });
+  };
+};
+
+export const fetchRelatedProducts = (tokens) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
+  return async (dispatch, getState) => {
+    const { userId, token } = getState().auth;
+    //const vendor = token.vendorId;
+    const response = await data.get("/relatedproducts");
+
+    dispatch({ type: FETCH_RELATEDPRODUCTS, payload: response.data.data.data });
+  };
+};
+
+export const fetchRelatedProduct = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch, getState) => {
+    const { userId, token } = getState().auth;
+    //const vendor = token.vendorId;
+    const response = await data.get(`/relatedproducts/${id}`);
+    dispatch({ type: FETCH_RELATEDPRODUCT, payload: response.data });
+  };
+};
+
+export const editRelatedProduct = (id, formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.patch(`/relatedproducts/${id}`, formValues);
+    dispatch({ type: EDIT_RELATEDPRODUCT, payload: response.data });
+  };
+};
+
+export const deleteRelatedProduct = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    await data.delete(`/relatedproducts/${id}`);
+    dispatch({ type: DELETE_RELATEDPRODUCT, payload: id });
+  };
+};
+
+///////////////////////////////// PRODUCTS ON SALE //////////////////////////////////////
+
+//products  on sale resource crud operation
+export const createProductOnSale = (formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch, getState) => {
+    const { userId } = getState().auth;
+    const response = await data.post("/productsonsale", {
+      ...formValues,
+      userId,
+    });
+
+    //console.log(response);
+    dispatch({ type: CREATE_PRODUCTONSALE, payload: response.data });
+  };
+};
+
+export const fetchProductsOnSale = (tokens) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
+  return async (dispatch, getState) => {
+    const { userId, token } = getState().auth;
+    //const vendor = token.vendorId;
+    const response = await data.get("/productsonsale");
+
+    dispatch({ type: FETCH_PRODUCTONSSALE, payload: response.data.data.data });
+  };
+};
+
+export const fetchProductOnSale = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch, getState) => {
+    const { userId, token } = getState().auth;
+    //const vendor = token.vendorId;
+    const response = await data.get(`/productsonsale/${id}`);
+    dispatch({ type: FETCH_PRODUCTONSALE, payload: response.data });
+  };
+};
+
+export const editProductOnSale = (id, formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.patch(`/productsonsale/${id}`, formValues);
+    dispatch({ type: EDIT_PRODUCTONSALE, payload: response.data });
+  };
+};
+
+export const deleteProductOnSale = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    await data.delete(`/productsonsale/${id}`);
+    dispatch({ type: DELETE_PRODUCTONSALE, payload: id });
+  };
+};
+
+///////////////////////////// ORDERS FOR DELIVERY ////////////////////////////////////////
+
+//order resource crud operation
+export const fetchOrdersForDelivery = (tokens, status) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
+  return async (dispatch) => {
+    const response = await data.get(`/orders`, {
+      params: { status: "ready-for-delivery" },
+    });
+    dispatch({
+      type: FETCH_ORDERSFORDELIVERY,
+      payload: response.data.data.data,
+    });
+  };
+};
+
+export const fetchOrderForDelivery = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.get(`/orders/${id}`);
+    dispatch({ type: FETCH_ORDERFORDELIVERY, payload: response.data });
+  };
+};
+
+export const editOrderForDelivery = (id, formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.patch(`/orders/${id}`, formValues);
+    dispatch({ type: EDIT_ORDERFORDELIVERY, payload: response.data });
+  };
+};
+
+export const deleteOrderForDelivery = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    await data.delete(`/orders/${id}`);
+    dispatch({ type: DELETE_ORDERFORDELIVERY, payload: id });
+    history.push("/orders");
+  };
+};
+
+///////////////////////////// REJECTED ORDERS ////////////////////////////////////////
+
+//rejected order resource crud operation
+export const fetchRejectedOrders = (tokens, status) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
+  return async (dispatch) => {
+    const response = await data.get(`/orders`, {
+      params: { status: "rejected" },
+    });
+    dispatch({
+      type: FETCH_REJECTEDORDERS,
+      payload: response.data.data.data,
+    });
+  };
+};
+
+export const fetchRejectedOrder = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.get(`/orders/${id}`);
+    dispatch({ type: FETCH_REJECTEDORDER, payload: response.data });
+  };
+};
+
+export const editRejectedOrder = (id, formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.patch(`/orders/${id}`, formValues);
+    dispatch({ type: EDIT_REJECTEDORDER, payload: response.data });
+  };
+};
+
+export const deleteRejectedOrder = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    await data.delete(`/orders/${id}`);
+    dispatch({ type: DELETE_REJECTEDORDER, payload: id });
+    history.push("/orders");
+  };
+};
+
+////////////////////////////////// LOGISTICS PARTNERS ///////////////////////////////
+
+//vendor resource crud operation
+export const createLogisticsPartner = (formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.post("/logisticspartners", formValues);
+
+    //console.log(response);
+    dispatch({
+      type: CREATE_LOGISTICSPARTNER,
+      payload: response.data.data.data,
+    });
+    //history.push("/vendors");
+  };
+};
+
+export const fetchLogisticsPartners = (tokens) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
+  return async (dispatch) => {
+    const response = await data.get("/logisticspartners");
+
+    dispatch({
+      type: FETCH_LOGISTICSPARTNERS,
+      payload: response.data.data.data,
+    });
+  };
+};
+
+export const fetchLogisticsPartner = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.get(`/logisticspartners/${id}`);
+    dispatch({ type: FETCH_LOGISTICSPARTNER, payload: response.data });
+  };
+};
+
+export const editLogisticsPartner = (id, formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.patch(`/logisticspartners/${id}`, formValues);
+    dispatch({ type: EDIT_LOGISTICSPARTNER, payload: response.data });
+  };
+};
+
+export const deleteLogisticsPartner = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    await data.delete(`/logisticspartners/${id}`);
+    dispatch({ type: DELETE_LOGISTICSPARTNER, payload: id });
+  };
+};
+
+///////////////////////////////// DELIVERIES ///////////////////////////////
+
+//deliveries resource crud operation
+
+export const createDelivery = (formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.post("/deliveries", formValues);
+
+    //console.log(response);
+    dispatch({
+      type: CREATE_DELIVERY,
+      payload: response.data.data.data,
+    });
+    //history.push("/vendors");
+  };
+};
+
+export const fetchDeliveries = (tokens) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
+  return async (dispatch) => {
+    const response = await data.get("/deliveries", {
+      params: { status: "assigned" },
+    });
+
+    dispatch({
+      type: FETCH_DELIVERIES,
+      payload: response.data.data.data,
+    });
+  };
+};
+
+export const fetchDelivery = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.get(`/deliveries/${id}`);
+    dispatch({ type: FETCH_DELIVERY, payload: response.data });
+  };
+};
+
+export const editDelivery = (id, formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.patch(`/deliveries/${id}`, formValues);
+    dispatch({ type: EDIT_DELIVERY, payload: response.data });
+  };
+};
+
+export const deleteDelivery = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    await data.delete(`/deliveries/${id}`);
+    dispatch({ type: DELETE_DELIVERY, payload: id });
+  };
+};
+
+//////////////////////////////// ONTRANSIT DELIVERIES ///////////////////////////////
+
+//on transit deliveries resource crud operation
+
+export const createOnTransitDelivery = (formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.post("/deliveries", formValues);
+
+    //console.log(response);
+    dispatch({
+      type: CREATE_ONTRANSITDELIVERY,
+      payload: response.data.data.data,
+    });
+    //history.push("/vendors");
+  };
+};
+
+export const fetchOnTransitDeliveries = (tokens) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
+  return async (dispatch) => {
+    const response = await data.get("/deliveries", {
+      params: { status: "on-transit" },
+    });
+
+    dispatch({
+      type: FETCH_ONTRANSITDELIVERIES,
+      payload: response.data.data.data,
+    });
+  };
+};
+
+export const fetchOnTransitDelivery = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.get(`/deliveries/${id}`);
+    dispatch({ type: FETCH_ONTRANSITDELIVERY, payload: response.data });
+  };
+};
+
+export const editOnTransitDelivery = (id, formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.patch(`/deliveries/${id}`, formValues);
+    dispatch({ type: EDIT_ONTRANSITDELIVERY, payload: response.data });
+  };
+};
+
+export const deleteOnTransitDelivery = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    await data.delete(`/deliveries/${id}`);
+    dispatch({ type: DELETE_ONTRANSITDELIVERY, payload: id });
+  };
+};
+
+//////////////////////////////// COMPLETED DELIVERIES ///////////////////////////////
+
+//completed deliveries resource crud operation
+
+export const createCompletedDelivery = (formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.post("/deliveries", formValues);
+
+    //console.log(response);
+    dispatch({
+      type: CREATE_COMPLETEDDELIVERY,
+      payload: response.data.data.data,
+    });
+    //history.push("/vendors");
+  };
+};
+
+export const fetchCompletedDeliveries = (tokens) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
+  return async (dispatch) => {
+    const response = await data.get("/deliveries", {
+      params: { status: "fullfilled" },
+    });
+
+    dispatch({
+      type: FETCH_COMPLETEDDELIVERIES,
+      payload: response.data.data.data,
+    });
+  };
+};
+
+export const fetchCompletedDelivery = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.get(`/deliveries/${id}`);
+    dispatch({ type: FETCH_COMPLETEDDELIVERY, payload: response.data });
+  };
+};
+
+export const editCompletedDelivery = (id, formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.patch(`/deliveries/${id}`, formValues);
+    dispatch({ type: EDIT_COMPLETEDDELIVERY, payload: response.data });
+  };
+};
+
+export const deleteCompletedDelivery = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    await data.delete(`/deliveries/${id}`);
+    dispatch({ type: DELETE_COMPLETEDDELIVERY, payload: id });
+  };
+};
+
+//////////////////////////////// RETURN DELIVERIES ///////////////////////////////
+
+//return deliveries resource crud operation
+
+export const createReturnDelivery = (formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.post("/deliveries", formValues);
+
+    //console.log(response);
+    dispatch({
+      type: CREATE_RETURNDELIVERY,
+      payload: response.data.data.data,
+    });
+    //history.push("/vendors");
+  };
+};
+
+export const fetchReturnDeliveries = (tokens) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
+  return async (dispatch) => {
+    const response = await data.get("/deliveries", {
+      params: { status: "returned" },
+    });
+
+    dispatch({
+      type: FETCH_RETURNDELIVERIES,
+      payload: response.data.data.data,
+    });
+  };
+};
+
+export const fetchReturnDelivery = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.get(`/deliveries/${id}`);
+    dispatch({ type: FETCH_RETURNDELIVERY, payload: response.data });
+  };
+};
+
+export const editReturnDelivery = (id, formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.patch(`/deliveries/${id}`, formValues);
+    dispatch({ type: EDIT_RETURNDELIVERY, payload: response.data });
+  };
+};
+
+export const deleteReturnDelivery = (id, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    await data.delete(`/deliveries/${id}`);
+    dispatch({ type: DELETE_RETURNDELIVERY, payload: id });
   };
 };

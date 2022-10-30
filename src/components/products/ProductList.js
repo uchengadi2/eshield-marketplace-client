@@ -141,14 +141,14 @@ class ProductList extends React.Component {
     let rows = [];
     let counter = 0;
     const columns = [
-      { field: "numbering", headerName: "S/n", width: 100 },
+      { field: "numbering", headerName: "S/n", width: 80 },
       { field: "name", headerName: "Product Name", width: 220 },
       { field: "sku", headerName: "SKU", width: 100 },
       { field: "weightPerUnit", headerName: "Weight Per Unit(kg)", width: 120 },
       { field: "totalUnits", headerName: "Total Units", width: 100 },
-      { field: "pricePerUnit", headerName: "Price per Units", width: 150 },
-      { field: "currency", headerName: "Currency", width: 150 },
-      { field: "size", headerName: "Product Size", width: 100 },
+      { field: "pricePerUnit", headerName: "Price per Units", width: 130 },
+      //{ field: "currency", headerName: "Currency", width: 150 },
+      //{ field: "size", headerName: "Product Size", width: 100 },
       { field: "vendor", headerName: "Vendor", width: 150 },
       {
         field: "editaction",
@@ -245,6 +245,7 @@ class ProductList extends React.Component {
         estimatedDeliveryPeriodInHours: product.estimatedDeliveryPeriodInHours,
         estimatedDeliveryPeriodInMinutes:
           product.estimatedDeliveryPeriodInMinutes,
+        priceMarkupPerUnit: product.priceMarkupPerUnit,
       };
       rows.push(row);
     });

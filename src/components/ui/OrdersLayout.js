@@ -12,9 +12,11 @@ import StateLayout from "./StateLayout";
 import CurrencyLayout from "./CurrencyLayout";
 import ClustersLayout from "./ClustersLayout";
 import OrdersAssignedLayout from "./OrdersAssignedLayout";
-import OrdersOnTransitLayout from "./OrdersOnTransitLayout";
-import OrdersCompletedLayout from "./OrdersCompletedLayout";
+import OrdersOnTransitLayout from "./OrdersForDeliveryLayout";
+import OrdersCompletedLayout from "./OrdersJRejectedLayout";
 import OrdersPendingLayout from "./OrdersPendingLayout";
+import OrdersRejectedLayout from "./OrdersJRejectedLayout";
+import OrdersForDeliveryLayout from "./OrdersForDeliveryLayout";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -99,51 +101,41 @@ function OrdersLayout({ token, userId }) {
         className={classes.tabs}
       >
         <Tab
-          label="Pending Orders"
+          label="Fresh Orders"
           {...a11yProps(0)}
           onClick={(event) => {
             event.preventDefault();
-            history.push(`/orders/pending`);
+            history.push(`/orders/orders`);
           }}
         />
         <Tab
-          label="Assigned Orders"
-          {...a11yProps(0)}
-          onClick={(event) => {
-            event.preventDefault();
-            history.push(`/orders/assigned`);
-          }}
-        />
-        <Tab
-          label="onTransit Orders"
+          label="Orders for Delivery"
           {...a11yProps(1)}
           onClick={(event) => {
             event.preventDefault();
-            history.push(`/orders/ontransit`);
+            history.push(`/orders/ordersfordelivery`);
           }}
         />
         <Tab
-          label="Complete Orders"
+          label="Rejected Orders"
           {...a11yProps(2)}
           onClick={(event) => {
             event.preventDefault();
-            history.push(`/orders/completed`);
+            history.push(`/orders/rejectedorders`);
           }}
         />
       </Tabs>
+
       <TabPanel value={value} index={0}>
-        <OrdersPendingLayout token={token} userId={userId} />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
         <OrdersAssignedLayout token={token} userId={userId} />
       </TabPanel>
+      <TabPanel value={value} index={1}>
+        <OrdersForDeliveryLayout token={token} userId={userId} />
+      </TabPanel>
       <TabPanel value={value} index={2}>
-        <OrdersOnTransitLayout token={token} userId={userId} />
+        <OrdersRejectedLayout token={token} userId={userId} />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <OrdersCompletedLayout token={token} userId={userId} />
-      </TabPanel>
-      <TabPanel value={value} index={4}>
         {/* <ClustersLayout token={token} /> */}
       </TabPanel>
     </div>

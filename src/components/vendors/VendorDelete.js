@@ -20,7 +20,7 @@ class VendorDelete extends React.Component {
 
     const handleNoDelete = () => {
       this.props.handleDialogOpenStatus();
-      history.push("/vendors");
+      history.push("/partners/vendors");
     };
     return (
       <>

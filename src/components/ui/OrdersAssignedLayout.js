@@ -13,18 +13,6 @@ import history from "../../history";
 import OrdersList from "../orders/OrdersList";
 import OrderFormContainer from "../orders/OrderFormContainer";
 import OrderAssignmentFormContainer from "../orders/OrderAssignmentFormContainer";
-import CountryVendorSelectFields from "./CountryVendorSelectFields";
-import SourceCountryDestinationCountryAndCategoryFilters from "./filters/SourceCountryDestinationCountryAndCategoryFilters";
-import data from "./../../apis/local";
-import OrderByCategoryList from "../orders/OrderByCategoryList";
-import OrderByCategoryAndDestinationCountryList from "./../orders/OrderByCategoryAndDestinationCountryList";
-import OrderByCategorySourceAndDestinationCountryList from "./../orders/OrderByCategorySourceAndDestinationCountryList";
-import OrderBySourceAndDestinationCountryList from "./../orders/OrderBySourceAndDesitinationCountryList";
-import OrderBySourceCountryList from "../orders/OrderBySourceCountryList";
-import OrderByDestinationCountryList from "./../orders/OrderByDestinationCountryList";
-import OrderByCategoryAndSourceCountryList from "../orders/OrderByCategoryAndSourceCountryList";
-import OrderAssignedList from "../assignedOrders/OrderAssignedList";
-import AssignOrderForm from "../assignedOrders/AssignOrderForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function OrdersAssignedLayout(props) {
+function OrdersAssignedLayout({ token }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [alert, setAlert] = useState({
@@ -78,91 +66,14 @@ function OrdersAssignedLayout(props) {
     message: "",
     backgroundColor: "",
   });
-  const [selectedSourceCountry, setSelectedSourceCountry] = useState("all");
-  const [selectedDestinationCountry, setSelectedDestinationCountry] =
-    useState("all");
-  const [sourceCountryList, setSourceCountryList] = useState([
-    { id: "", name: "" },
-  ]);
-  const [destinationCountryList, setDestinationCountryList] = useState([
-    { id: "", name: "" },
-  ]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [categoryList, setCategoryList] = useState([{ id: "", name: "" }]);
   const theme = useTheme();
   const matchesMD = useMediaQuery(theme.breakpoints.down("md"));
   const matchesSM = useMediaQuery(theme.breakpoints.down("sm"));
   const matchesXS = useMediaQuery(theme.breakpoints.down("xs"));
 
-  useEffect(() => {
-    const fetchSourceCountryData = async () => {
-      let allData = [{ id: "all", name: "All" }];
-      data.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await data.get("/countries");
-      const workingData = response.data.data.data;
-      workingData.map((country) => {
-        allData.push({ id: country._id, name: country.name });
-      });
-      setSourceCountryList(allData);
-    };
-
-    //call the function
-
-    fetchSourceCountryData().catch(console.error);
-  }, []);
-
-  useEffect(() => {
-    const fetchDestinationCountryData = async () => {
-      let allData = [{ id: "all", name: "All" }];
-      data.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await data.get("/countries");
-      const workingData = response.data.data.data;
-      workingData.map((country) => {
-        allData.push({ id: country._id, name: country.name });
-      });
-      setDestinationCountryList(allData);
-    };
-
-    //call the function
-
-    fetchDestinationCountryData().catch(console.error);
-  }, []);
-
-  useEffect(() => {
-    const fetchCategoryData = async () => {
-      let allData = [{ id: "all", name: "All" }];
-      data.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await data.get("/categories");
-      const workingData = response.data.data.data;
-      workingData.map((category) => {
-        allData.push({ id: category._id, name: category.name });
-      });
-      setCategoryList(allData);
-    };
-
-    //call the function
-
-    fetchCategoryData().catch(console.error);
-  }, []);
-
   const handleDialogOpenStatus = () => {
     // history.push("/categories/new");
     setOpen(false);
-  };
-
-  const handleSourceCountryChange = (value) => {
-    setSelectedSourceCountry(value);
-    console.log("the selected country iseeeeeeee:", selectedSourceCountry);
-  };
-
-  const handleDestinationCountryChange = (value) => {
-    setSelectedDestinationCountry(value);
-    console.log("the selected country iseeeeeeee:", selectedDestinationCountry);
-  };
-
-  const handleCategoryChange = (value) => {
-    setSelectedCategory(value);
-    console.log("the selected vendor iseeeeeeee:", selectedCategory);
   };
 
   const handleSuccessfulCreateSnackbar = (message) => {
@@ -184,115 +95,6 @@ function OrdersAssignedLayout(props) {
     setOpen({ open: false });
   };
 
-  const status = "assigned";
-
-  const renderDataList = () => {
-    if (
-      selectedSourceCountry === "all" &&
-      selectedDestinationCountry === "all" &&
-      selectedCategory === "all"
-    ) {
-      return (
-        <OrderAssignedList
-          token={props.token}
-          userId={props.userId}
-          status={status}
-        />
-      );
-    } else if (
-      selectedSourceCountry === "all" &&
-      selectedDestinationCountry === "all" &&
-      selectedCategory !== "all"
-    ) {
-      return (
-        <OrderByCategoryList
-          token={props.token}
-          selectedCategory={selectedCategory}
-          status={status}
-        />
-      );
-    } else if (
-      selectedSourceCountry === "all" &&
-      selectedDestinationCountry !== "all" &&
-      selectedCategory !== "all"
-    ) {
-      return (
-        <OrderByCategoryAndDestinationCountryList
-          token={props.token}
-          selectedCategory={selectedCategory}
-          selectedDestinationCountry={selectedDestinationCountry}
-          status={status}
-        />
-      );
-    } else if (
-      selectedSourceCountry !== "all" &&
-      selectedDestinationCountry !== "all" &&
-      selectedCategory !== "all"
-    ) {
-      return (
-        <OrderByCategorySourceAndDestinationCountryList
-          token={props.token}
-          selectedCategory={selectedCategory}
-          selectedDestinationCountry={selectedDestinationCountry}
-          selectedSourceCountry={selectedSourceCountry}
-          status={status}
-        />
-      );
-    } else if (
-      selectedSourceCountry !== "all" &&
-      selectedDestinationCountry !== "all" &&
-      selectedCategory === "all"
-    ) {
-      return (
-        <OrderBySourceAndDestinationCountryList
-          token={props.token}
-          selectedDestinationCountry={selectedDestinationCountry}
-          selectedSourceCountry={selectedSourceCountry}
-          status={status}
-        />
-      );
-    } else if (
-      selectedSourceCountry !== "all" &&
-      selectedDestinationCountry === "all" &&
-      selectedCategory === "all"
-    ) {
-      return (
-        <OrderBySourceCountryList
-          token={props.token}
-          selectedSourceCountry={selectedSourceCountry}
-          status={status}
-        />
-      );
-    } else if (
-      selectedSourceCountry === "all" &&
-      selectedDestinationCountry !== "all" &&
-      selectedCategory === "all"
-    ) {
-      return (
-        <OrderByDestinationCountryList
-          token={props.token}
-          selectedDestinationCountry={selectedDestinationCountry}
-          status={status}
-        />
-      );
-    } else if (
-      selectedSourceCountry !== "all" &&
-      selectedDestinationCountry === "all" &&
-      selectedCategory !== "all"
-    ) {
-      return (
-        <OrderByCategoryAndSourceCountryList
-          token={props.token}
-          selectedCategory={selectedCategory}
-          selectedSourceCountry={selectedSourceCountry}
-          status={status}
-        />
-      );
-    } else {
-      return null;
-    }
-  };
-
   const width = 12;
 
   return (
@@ -305,20 +107,6 @@ function OrdersAssignedLayout(props) {
       spacing={2}
     >
       <Grid item container direction="column" sm={width}>
-        <Grid item className={classes.selectField}>
-          <SourceCountryDestinationCountryAndCategoryFilters
-            token={props.token}
-            sourceCountryList={sourceCountryList}
-            destinationCountryList={destinationCountryList}
-            selectedSourceCountry={selectedSourceCountry}
-            selectedDestinationCountry={selectedDestinationCountry}
-            handleSourceCountryChange={handleSourceCountryChange}
-            handleDestinationCountryChange={handleDestinationCountryChange}
-            categoryList={categoryList}
-            selectedCategory={selectedCategory}
-            handleCategoryChange={handleCategoryChange}
-          />
-        </Grid>
         <Grid
           item
           container
@@ -327,22 +115,19 @@ function OrdersAssignedLayout(props) {
         >
           <Toolbar disableGutters className={classes.toolbar}>
             <Grid item>
-              <Button
+              {/* <Button
                 variant="contained"
                 className={classes.addButton}
-                onClick={() => [
-                  setOpen(true),
-                  history.push("/orders/assigned"),
-                ]}
+                onClick={() => [setOpen(true), history.push("/orders/new")]}
               >
-                Assign Order
-              </Button>
+                Add Order
+              </Button> */}
             </Grid>
             <Grid item></Grid>
           </Toolbar>
         </Grid>
         <Grid item className={classes.contentContainer}>
-          {renderDataList()}
+          <OrdersList token={token} />
           {/* <DataGridText /> */}
         </Grid>
       </Grid>
@@ -353,12 +138,9 @@ function OrdersAssignedLayout(props) {
         onClose={() => [setOpen(false), history.push("/orders")]}
       >
         <DialogContent>
-          <AssignOrderForm
-            token={props.token}
-            userId={props.userId}
+          <OrderFormContainer
+            token={token}
             handleDialogOpenStatus={handleDialogOpenStatus}
-            handleSuccessfulCreateSnackbar={handleSuccessfulCreateSnackbar}
-            handleFailedSnackbar={handleFailedSnackbar}
           />
         </DialogContent>
       </Dialog>

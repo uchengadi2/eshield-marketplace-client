@@ -75,7 +75,7 @@ class VendorList extends React.Component {
           open={this.state.editOpen}
           onClose={() => [
             this.setState({ editOpen: false }),
-            history.push("/vendors"),
+            history.push("/partners/vendors"),
           ]}
         >
           <DialogContent>
@@ -102,7 +102,7 @@ class VendorList extends React.Component {
           open={this.state.deleteOpen}
           onClose={() => [
             this.setState({ deleteOpen: false }),
-            history.push(`/vendors`),
+            history.push(`/partners/vendors`),
           ]}
         >
           <DialogContent>
@@ -127,7 +127,7 @@ class VendorList extends React.Component {
           open={this.state.blacklistOpen}
           onClose={() => [
             this.setState({ blacklistOpen: false }),
-            history.push(`/vendors`),
+            history.push(`/partners/vendors`),
           ]}
         >
           <DialogContent>
@@ -161,7 +161,7 @@ class VendorList extends React.Component {
                   id: params.id,
                   params: params.row,
                 }),
-                history.push(`/vendors/edit/${params.id}`),
+                history.push(`/partners/vendors/edit/${params.id}`),
               ]}
             />
           </strong>
@@ -180,7 +180,7 @@ class VendorList extends React.Component {
               style={{ color: "red" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
-                history.push(`/vendors/delete/${params.id}`),
+                history.push(`/partners/vendors/delete/${params.id}`),
               ]}
             />
           </strong>

@@ -231,6 +231,38 @@ const renderProductSizeField = ({
   );
 };
 
+const renderPriceMarkUpPerUnitField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Price Markup Per Unit"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+
+      //onChange={handleInput}
+    />
+  );
+};
+
 const renderProductColourField = ({
   input,
   label,
@@ -1515,7 +1547,7 @@ function ProductForm(props) {
           >
             {renderCategoryList()}
           </Select>
-          <FormHelperText>Vehicle Category</FormHelperText>
+          <FormHelperText>Product Category</FormHelperText>
         </FormControl>
       </Box>
     );
@@ -1570,6 +1602,7 @@ function ProductForm(props) {
     form.append("createdBy", props.userId);
 
     form.append("make", formValues.make);
+    form.append("priceMarkupPerUnit", formValues.priceMarkupPerUnit);
     form.append("model", formValues.model);
     form.append("color", formValues.color);
     form.append("weightPerUnit", formValues.weightPerUnit);
@@ -2100,6 +2133,20 @@ function ProductForm(props) {
               />
             </Grid>
           </Grid>
+
+          <Grid item container style={{ marginTop: 20 }}>
+            <FormLabel style={{ color: "blue" }} component="legend">
+              Price Markup Per Unit
+            </FormLabel>
+          </Grid>
+          <Field
+            label=""
+            id="priceMarkupPerUnit"
+            name="priceMarkupPerUnit"
+            type="number"
+            component={renderPriceMarkUpPerUnitField}
+            style={{ marginTop: 10 }}
+          />
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Producti mages

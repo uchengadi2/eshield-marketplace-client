@@ -22,6 +22,7 @@ import ReportsLayout from "./ui/ReportsLayout";
 import PoliciesLayout from "./ui/PoliciesLayout";
 import UtilitiesLayout from "./ui/UtilitiesLayout";
 import TripsLayout from "./ui/TripLayout";
+import DeliveryLayout from "./ui/DeliveryLayout";
 
 function App() {
   const { token, setToken } = useToken();
@@ -53,7 +54,7 @@ function App() {
             <Route path="/categories">
               <CategoryLayout token={token} userId={userId} />
             </Route>
-            <Route path="/vendors">
+            <Route path="/partners">
               <VendorLayout token={token} userId={userId} />
             </Route>
             <Route path="/products">
@@ -68,8 +69,8 @@ function App() {
             <Route path="/orders">
               <OrdersLayout token={token} userId={userId} />
             </Route>
-            <Route path="/trips">
-              <TripsLayout token={token} userId={userId} />
+            <Route path="/deliveries">
+              <DeliveryLayout token={token} userId={userId} />
             </Route>
             <Route path="/payments">
               <PaymentLayout token={token} userId={userId} />

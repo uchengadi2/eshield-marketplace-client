@@ -67,7 +67,7 @@ class OrdersList extends React.Component {
         backgroundColor: "#FF3232",
       },
     });
-    this.setState({ editOpen: false });
+    this.setState({ editOpen: true });
   };
 
   renderEditDialogForm = () => {
@@ -79,7 +79,7 @@ class OrdersList extends React.Component {
           open={this.state.editOpen}
           onClose={() => [
             this.setState({ editOpen: false }),
-            history.push("/orders"),
+            history.push("/orders/freshorders"),
           ]}
         >
           <DialogContent>
@@ -106,7 +106,7 @@ class OrdersList extends React.Component {
           open={this.state.deleteOpen}
           onClose={() => [
             this.setState({ deleteOpen: false }),
-            history.push(`/orders`),
+            history.push(`/orders/freshorders`),
           ]}
         >
           <DialogContent>
@@ -131,7 +131,7 @@ class OrdersList extends React.Component {
           open={this.state.cancelOpen}
           onClose={() => [
             this.setState({ cancelOpen: false }),
-            history.push(`/orders`),
+            history.push(`/orders/freshorders`),
           ]}
         >
           <DialogContent>
@@ -151,7 +151,7 @@ class OrdersList extends React.Component {
           open={this.state.assignOpen}
           onClose={() => [
             this.setState({ assignOpen: false }),
-            history.push(`/orders`),
+            history.push(`/orders/freshorders`),
           ]}
         >
           <DialogContent>
@@ -171,11 +171,11 @@ class OrdersList extends React.Component {
     let counter = 0;
     const columns = [
       { field: "numbering", headerName: "S/n", width: 100 },
-      { field: "orderNumber", headerName: "Order Number", width: 150 },
       { field: "dateOrdered", headerName: "Date Ordered", width: 150 },
+      { field: "orderNumber", headerName: "Order Number", width: 200 },
+      { field: "product", headerName: "Ordered Product", width: 200 },
       { field: "orderedQuantity", headerName: "Ordered Quantity", width: 150 },
       { field: "status", headerName: "Status", width: 150 },
-      { field: "category", headerName: "Category", width: 150 },
       // {
       //   field: "consignmentCountry",
       //   headerName: "Source Country",
@@ -201,7 +201,7 @@ class OrdersList extends React.Component {
                   id: params.id,
                   params: params.row,
                 }),
-                history.push(`/orders/edit/${params.id}`),
+                history.push(`/orders/freshorders/edit/${params.id}`),
               ]}
             />
           </strong>
@@ -255,7 +255,7 @@ class OrdersList extends React.Component {
               style={{ color: "red" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
-                history.push(`/orders/delete/${params.id}`),
+                history.push(`/orders/freshorders/delete/${params.id}`),
               ]}
             />
           </strong>
@@ -268,16 +268,30 @@ class OrdersList extends React.Component {
         id: order.id,
         orderNumber: order.orderNumber,
         dateOrdered: order.dateOrdered,
-        orderQuantity: order.orderQuantity,
+        orderedQuantity: order.orderedQuantity,
         status: order.status,
-        consignmentCountry: order.consignmentCountry,
-        destinationCountry: order.destinationCountry,
-        category: order.category,
+        cartId: order.cartId,
+        product: order.product,
+        productVendor: order.productVendor,
+        productCategory: order.productCategory,
+        quantityAdddedToCart: order.quantityAdddedToCart,
+        orderedPrice: order.orderedPrice,
+        productCurrency: order.productCurrency,
+        productLocation: order.productLocation,
+        locationCountry: order.locationCountry,
+        totalDeliveryCost: order.totalDeliveryCost,
+        totalProductCost: order.totalProductCost,
+        recipientName: order.recipientName,
+        recipientPhoneNumber: order.recipientPhoneNumber,
+        recipientAddress: order.recipientAddress,
+        recipientState: order.recipientState,
+        recipientCountry: order.recipientCountry,
+        dateAddedToCart: order.dateAddedToCart,
         orderedBy: order.orderedBy,
-        consignment: order.consignment,
-        sourceLocation: order.sourceLocation,
-        destinationLocation: order.destinationLocation,
-        logisticsInsurancetype: order.logisticsInsurancetype,
+        paymentStatus: order.paymentStatus,
+        paymentMethod: order.paymentMethod,
+        status: order.status,
+        rejectionReason: order.rejectionReason,
       };
       rows.push(row);
     });
@@ -308,7 +322,6 @@ class OrdersList extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log("this is the state:", state);
   return { orders: Object.values(state.order) };
 };
 

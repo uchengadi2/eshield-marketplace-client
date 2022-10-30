@@ -25,6 +25,15 @@ import remittanceReducer from "./remittanceReducer";
 import remittancesCompleteReducer from "./remittancesCompleteReducer";
 import RemittancesPartialReducer from "./remittancesPartialReducer";
 import orderOnCompletionReducer from "./orderOnCompletionReducer";
+import relatedProductReducer from "./relatedProductReducer";
+import productsOnSaleReducer from "./productsOnSaleReducer";
+import ordersForDeliveryReducer from "./ordersForDeliveryReducer";
+import rejectedOrdersReducer from "./rejectedOrdersReducer";
+import logisticsPartnerReducer from "./logisticsPartnerReducer";
+import deliveryReducer from "./deliveryReducer";
+import onTransitDeliveryReducer from "./onTransitDeliveryReducer";
+import completedDeliveryReducer from "./completedDeliveryReducer";
+import returnedDeliveryReducer from "./returnedDeliveryReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -52,4 +61,13 @@ export default combineReducers({
   remittance: remittanceReducer,
   remittanceComplete: remittancesCompleteReducer,
   remittancePartial: RemittancesPartialReducer,
+  relatedProduct: relatedProductReducer,
+  productOnSale: productsOnSaleReducer,
+  ordersForDelivery: ordersForDeliveryReducer,
+  rejectedOrders: rejectedOrdersReducer,
+  logisticsPartner: logisticsPartnerReducer,
+  delivery: deliveryReducer,
+  onTransitDelivery: onTransitDeliveryReducer,
+  completedDelivery: completedDeliveryReducer,
+  returnedDelivery: returnedDeliveryReducer,
 });

@@ -664,7 +664,7 @@ function AssignOrderEditForm(props) {
           label=""
           id="vendor"
           name="vendor"
-          type="date"
+          type="text"
           component={renderVendorField}
         />
         {/* <Field
