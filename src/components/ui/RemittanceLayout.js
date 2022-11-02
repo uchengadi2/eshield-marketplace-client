@@ -7,13 +7,9 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { Link } from "react-router-dom";
 import history from "../../history";
-import CountryLayout from "./CountryLayout";
-import StateLayout from "./StateLayout";
-import CurrencyLayout from "./CurrencyLayout";
-import ClustersLayout from "./ClustersLayout";
-import RemittancePartialLayout from "./RemittancePartialLayout";
-import RemittancePendingLayout from "./RemittancesPendingLayout";
-import RemittanceCompletedLayout from "./RemittancesCompleteLayout";
+
+import PaymentPaymentLayout from "./PaymentPaymentLayout";
+import RemittanceRemittanceLayout from "./RemittanceRemittanceLayout";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,7 +52,7 @@ function LinkTab(props) {
       //label={route.name}
       onClick={(event) => {
         event.preventDefault();
-        history.push(`/utilities/countries`);
+        history.push(`/remittances/remittances`);
       }}
       {...props}
     />
@@ -79,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function RemittanceLayout({ token }) {
+function RemittanceLayout({ token, userId }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -98,38 +94,16 @@ function RemittanceLayout({ token }) {
         className={classes.tabs}
       >
         <Tab
-          label="Pending Remittances"
+          label="Remittances"
           {...a11yProps(0)}
           onClick={(event) => {
             event.preventDefault();
-            history.push(`/remittances/pending`);
-          }}
-        />
-        <Tab
-          label="Partial Remittances"
-          {...a11yProps(1)}
-          onClick={(event) => {
-            event.preventDefault();
-            history.push(`/remittances/partial`);
-          }}
-        />
-        <Tab
-          label="Complete Remittances"
-          {...a11yProps(2)}
-          onClick={(event) => {
-            event.preventDefault();
-            history.push(`/remittances/complete`);
+            history.push(`/remittances/remittances`);
           }}
         />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <RemittancePendingLayout token={token} />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <RemittancePartialLayout token={token} />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <RemittanceCompletedLayout token={token} />
+        <RemittanceRemittanceLayout token={token} userId={userId} />
       </TabPanel>
     </div>
   );

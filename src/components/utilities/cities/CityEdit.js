@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { fetchCity, editCity } from "../../actions";
+import { fetchCity, editCity } from "../../../actions";
 import CityEditForm from "./CityEditForm";
 
 class CityEdit extends React.Component {

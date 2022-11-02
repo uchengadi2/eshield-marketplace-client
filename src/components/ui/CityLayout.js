@@ -10,15 +10,17 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import history from "../../history";
-import CityList from "./../cities/CityList";
 import CountrySelectField from "./CountrySelectField";
 import data from "./../../apis/local";
-import CitiesInCountryList from "../cities/CitiesInCountryList";
-import CityForm from "../cities/CityForm";
+import CityList from "./../utilities/cities/CityList";
+
+import CityForm from "./../utilities/cities/CityForm";
+import CitiesInCountryList from "./../utilities/cities/CitiesInCountryList";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: "-80px",
+    marginTop: "-30px",
+    width: 1100,
   },
   headerContainer: {
     height: 20,
@@ -159,7 +161,10 @@ function CityLayout(props) {
             <Button
               variant="contained"
               className={classes.addButton}
-              onClick={() => [setOpen(true), history.push("/cities/new")]}
+              onClick={() => [
+                setOpen(true),
+                history.push("/utilities/cities/new"),
+              ]}
             >
               Add City
             </Button>
@@ -174,7 +179,7 @@ function CityLayout(props) {
         //style={{ zIndex: 1302 }}
         fullScreen={matchesXS}
         open={open}
-        onClose={() => [setOpen(false), history.push("/cities")]}
+        onClose={() => [setOpen(false), history.push("/utilities/cities")]}
       >
         <DialogContent>
           <CityForm

@@ -197,6 +197,7 @@ class LogisticsPartnerList extends React.Component {
         type: partner.type,
         logo: partner.logo,
         partnerCountry: partner.partnerCountry,
+        partnerState: partner.partnerState,
         contactPerson: partner.contactPerson,
         bankDetails: partner.bankDetails,
         location: partner.location,

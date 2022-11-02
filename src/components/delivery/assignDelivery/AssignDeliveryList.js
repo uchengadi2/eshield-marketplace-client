@@ -173,7 +173,11 @@ class AssignDeliveryList extends React.Component {
       { field: "numbering", headerName: "S/n", width: 100 },
       { field: "refNumber", headerName: "Reference Number", width: 150 },
       { field: "order", headerName: "Order", width: 200 },
-      { field: "product", headerName: "Ordered Product", width: 200 },
+      {
+        field: "logisticsPartner",
+        headerName: "Logistics Partner",
+        width: 200,
+      },
       { field: "quantity", headerName: "Quantity for Delivery", width: 150 },
       { field: "status", headerName: "Status", width: 150 },
       // {
@@ -266,6 +270,7 @@ class AssignDeliveryList extends React.Component {
       let row = {
         numbering: ++counter,
         id: delivery.id,
+        refNumber: delivery.refNumber,
         order: delivery.order,
         product: delivery.product,
         productVendor: delivery.productVendor,
@@ -285,6 +290,8 @@ class AssignDeliveryList extends React.Component {
         logisticsPartner: delivery.logisticsPartner,
         dateAssigned: delivery.dateAssigned,
         assignedBy: delivery.assignedBy,
+        logisticsPartnerState: delivery.logisticsPartnerState,
+        logisticsPartnerCountry: delivery.logisticsPartnerCountry,
       };
       rows.push(row);
     });

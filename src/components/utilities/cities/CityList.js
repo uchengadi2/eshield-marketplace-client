@@ -7,9 +7,9 @@ import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import Typography from "@material-ui/core/Typography";
-import history from "../../history";
-import { fetchCities } from "../../actions";
-import DataGridContainer from "../DataGridContainer";
+import history from "../../../history";
+import { fetchCities } from "../../../actions";
+import DataGridContainer from "../../DataGridContainer";
 import CityEdit from "./CityEdit";
 import CityDelete from "./CityDelete";
 import CityEditForm from "./CityEditForm";
@@ -76,7 +76,7 @@ class CityList extends React.Component {
           open={this.state.editOpen}
           onClose={() => [
             this.setState({ editOpen: false }),
-            history.push("/cities"),
+            history.push("/utilities/cities"),
           ]}
         >
           <DialogContent>
@@ -103,7 +103,7 @@ class CityList extends React.Component {
           open={this.state.deleteOpen}
           onClose={() => [
             this.setState({ deleteOpen: false }),
-            history.push(`/cities`),
+            history.push(`/utilities/cities`),
           ]}
         >
           <DialogContent>
@@ -127,7 +127,7 @@ class CityList extends React.Component {
           open={this.state.blacklistOpen}
           onClose={() => [
             this.setState({ blacklistOpen: false }),
-            history.push(`/cities`),
+            history.push(`/utilities/cities`),
           ]}
         >
           <DialogContent>
@@ -160,7 +160,7 @@ class CityList extends React.Component {
                   id: params.id,
                   params: params.row,
                 }),
-                history.push(`/cities/edit/${params.id}`),
+                history.push(`/utilities/cities/edit/${params.id}`),
               ]}
             />
           </strong>
@@ -178,7 +178,7 @@ class CityList extends React.Component {
               style={{ color: "black" }}
               onClick={() => [
                 this.setState({ blacklistOpen: true, id: params.id }),
-                history.push(`/cities/blacklist/${params.id}`),
+                history.push(`/utilities/cities/blacklist/${params.id}`),
               ]}
             />
           </strong>
@@ -196,7 +196,7 @@ class CityList extends React.Component {
               style={{ color: "red" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
-                history.push(`/cities/delete/${params.id}`),
+                history.push(`/utilities/cities/delete/${params.id}`),
               ]}
             />
           </strong>

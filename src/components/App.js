@@ -18,11 +18,11 @@ import UsersLayout from "./ui/UsersLayout";
 import OrdersLayout from "./ui/OrdersLayout";
 import PaymentLayout from "./ui/PaymentLayout";
 import RemittanceLayout from "./ui/RemittanceLayout";
-import ReportsLayout from "./ui/ReportsLayout";
 import PoliciesLayout from "./ui/PoliciesLayout";
 import UtilitiesLayout from "./ui/UtilitiesLayout";
 import TripsLayout from "./ui/TripLayout";
 import DeliveryLayout from "./ui/DeliveryLayout";
+import ReportsLayout from "./ui/ReportsLayout";
 
 function App() {
   const { token, setToken } = useToken();
@@ -60,9 +60,9 @@ function App() {
             <Route path="/products">
               <ProductLayout token={token} userId={userId} />
             </Route>
-            <Route path="/cities">
+            {/* <Route path="/cities">
               <CityLayout token={token} userId={userId} />
-            </Route>
+            </Route> */}
             <Route path="/users">
               <UsersLayout token={token} userId={userId} />
             </Route>
@@ -83,6 +83,9 @@ function App() {
             </Route>
             <Route path="/policies">
               <PoliciesLayout token={token} userId={userId} />
+            </Route>
+            <Route path="/reports">
+              <ReportsLayout token={token} userId={userId} />
             </Route>
             <Route path="/dashboard">
               <Dashboard />

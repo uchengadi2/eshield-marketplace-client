@@ -1115,6 +1115,7 @@ function LogisticsPartnerForm(props) {
       description: formValues["description"],
       type: partnerType,
       partnerCountry: locationCountry,
+      partnerState: locationState,
       location: {
         locationAddress: formValues["locationAddress"],
         locationCity: locationCity,

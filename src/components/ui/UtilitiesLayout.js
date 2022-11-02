@@ -11,6 +11,7 @@ import CountryLayout from "./CountryLayout";
 import StateLayout from "./StateLayout";
 import CurrencyLayout from "./CurrencyLayout";
 import ClustersLayout from "./ClustersLayout";
+import CityLayout from "./CityLayout";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -111,6 +112,14 @@ function UtilitiesLayout({ token, userId }) {
           }}
         />
         <Tab
+          label="Cities"
+          {...a11yProps(2)}
+          onClick={(event) => {
+            event.preventDefault();
+            history.push(`/utilities/cities`);
+          }}
+        />
+        <Tab
           label="Currencies"
           {...a11yProps(2)}
           onClick={(event) => {
@@ -134,11 +143,11 @@ function UtilitiesLayout({ token, userId }) {
         <StateLayout token={token} userId={userId} />
       </TabPanel>
       <TabPanel value={value} index={2}>
+        <CityLayout token={token} userId={userId} />
+      </TabPanel>
+      <TabPanel value={value} index={3}>
         <CurrencyLayout token={token} userId={userId} />
       </TabPanel>
-      {/* <TabPanel value={value} index={3}>
-        <ClustersLayout token={token} userId={userId} />
-      </TabPanel> */}
     </div>
   );
 }

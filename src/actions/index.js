@@ -720,18 +720,14 @@ export const processRemittance = (formValues, token) => {
     });
 
     //console.log(response);
-    dispatch({ type: PROCESS_REMITTANCE, payload: response.data });
-    history.push("/remittances");
+    dispatch({ type: PROCESS_REMITTANCE, payload: response.data.data.data });
   };
 };
 
 export const fetchRemittances = (tokens, status) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
   return async (dispatch) => {
-    const response = await data.get("/remittances", {
-      params: { generalRemittanceStatus: status },
-    });
-    console.log("the remittances:", response);
+    const response = await data.get("/remittances");
     dispatch({ type: FETCH_REMITTANCES, payload: response.data.data.data });
   };
 };

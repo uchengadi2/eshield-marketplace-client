@@ -20,7 +20,7 @@ class PaymentDelete extends React.Component {
 
     const handleNoDelete = () => {
       this.props.handleDialogOpenStatus();
-      history.push("/payments");
+      history.push("/payments/payments");
     };
     return (
       <>

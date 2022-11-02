@@ -4,7 +4,7 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import Button from "@material-ui/core/Button";
 import history from "../../../history";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { fetchVendor, deleteVendor } from "../../../actions";
+import { fetchDelivery, deleteDelivery } from "../../../actions";
 
 class ReturnDeliveryDelete extends React.Component {
   componentDidMount() {
@@ -14,13 +14,13 @@ class ReturnDeliveryDelete extends React.Component {
 
   render() {
     const handleDelete = () => {
-      this.props.deleteVendor(this.props.id, this.props.token);
+      this.props.deleteDelivery(this.props.id, this.props.token);
       this.props.handleDialogOpenStatus();
     };
 
     const handleNoDelete = () => {
       this.props.handleDialogOpenStatus();
-      history.push("/deliveries/completed");
+      history.push("/deliveries/assigned");
     };
     return (
       <>
@@ -57,9 +57,9 @@ class ReturnDeliveryDelete extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { category: state.category[ownProps.match.params.id] };
+  return { delivery: state.delivery[ownProps.match.params.id] };
 };
 
-export default connect(null, { fetchVendor, deleteVendor })(
+export default connect(null, { fetchDelivery, deleteDelivery })(
   ReturnDeliveryDelete
 );

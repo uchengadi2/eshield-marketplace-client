@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Field, formValueSelector, reduxForm } from "redux-form";
+import { Field, reduxForm } from "redux-form";
 import { useDispatch } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
@@ -19,8 +19,8 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import api from "./../../apis/local";
-import { EDIT_CITY } from "../../actions/types";
+import api from "./../../../apis/local";
+import { CREATE_CITY } from "../../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -134,11 +134,10 @@ const renderDescriptionField = ({
   );
 };
 
-function CityEditForm(props) {
-  const { params } = props;
+function CityForm(props) {
   const classes = useStyles();
-  const [state, setState] = useState(params.state);
-  const [country, setCountry] = useState(params.country);
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
   const [countryList, setCountryList] = useState([]);
   const [stateList, setStateList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -277,31 +276,30 @@ function CityEditForm(props) {
   const onSubmit = (formValues) => {
     setLoading(true);
     const data = {
-      name: formValues.name ? formValues.name : params.name,
-      code: formValues.code ? formValues.code : params.code,
-
-      description: formValues.description
-        ? formValues.description
-        : params.description,
+      name: formValues.name,
+      code: formValues.code
+        ? formValues.code
+        : "CT-" + Math.floor(Math.random() * 100000),
+      description: formValues.description,
       country: country,
       state: state,
       createdBy: props.userId,
     };
-    if (formValues) {
+    if (data) {
       const createForm = async () => {
         api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-        const response = await api.patch(`/cities/${params.id}`, data);
+        const response = await api.post(`/cities`, data);
 
         if (response.data.status === "success") {
           dispatch({
-            type: EDIT_CITY,
+            type: CREATE_CITY,
             payload: response.data.data.data,
           });
 
-          props.handleSuccessfulEditSnackbar(
-            `${response.data.data.data.name} City is updated successfully!!!`
+          props.handleSuccessfulCreateSnackbar(
+            `${response.data.data.data.name} City is added successfully!!!`
           );
-          props.handleEditDialogOpenStatus();
+          props.handleDialogOpenStatus();
           setLoading(false);
         } else {
           props.handleFailedSnackbar(
@@ -325,12 +323,12 @@ function CityEditForm(props) {
           style={{ color: "grey", fontSize: "1.3em" }}
           component="legend"
         >
-          City Details
+          Enter City Details
         </FormLabel>
       </Grid>
       <Box
         component="form"
-        id="cityEditForm"
+        id="cityForm"
         // onSubmit={onSubmit}
         sx={{
           width: 500,
@@ -346,7 +344,6 @@ function CityEditForm(props) {
               label=""
               id="name"
               name="name"
-              defaultValue={params.name}
               type="text"
               component={renderNameField}
             />
@@ -356,7 +353,6 @@ function CityEditForm(props) {
               label=""
               id="code"
               name="code"
-              defaultValue={params.code}
               type="text"
               component={renderCityCodeField}
             />
@@ -383,7 +379,6 @@ function CityEditForm(props) {
           label=""
           id="description"
           name="description"
-          defaultValue={params.description}
           type="text"
           component={renderDescriptionField}
         />
@@ -406,5 +401,5 @@ function CityEditForm(props) {
 }
 
 export default reduxForm({
-  form: "cityEditForm",
-})(CityEditForm);
+  form: "cityForm",
+})(CityForm);

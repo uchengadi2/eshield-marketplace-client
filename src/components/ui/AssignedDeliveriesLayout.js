@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AssignedDeliveries({ token }) {
+function AssignedDeliveries({ token, userId }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [alert, setAlert] = useState({
@@ -123,7 +123,7 @@ function AssignedDeliveries({ token }) {
                 className={classes.addButton}
                 onClick={() => [
                   setOpen(true),
-                  history.push("/deliveries/assign/new"),
+                  history.push("/deliveries/assigned/new"),
                 ]}
               >
                 Assign Order for Delivery
@@ -133,7 +133,7 @@ function AssignedDeliveries({ token }) {
           </Toolbar>
         </Grid>
         <Grid item className={classes.contentContainer}>
-          <AssignDeliveryList token={token} />
+          <AssignDeliveryList token={token} userId={userId} />
           {/* <DataGridText /> */}
         </Grid>
       </Grid>
@@ -141,12 +141,15 @@ function AssignedDeliveries({ token }) {
         //style={{ zIndex: 1302 }}
         fullScreen={matchesXS}
         open={open}
-        onClose={() => [setOpen(false), history.push("/orders")]}
+        onClose={() => [setOpen(false), history.push("/deliveries/assigned")]}
       >
         <DialogContent>
           <AssignDeliveryCreateForm
             token={token}
+            userId={userId}
             handleDialogOpenStatus={handleDialogOpenStatus}
+            handleSuccessfulCreateSnackbar={handleSuccessfulCreateSnackbar}
+            handleFailedSnackbar={handleFailedSnackbar}
           />
         </DialogContent>
       </Dialog>

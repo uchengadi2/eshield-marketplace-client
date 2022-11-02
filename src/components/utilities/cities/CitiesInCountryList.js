@@ -6,11 +6,11 @@ import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import Typography from "@material-ui/core/Typography";
-import history from "../../history";
-import DataGridContainer from "../DataGridContainer";
+import history from "../../../history";
+import DataGridContainer from "../../DataGridContainer";
 import CityEdit from "./CityEdit";
 import CityDelete from "./CityDelete";
-import data from "./../../apis/local";
+import data from "./../../../apis/local";
 
 function CitiesInCountryList(props) {
   const [cityList, setCityList] = useState([]);

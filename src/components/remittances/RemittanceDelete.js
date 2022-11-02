@@ -20,7 +20,7 @@ class RemittanceDelete extends React.Component {
 
     const handleNoDelete = () => {
       this.props.handleDialogOpenStatus();
-      history.push("/remittances");
+      history.push("/remittances/remittances");
     };
     return (
       <>

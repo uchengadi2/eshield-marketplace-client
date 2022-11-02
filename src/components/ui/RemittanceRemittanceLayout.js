@@ -10,12 +10,13 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import history from "../../history";
-import OrdersList from "../orders/OrdersList";
-import OrdersForDeliveryList from "../orders/OrdersForDeliveryList";
-import OrderFormContainer from "../orders/OrderFormContainer";
-import OrderAssignmentFormContainer from "../orders/OrderAssignmentFormContainer";
-import CompletedDeliveryCreateForm from "../delivery/completed/CompletedDeliveryCreateForm";
-import CompletedDeliveryList from "../delivery/completed/CompletedDeliveryList";
+
+import OnTransitDeliveryCreateForm from "../delivery/ontransit/OnTransitDeliveryCreateForm";
+import OnTransitDeliveryList from "../delivery/ontransit/OnTransitDeliveryList";
+import PaymentList from "../payments/PaymentList";
+import AddPaymentForm from "../payments/AddPaymentForm";
+import RemittancesList from "../remittances/RemittancesList";
+import RemittanceForm from "../remittances/RemittanceForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   addButton: {
     borderRadius: 10,
     height: 30,
-    width: 220,
+    width: 200,
     marginLeft: 10,
     marginTop: 2,
     marginBottom: 20,
@@ -61,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CompletedDelivery({ token }) {
+function RemittanceRemittanceLayout({ token, userId }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [alert, setAlert] = useState({
@@ -123,17 +124,17 @@ function CompletedDelivery({ token }) {
                 className={classes.addButton}
                 onClick={() => [
                   setOpen(true),
-                  history.push("/deliveries/completed/new"),
+                  history.push("/remittances/remittances/new"),
                 ]}
               >
-                Mark Delivery as Fullfilled
+                Process remittance
               </Button>
             </Grid>
             <Grid item></Grid>
           </Toolbar>
         </Grid>
         <Grid item className={classes.contentContainer}>
-          <CompletedDeliveryList token={token} />
+          <RemittancesList token={token} userId={userId} />
           {/* <DataGridText /> */}
         </Grid>
       </Grid>
@@ -141,11 +142,15 @@ function CompletedDelivery({ token }) {
         //style={{ zIndex: 1302 }}
         fullScreen={matchesXS}
         open={open}
-        onClose={() => [setOpen(false), history.push("/deliveries/completed")]}
+        onClose={() => [
+          setOpen(false),
+          history.push("/remittances/remittances"),
+        ]}
       >
         <DialogContent>
-          <CompletedDeliveryCreateForm
+          <RemittanceForm
             token={token}
+            userId={userId}
             handleDialogOpenStatus={handleDialogOpenStatus}
             handleSuccessfulCreateSnackbar={handleSuccessfulCreateSnackbar}
             handleFailedSnackbar={handleFailedSnackbar}
@@ -184,4 +189,4 @@ function CompletedDelivery({ token }) {
   );
 }
 
-export default CompletedDelivery;
+export default RemittanceRemittanceLayout;

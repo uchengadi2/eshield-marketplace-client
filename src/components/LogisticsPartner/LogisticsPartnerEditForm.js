@@ -1029,6 +1029,7 @@ function LogisticsPartnerEditForm(props) {
         : params.description,
       type: partnerType,
       partnerCountry: locationCountry,
+      partnerState: locationState,
       location: {
         locationAddress: formValues["locationAddress"]
           ? formValues["locationAddress"]

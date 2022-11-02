@@ -7,13 +7,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { Link } from "react-router-dom";
 import history from "../../history";
-import CountryLayout from "./CountryLayout";
-import StateLayout from "./StateLayout";
-import CurrencyLayout from "./CurrencyLayout";
-import ClustersLayout from "./ClustersLayout";
-import PaymentPendingLayout from "./PaymentPendingLayout";
-import PaymentCompletedLayout from "./PaymentCompletedLayout";
-import PartialPaymentLayout from "./PartialPaymentLayout";
+
+import PaymentPaymentLayout from "./PaymentPaymentLayout";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,7 +51,7 @@ function LinkTab(props) {
       //label={route.name}
       onClick={(event) => {
         event.preventDefault();
-        history.push(`/payments`);
+        history.push(`/payments/process`);
       }}
       {...props}
     />
@@ -98,38 +93,16 @@ function PaymentLayout({ token, userId }) {
         className={classes.tabs}
       >
         <Tab
-          label="Pending Payments"
+          label="Payments"
           {...a11yProps(0)}
           onClick={(event) => {
             event.preventDefault();
-            history.push(`/payments/pending`);
-          }}
-        />
-        <Tab
-          label="Partial Payments"
-          {...a11yProps(1)}
-          onClick={(event) => {
-            event.preventDefault();
-            history.push(`/payments/partial`);
-          }}
-        />
-        <Tab
-          label="Complete Payments"
-          {...a11yProps(2)}
-          onClick={(event) => {
-            event.preventDefault();
-            history.push(`/payments/complete`);
+            history.push(`/payments/process`);
           }}
         />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <PaymentPendingLayout token={token} userId={userId} />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <PartialPaymentLayout token={token} userId={userId} />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <PaymentCompletedLayout token={token} userId={userId} />
+        <PaymentPaymentLayout token={token} userId={userId} />
       </TabPanel>
     </div>
   );

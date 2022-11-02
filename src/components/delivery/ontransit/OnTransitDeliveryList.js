@@ -173,7 +173,11 @@ class OnTransitDeliveryList extends React.Component {
       { field: "numbering", headerName: "S/n", width: 100 },
       { field: "refNumber", headerName: "Reference Number", width: 150 },
       { field: "order", headerName: "Order", width: 200 },
-      { field: "product", headerName: "Ordered Product", width: 200 },
+      {
+        field: "logisticsPartner",
+        headerName: "Logistics Partner",
+        width: 200,
+      },
       { field: "quantity", headerName: "Quantity for Delivery", width: 150 },
       { field: "status", headerName: "Status", width: 150 },
       // {
@@ -267,6 +271,7 @@ class OnTransitDeliveryList extends React.Component {
         numbering: ++counter,
         id: delivery.id,
         order: delivery.order,
+        refNumber: delivery.refNumber,
         product: delivery.product,
         productVendor: delivery.productVendor,
         status: delivery.status,
@@ -285,6 +290,9 @@ class OnTransitDeliveryList extends React.Component {
         logisticsPartner: delivery.logisticsPartner,
         dateAssigned: delivery.dateAssigned,
         assignedBy: delivery.assignedBy,
+        deliveryCommencementDate: delivery.deliveryCommencementDate,
+        logisticsPartnerState: delivery.logisticsPartnerState,
+        logisticsPartnerCountry: delivery.logisticsPartnerCountry,
       };
       rows.push(row);
     });

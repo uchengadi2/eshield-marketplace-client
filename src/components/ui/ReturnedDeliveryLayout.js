@@ -141,12 +141,14 @@ function ReturnedDelivery({ token }) {
         //style={{ zIndex: 1302 }}
         fullScreen={matchesXS}
         open={open}
-        onClose={() => [setOpen(false), history.push("/orders")]}
+        onClose={() => [setOpen(false), history.push("/deliveries/returned")]}
       >
         <DialogContent>
           <ReturnDeliveryCreateForm
             token={token}
             handleDialogOpenStatus={handleDialogOpenStatus}
+            handleSuccessfulCreateSnackbar={handleSuccessfulCreateSnackbar}
+            handleFailedSnackbar={handleFailedSnackbar}
           />
         </DialogContent>
       </Dialog>

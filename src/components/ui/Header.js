@@ -170,14 +170,15 @@ const Header = (props) => {
       activeIndex: 1,
     },
     { name: "Products", link: "/products", activeIndex: 2 },
-    { name: "Cities", link: "/cities", activeIndex: 3 },
-    { name: "Users", link: "/users", activeIndex: 4 },
-    { name: "Orders", link: "/orders", activeIndex: 5 },
-    { name: "Deliveries", link: "/deliveries", activeIndex: 6 },
-    { name: "Payments", link: "/payments", activeIndex: 7 },
-    { name: "Remittances", link: "/remittances", activeIndex: 8 },
+    // { name: "Cities", link: "/cities", activeIndex: 3 },
+    { name: "Users", link: "/users", activeIndex: 3 },
+    { name: "Orders", link: "/orders", activeIndex: 4 },
+    { name: "Deliveries", link: "/deliveries", activeIndex: 5 },
+    { name: "Payments", link: "/payments", activeIndex: 6 },
+    { name: "Remittances", link: "/remittances", activeIndex: 7 },
+    { name: "Reports", link: "/reports", activeIndex: 8 },
     { name: "Utilities", link: "/utilities", activeIndex: 9 },
-    // { name: "Settings", link: "/policies", activeIndex: 10 },
+
     // { name: "Sign Out", link: "/logout" },
   ];
 

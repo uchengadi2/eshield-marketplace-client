@@ -1,24 +1,33 @@
 import React from "react";
 import { connect } from "react-redux";
 import Dialog from "@material-ui/core/Dialog";
+import Snackbar from "@material-ui/core/Snackbar";
 import DialogContent from "@material-ui/core/DialogContent";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
+import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import Typography from "@material-ui/core/Typography";
 import history from "../../history";
 import { fetchRemittances } from "../../actions";
 import DataGridContainer from "../DataGridContainer";
-import RemittanceEdit from "./RemittanceEdit";
+
 import RemittanceDelete from "./RemittanceDelete";
+import RemittanceEditForm from "./RemittanceEditForm";
 
 class RemittanceList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       editOpen: false,
+      paymentOpen: false,
       deleteOpen: false,
       id: null,
       params: {},
+      alert: {
+        open: false,
+        message: "",
+        backgroundColor: "",
+      },
     };
   }
   componentDidMount() {
@@ -35,6 +44,34 @@ class RemittanceList extends React.Component {
     this.setState({ editOpen: false });
   };
 
+  handleBookPaymentDialogOpenStatus = () => {
+    // history.push("/categories/new");
+    this.setState({ paymentOpen: false });
+  };
+
+  handleSuccessfulEditSnackbar = (message) => {
+    // history.push("/categories/new");
+    this.setState({ editOpen: false });
+    this.setState({
+      alert: {
+        open: true,
+        message: message,
+        backgroundColor: "#4BB543",
+      },
+    });
+  };
+
+  handleFailedSnackbar = (message) => {
+    this.setState({
+      alert: {
+        open: true,
+        message: message,
+        backgroundColor: "#FF3232",
+      },
+    });
+    this.setState({ editOpen: true });
+  };
+
   renderEditDialogForm = () => {
     //token will be used here
     return (
@@ -44,15 +81,43 @@ class RemittanceList extends React.Component {
           open={this.state.editOpen}
           onClose={() => [
             this.setState({ editOpen: false }),
-            history.push("/remittances"),
+            history.push("/remittances/remittances"),
           ]}
         >
           <DialogContent>
-            <RemittanceEdit
+            <RemittanceEditForm
               token={this.props.token}
               params={this.state.params}
               handleEditDialogOpenStatus={this.handleEditDialogOpenStatus}
+              handleFailedSnackbar={this.handleFailedSnackbar}
+              handleSuccessfulEditSnackbar={this.handleSuccessfulEditSnackbar}
             />
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  };
+
+  renderPaymentDialogForm = () => {
+    //token will be used here
+    return (
+      <>
+        <Dialog
+          //style={{ zIndex: 1302 }}
+          open={this.state.paymentOpen}
+          onClose={() => [
+            this.setState({ paymentOpen: false }),
+            history.push("/remittances/remittances"),
+          ]}
+        >
+          <DialogContent>
+            {/* <PaymentBooking
+              token={this.props.token}
+              params={this.state.params}
+              handleBookPaymentDialogOpenStatus={
+                this.handleBookPaymentDialogOpenStatus
+              }
+            /> */}
           </DialogContent>
         </Dialog>
       </>
@@ -64,11 +129,11 @@ class RemittanceList extends React.Component {
     return (
       <>
         <Dialog
-          // style={{ zIndex: 1302 }}
+          //style={{ zIndex: 1302 }}
           open={this.state.deleteOpen}
           onClose={() => [
             this.setState({ deleteOpen: false }),
-            history.push(`/remittances`),
+            history.push(`/remittances/remittances`),
           ]}
         >
           <DialogContent>
@@ -86,36 +151,26 @@ class RemittanceList extends React.Component {
     let rows = [];
     let counter = 0;
     const columns = [
-      { field: "numbering", headerName: "S/n", width: 70 },
-      { field: "id", headerName: "Remittance Id", width: 200 },
-      { field: "orderNumber", headerName: "Order Number", width: 200 },
-
+      { field: "numbering", headerName: "S/n", width: 100 },
+      { field: "refNumber", headerName: "Reference Number", width: 150 },
       {
-        field: "payment",
-        headerName: "Payment",
-        width: 200,
+        field: "remittanceStatus",
+        headerName: "Remittance Status",
+        width: 150,
+      },
+      { field: "payment", headerName: "Payment", width: 200 },
+      { field: "vendor", headerName: "Vendor", width: 200 },
+      // {
+      //   field: "totalProductAmount",
+      //   headerName: "Total Amount",
+      //   width: 200,
+      // },
+      {
+        field: "amountRemitted",
+        headerName: "Amount Remitted",
+        width: 150,
       },
 
-      {
-        field: "vendor",
-        headerName: "Vendor",
-        width: 200,
-      },
-      {
-        field: "generalRemittanceStatus",
-        headerName: "General Remittance Status",
-        width: 200,
-      },
-      {
-        field: "paymentPhase",
-        headerName: "Payment Phase",
-        width: 200,
-      },
-      {
-        field: "prevailingBaseCurrency",
-        headerName: "Base Currency",
-        width: 200,
-      },
       {
         field: "editaction",
         headerName: "",
@@ -131,12 +186,33 @@ class RemittanceList extends React.Component {
                   id: params.id,
                   params: params.row,
                 }),
-                history.push(`/remittances/edit/${params.id}`),
+                history.push(`/remittances/remittances/edit/${params.id}`),
               ]}
             />
           </strong>
         ),
       },
+      // {
+      //   field: "bookpaymentaction",
+      //   headerName: "",
+      //   width: 30,
+      //   description: "Update payment",
+      //   renderCell: (params) => (
+      //     <strong>
+      //       {/* {params.value.getFullYear()} */}
+      //       <AttachMoneyIcon
+      //         onClick={() => [
+      //           this.setState({
+      //             paymentOpen: true,
+      //             id: params.id,
+      //             params: params.row,
+      //           }),
+      //           history.push(`/payments/payments/bookings/${params.id}`),
+      //         ]}
+      //       />
+      //     </strong>
+      //   ),
+      // },
       {
         field: "deleteaction",
         headerName: "",
@@ -149,7 +225,7 @@ class RemittanceList extends React.Component {
               style={{ color: "red" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
-                history.push(`/remittances/delete/${params.id}`),
+                history.push(`/remittances/remittances/delete/${params.id}`),
               ]}
             />
           </strong>
@@ -157,33 +233,27 @@ class RemittanceList extends React.Component {
       },
     ];
     this.props.remittances.map((remittance) => {
-      console.log("thii is the list remittance:", remittance);
       let row = {
+        numbering: ++counter,
         id: remittance.id,
-        orderNumber: remittance.order[0],
-        vendor: remittance.vendor[0],
-        payment: remittance.payment[0],
-        prevailingBaseCurrency: remittance.prevailingBaseCurrency,
-        generalRemittanceStatus: remittance.generalRemittanceStatus,
-        paymentPhase: remittance.paymentPhase,
-        agreedRemittanceCurrency:
-          remittance.remittance.agreedRemittanceCurrency[0],
-        agreedRemittanceBaseExchangeRate:
-          remittance.remittance.agreedRemittanceBaseExchangeRate,
-        paymentRemittanceDate: remittance.remittance.paymentRemittanceDate,
-        totalAmountExpectedForRemittance:
-          remittance.remittance.totalAmountExpectedForRemittance,
-        actualAmountRemitted: remittance.remittance.actualAmountRemitted,
-        remittanceStatus: remittance.remittance.remittanceStatus,
-        agreedRetentionCurrency:
-          remittance.retention.agreedRetentionCurrency[0],
-        agreedRetentionBaseExchangeRate:
-          remittance.retention.agreedRetentionBaseExchangeRate,
-        paymentRetentionDate: remittance.retention.paymentRetentionDate,
-        totalAmountExpectedForRetention:
-          remittance.retention.totalAmountExpectedForRetention,
-        amountRetained: remittance.retention.amountRetained,
-        retentionStatus: remittance.retention.retentionStatus,
+        refNumber: remittance.refNumber,
+        order: remittance.order,
+        vendor: remittance.vendor,
+        customer: remittance.customer,
+        payment: remittance.payment,
+        remittanceStatus: remittance.remittanceStatus,
+        amountRemitted: remittance.amountRemitted,
+        totalRemittableAmount: remittance.totalRemittableAmount,
+        dateRemitted: remittance.dateRemitted,
+        remittanceMethod: remittance.remittanceMethod,
+        bankName: remittance.bankName,
+        bankAccountNumber: remittance.bankAccountNumber,
+        accountTitle: remittance.accountTitle,
+        chequeNumber: remittance.chequeNumber,
+        bankChequeOwner: remittance.bankChequeOwner,
+        postedBy: remittance.postedBy,
+        datePosted: remittance.datePosted,
+        remittanceCurrency: remittance.remittanceCurrency,
       };
       rows.push(row);
     });
@@ -196,6 +266,17 @@ class RemittanceList extends React.Component {
         {this.renderDeleteDialogForm()}
         {this.renderEditDialogForm()}
         {this.renderPaymentsList()}
+        {this.renderPaymentDialogForm()}
+        <Snackbar
+          open={this.state.alert.open}
+          message={this.state.alert.message}
+          ContentProps={{
+            style: { backgroundColor: this.state.alert.backgroundColor },
+          }}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => this.setState({ alert: { ...alert, open: false } })}
+          autoHideDuration={4000}
+        />
       </>
     );
   }

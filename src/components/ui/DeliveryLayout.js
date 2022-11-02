@@ -126,7 +126,7 @@ function DeliveryLayout({ token, userId, vendorId, roleId }) {
           {...a11yProps(1)}
           onClick={(event) => {
             event.preventDefault();
-            history.push(`/deliveries/completed`);
+            history.push(`/deliveries/fullfilled`);
           }}
         />
 

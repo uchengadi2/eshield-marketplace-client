@@ -2,9 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import Button from "@material-ui/core/Button";
-import history from "../../history";
+import history from "../../../history";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { fetchCity, deleteCity } from "../../actions";
+import { fetchCity, deleteCity } from "../../../actions";
 
 class CityDelete extends React.Component {
   componentDidMount() {
@@ -20,7 +20,7 @@ class CityDelete extends React.Component {
 
     const handleNoDelete = () => {
       this.props.handleDialogOpenStatus();
-      history.push("/cities");
+      history.push("/utilities/cities");
     };
     return (
       <>

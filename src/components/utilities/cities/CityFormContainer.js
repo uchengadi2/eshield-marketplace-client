@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { createCity } from "./../../actions";
+import { createCity } from "./../../../actions";
 import CityForm from "./CityForm";
 
 class CityFormContainer extends React.Component {
