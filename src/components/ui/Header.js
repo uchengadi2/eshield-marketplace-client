@@ -18,9 +18,14 @@ import MenuIcon from "@material-ui/icons/Menu";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import history from "./../../history";
+import UserLogOut from "../users/UserLogOut";
 
 import logo from "./../../assets/logo.svg";
 import { RouterRounded } from "@material-ui/icons";
+import UserLogout from "../authForms/UserLogout";
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -134,10 +139,17 @@ const Header = (props) => {
     typeof navigator !== "undefined" &&
     /iPad|iPhone|iPod/.test(navigator.userAgent);
   const matches = useMediaQuery(theme.breakpoints.down("md"));
+  const matchesXS = useMediaQuery(theme.breakpoints.down("xs"));
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
+  const [openLogOut, setOpenLogOut] = useState(false);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    backgroundColor: "",
+  });
 
   const handleChange = (e, newValue) => {
     props.setValue(newValue);
@@ -156,6 +168,11 @@ const Header = (props) => {
   const handleClose = (e) => {
     setAnchorEl(null);
     setOpenMenu(false);
+  };
+
+  const handleLogOutDialogOpenStatus = () => {
+    // history.push("/categories/new");
+    setOpenLogOut(false);
   };
 
   const menuOptions = [];
@@ -300,44 +317,59 @@ const Header = (props) => {
       </Tabs>
       <Button
         variant="contained"
-        component={Link}
-        to="/logout"
-        color="secondary"
-        className={classes.button}
-        onClick={() => props.setValue(12)}
+        // component={Link}
+        // to="/logout"
+        color="inherit"
+        className={classes.buttonSignOut}
+        onClick={() => [setOpenLogOut(true), history.push("/")]}
       >
         Sign Out
       </Button>
-      {/* <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        open={openMenu}
-        onClose={handleClose}
-        classes={{ paper: classes.menu }}
-        MenuListProps={{ onMouseLeave: handleClose }}
-        elevation={0}
-        style={{ zIndex: 1302 }}
-        keepMounted
-      >
-        {menuOptions.map((option, i) => (
-          <MenuItem
-            key={`${option}${i}`}
-            component={Link}
-            to={option.link}
-            classes={{ root: classes.menuItem }}
-            onClick={(event) => {
-              handleMenuItemClick(event, i);
-              props.setValue(1);
-              handleClose();
-            }}
-            selected={i === props.selectedIndex && props.value === 1}
-          >
-            {option.name}
-          </MenuItem>
-        ))}
-      </Menu> */}
     </React.Fragment>
   );
+
+  const renderLogOutForm = () => {
+    return (
+      <Dialog
+        //style={{ zIndex: 1302 }}
+        fullScreen={matchesXS}
+        open={openLogOut}
+        onClose={() => [setOpenLogOut(false), history.push("/")]}
+      >
+        <DialogContent>
+          <UserLogOut
+            setToken={props.setToken}
+            setUserId={props.setUserId}
+            initiateIsSignedOut={props.initiateIsSignedOut}
+            handleLogOutDialogOpenStatus={handleLogOutDialogOpenStatus}
+            token={props.token}
+          />
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
+  // const renderLogout = () => {
+  //   return (
+  //     <Dialog
+  //       style={{ zIndex: 1302 }}
+  //       fullScreen
+  //       open={openLogout}
+  //       onClose={() => [setOpenLogout(false), history.push("/")]}
+  //       fullWidth
+  //       maxWidth="md"
+  //     >
+  //       <DialogContent>
+  //         <UserLogout
+  //           token={props.token}
+  //           handleLogoutProcess={props.handleLogoutProcess}
+  //           setToken={props.setToken}
+  //           // handleDialogOpenStatus={handleDialogOpenStatus}
+  //         />
+  //       </DialogContent>
+  //     </Dialog>
+  //   );
+  // };
 
   const drawer = (
     <React.Fragment>
@@ -421,6 +453,7 @@ const Header = (props) => {
             </Button>
             {/* {matches ? drawer : tabs} */}
             {tabs}
+            {renderLogOutForm()}
           </Toolbar>
         </AppBar>
       </ElevationScroll>

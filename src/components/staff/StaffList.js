@@ -188,6 +188,7 @@ class StaffList extends React.Component {
         ),
       },
     ];
+
     this.props.users.map((user) => {
       let row = {
         numbering: ++counter,

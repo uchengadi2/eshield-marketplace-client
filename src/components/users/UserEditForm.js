@@ -179,6 +179,7 @@ function UserEditForm(props) {
   const classes = useStyles();
   const [role, setRole] = useState(params.role);
   const [type, setType] = useState(params.type);
+  const [userType, setUserType] = useState(params.type);
   const [loading, setLoading] = useState(false);
   const [vendorList, setVendorList] = useState([]);
   const [vendor, setVendor] = useState(params.vendor);
@@ -211,6 +212,10 @@ function UserEditForm(props) {
 
   const handleTypeChange = (event) => {
     setType(event.target.value);
+  };
+
+  const handleUserTypeChange = (event) => {
+    setUserType(event.target.value);
   };
 
   const handleVendorChange = (event) => {
@@ -250,9 +255,9 @@ function UserEditForm(props) {
           >
             <MenuItem value={"admin"}>Admin</MenuItem>
             <MenuItem value={"user"}>User</MenuItem>
-            <MenuItem value={"partner_user"}>Partner User</MenuItem>
-            <MenuItem value={"partner_admin"}>Partner Admin</MenuItem>
-            <MenuItem value={"customer"}>Customer</MenuItem>
+            {/* <MenuItem value={"partner_user"}>Partner User</MenuItem>
+            <MenuItem value={"partner_admin"}>Partner Admin</MenuItem> */}
+            <MenuItem value={"staff"}>Staff</MenuItem>
           </Select>
           <FormHelperText>Select User Role</FormHelperText>
         </FormControl>
@@ -338,6 +343,36 @@ function UserEditForm(props) {
     );
   };
 
+  const renderUserTypeField = ({
+    input,
+    label,
+    meta: { touched, error, invalid },
+    type,
+    id,
+    ...custom
+  }) => {
+    return (
+      <Box>
+        <FormControl variant="outlined">
+          {/* <InputLabel id="vendor_city">City</InputLabel> */}
+          <Select
+            labelId="userType"
+            id="userType"
+            value={userType}
+            onChange={handleUserTypeChange}
+            label="user Type"
+            style={{ width: 500, height: 38, marginTop: 15 }}
+          >
+            <MenuItem value={"staff"}>Staff</MenuItem>
+            <MenuItem value={"customer"}>Customer</MenuItem>
+            <MenuItem value={"partner"}>Partner</MenuItem>
+          </Select>
+          <FormHelperText>User Type</FormHelperText>
+        </FormControl>
+      </Box>
+    );
+  };
+
   const buttonContent = () => {
     return <React.Fragment> Submit</React.Fragment>;
   };
@@ -350,8 +385,8 @@ function UserEditForm(props) {
       role: role,
       // password: formValues.password,
       // passwordConfirm: formValues.passwordConfirm,
-      type: type,
-      vendor: vendor,
+      type: userType,
+      //vendor: vendor,
     };
 
     if (data) {
@@ -401,7 +436,7 @@ function UserEditForm(props) {
         // onSubmit={onSubmit}
         sx={{
           width: 500,
-          height: 450,
+          height: 400,
         }}
         noValidate
         autoComplete="off"
@@ -451,20 +486,28 @@ function UserEditForm(props) {
           component={renderUserRoleField}
         />
 
-        <Field
+        {/* <Field
           label=""
           id="type"
           name="type"
           type="text"
           component={renderTypeRadioField}
-        />
+        /> */}
         <Field
+          label=""
+          id="userType"
+          name="userType"
+          type="text"
+          component={renderUserTypeField}
+          style={{ marginTop: 10 }}
+        />
+        {/* <Field
           label=""
           id="vendor"
           name="vendor"
           type="text"
           component={renderVendorField}
-        />
+        /> */}
 
         <Button
           variant="contained"

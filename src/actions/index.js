@@ -249,7 +249,7 @@ export const deleteCategory = (id, token) => {
     history.push("/categories");
   };
 };
-
+////////////////////////////////// Users ///////////////////////////////
 //user resource crud operation
 export const createUser = (formValues, token) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -265,7 +265,6 @@ export const fetchUsers = (tokens) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
   return async (dispatch) => {
     const response = await data.get("/users");
-    console.log("the users are:", response);
     dispatch({ type: FETCH_USERS, payload: response.data.data.data });
   };
 };

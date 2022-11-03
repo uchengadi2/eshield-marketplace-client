@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { Field, reduxForm } from "redux-form";
 import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
+import Box from "@material-ui/core/Box";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import Snackbar from "@material-ui/core/Snackbar";
 
 import { TextField } from "@material-ui/core";
+//import background from "./../../logistic_assets/cover_image_1.png";
 import background from "./../../assets/images/covers/footage_image.png";
+
+import api from "./../../apis/local";
 
 const useStyles = makeStyles((theme) => ({
   sendButton: {
@@ -15,9 +19,10 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 10,
     height: 40,
     width: 100,
-    marginLeft: 200,
+    marginLeft: 170,
     marginBottom: 10,
-    fontSize: "1.25rem",
+    marginTop: 30,
+    fontSize: "1.15rem",
     backgroundColor: "#FFBA60",
     color: "white",
     "&:hover": {
@@ -43,10 +48,72 @@ const useStyles = makeStyles((theme) => ({
       // backgroundImage: `url(${mobileBackground})`,
       backgroundAttachment: "inherit",
     },
+    inputText: {
+      marginLeft: 400,
+      width: "100%",
+      color: "white",
+    },
+  },
+  boxContainer: {
+    backgroundColor: "white",
+    marginLeft: 400,
+    width: "100%",
+    margin: 40,
+    padding: 30,
+    borderRadius: 80,
   },
 }));
 
-const SignInForm = (props) => {
+const renderTextField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      error={touched && invalid}
+      helperText={touched && error}
+      variant="outlined"
+      label={label}
+      id={input.name}
+      defaultValue={input.value}
+      fullWidth
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+    />
+  );
+};
+
+const renderPasswordField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      error={touched && invalid}
+      helperText={touched && error}
+      variant="outlined"
+      defaultValue={input.value}
+      label={label}
+      id={input.name}
+      fullWidth
+      type={type}
+      style={{ marginTop: "1em" }}
+      {...custom}
+      onChange={input.onChange}
+    />
+  );
+};
+
+const LoginForm = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const [email, setEmail] = useState("");
@@ -58,139 +125,159 @@ const SignInForm = (props) => {
     email: "",
     password: "",
   });
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    backgroundColor: "",
+  });
+  const [loading, setLoading] = useState(false);
 
-  // const handleFormChange = (event) => {
-  //   let loginParamsNew = { ...loginParams };
-  //   let val = event.target.value;
-  //   loginParamsNew[event.target.name] = val;
-  //   this.setState({
-  //     loginParams: loginParamsNew,
-  //   });
-  // };
-
-  // const login = (event) => {
-  //   let email = loginParams.email;
-  //   let user_password = loginParams.password;
-  //   if (email === "admin" && password === "123") {
-  //     localStorage.setItem("token", "T");
-  //     this.setState({
-  //       islogged: true,
-  //     });
-  //   }
-  //   event.preventDefault();
-  // };
-
-  const renderTextField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        error={touched && invalid}
-        helperText={touched && error}
-        variant="outlined"
-        label={label}
-        id={input.name}
-        fullWidth
-        type={type}
-        {...custom}
-        {...input}
-      />
-    );
+  const buttonContent = () => {
+    return <React.Fragment>Login</React.Fragment>;
   };
 
-  const renderPasswordField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        error={touched && invalid}
-        helperText={touched && error}
-        variant="outlined"
-        //placeholder={label}
-        //value={"password1234"}
-        label={label}
-        id={input.name}
-        fullWidth
-        type={type}
-        style={{ marginTop: "1em" }}
-        {...custom}
-      />
-    );
+  const handleSuccessfulLoginInSnackbar = (message) => {
+    // setBecomePartnerOpen(false);
+    setAlert({
+      open: true,
+      message: message,
+      backgroundColor: "#4BB543",
+    });
   };
 
+  const handleFailedLoginInSnackbar = (message) => {
+    setAlert({
+      open: true,
+      message: message,
+
+      backgroundColor: "#FF3232",
+    });
+    //setBecomePartnerOpen(true);
+  };
+
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+  let count = 0;
   const onSubmit = (formValues) => {
+    setLoading(true);
+
+    if (!formValues["email"] || !formValues["password"]) {
+      handleFailedLoginInSnackbar(
+        "Please enter your email and password login credentials and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!validateEmail(formValues["email"])) {
+      handleFailedLoginInSnackbar(
+        "You just entered an invalid email address. Please correct it and try again"
+      );
+      setLoading(false);
+
+      return;
+    }
+
+    if (formValues) {
+      const createForm = async () => {
+        api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+        const response = await api.post(`/users/login`, formValues);
+        console.log("login response:", response);
+
+        if (response.data.status === "success") {
+          //props.onSubmit(formValues);
+          ++count;
+          console.log("successfully logged in");
+          //setLoading(false);
+        } else {
+          props.handleFailedLoginInSnackbar("Incorrect Username or Password");
+        }
+      };
+      createForm().catch((err) => {
+        handleFailedLoginInSnackbar("Incorrect Username or Password");
+        setLoading(false);
+        console.log("err:", err.message);
+      });
+    }
+
     props.onSubmit(formValues);
-    //console.log("login form values are:", formValues);
+    setLoading(true);
   };
 
   return (
     <form id="loginForm" className={classes.background}>
-      <Grid item>
+      <Box
+        sx={{
+          width: 500,
+          //height: 420,
+        }}
+        noValidate
+        autoComplete="off"
+        style={{ marginTop: 20 }}
+      >
         <Grid
           container
           justifyContent="center"
           alignItems="center"
+          direction="column"
           style={{ minHeight: "100vh" }}
         >
-          <Grid item lg={5}>
-            <Card className={classes.root}>
-              <CardContent>
-                <Grid container direction="column">
-                  <Grid item style={{ marginTop: 10 }}>
-                    <Field
-                      name="email"
-                      component={renderTextField}
-                      //component="input"
-                      label="Email"
-                      type="email"
-                      //ref="email"
-                      //hintText="Email"
-                      //floatingLabelText="Email"
-                      //withRef
-                    />
-                  </Grid>
-                  <Grid item style={{ marginTop: 20 }}>
-                    <Field
-                      name="password"
-                      component={renderTextField}
-                      //component="input"
-                      label="Password"
-                      type="password"
-                      //hintText="Password"
-                      //floatingLabelText="Password"
-                    />
-                  </Grid>
-                </Grid>
-              </CardContent>
-              <Grid item style={{ marginTop: "2em" }}>
-                <Button
-                  //   disabled={
-                  //     email.length === 0 ||
-                  //     password.length === 0 ||
-                  //     emailHelper.length !== 0 ||
-                  //     passwordHelper.length !== 0
-                  //   }
-                  variant="contained"
-                  className={classes.sendButton}
-                  onClick={props.handleSubmit(onSubmit)}
-                >
-                  Login
-                </Button>
-              </Grid>
-            </Card>
-          </Grid>
+          <Box className={classes.boxContainer}>
+            <Grid
+              item
+              className={classes.inputText}
+              style={{ width: "100%", marginTop: 20 }}
+            >
+              <Field
+                name="email"
+                label="Email"
+                type="text"
+                component={renderTextField}
+              />
+            </Grid>
+            <Grid
+              item
+              className={classes.inputText}
+              style={{ width: "100%", marginTop: 20 }}
+            >
+              <Field
+                name="password"
+                label="Password"
+                type="password"
+                component={renderPasswordField}
+              />
+            </Grid>
+            <Grid item style={{ marginTop: "2em" }}>
+              <Button
+                variant="contained"
+                className={classes.sendButton}
+                onClick={props.handleSubmit(onSubmit)}
+              >
+                {loading ? (
+                  <CircularProgress size={30} color="inherit" />
+                ) : (
+                  buttonContent()
+                )}
+              </Button>
+            </Grid>
+          </Box>
         </Grid>
-      </Grid>
+      </Box>
+      <Snackbar
+        open={alert.open}
+        message={alert.message}
+        ContentProps={{
+          style: { backgroundColor: alert.backgroundColor },
+        }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        onClose={() => setAlert({ ...alert, open: false })}
+        autoHideDuration={4000}
+      />
     </form>
   );
 };
@@ -217,4 +304,4 @@ const validate = (formValues) => {
 export default reduxForm({
   form: "loginForm",
   // validate: validate,
-})(SignInForm);
+})(LoginForm);

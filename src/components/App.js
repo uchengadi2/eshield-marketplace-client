@@ -8,6 +8,7 @@ import Preferences from "./Preferences/Preferences";
 import useToken from "../custom-hooks/useToken";
 import useUserId from "../custom-hooks/useUserId";
 import UserLogin from "./users/UserLogin";
+import Snackbar from "@material-ui/core/Snackbar";
 import Header from "./ui/Header";
 import IndexDashboard from "./IndexDashboard";
 import CategoryLayout from "./ui/CategoryLayout";
@@ -29,9 +30,45 @@ function App() {
   const { userId, setUserId } = useUserId();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [value, setValue] = useState(0);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    backgroundColor: "",
+  });
+
+  const handleLogoutProcess = () => {
+    setToken({});
+    sessionStorage.removeItem("token");
+  };
+
+  const handleSuccessfulLoginInSnackbar = (message) => {
+    // setBecomePartnerOpen(false);
+    setAlert({
+      open: true,
+      message: message,
+      backgroundColor: "#4BB543",
+    });
+  };
+
+  const handleFailedLoginInSnackbar = (message) => {
+    setAlert({
+      open: true,
+      message: message,
+
+      backgroundColor: "#FF3232",
+    });
+    //setBecomePartnerOpen(true);
+  };
 
   if (!token) {
-    return <UserLogin setToken={setToken} setUserId={setUserId} />;
+    return (
+      <UserLogin
+        setToken={setToken}
+        setUserId={setUserId}
+        handleSuccessfulLoginInSnackbar={handleSuccessfulLoginInSnackbar}
+        handleFailedLoginInSnackbar={handleFailedLoginInSnackbar}
+      />
+    );
   }
 
   return (
@@ -45,6 +82,9 @@ function App() {
             setSelectedIndex={setSelectedIndex}
             token={token}
             userId={userId}
+            setToken={setToken}
+            setUserId={setUserId}
+            handleLogoutProcess={handleLogoutProcess}
           />
           ;
           <Switch>
@@ -94,6 +134,16 @@ function App() {
               <Preferences />
             </Route>
           </Switch>
+          <Snackbar
+            open={alert.open}
+            message={alert.message}
+            ContentProps={{
+              style: { backgroundColor: alert.backgroundColor },
+            }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            onClose={() => setAlert({ ...alert, open: false })}
+            autoHideDuration={4000}
+          />
         </Router>
       </ThemeProvider>
     </div>

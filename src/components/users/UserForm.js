@@ -178,6 +178,7 @@ function UserForm(props) {
   const classes = useStyles();
   const [role, setRole] = useState();
   const [type, setType] = useState("staff");
+  const [userType, setUserType] = useState();
   const [loading, setLoading] = useState(false);
   const [vendorList, setVendorList] = useState([]);
   const [vendor, setVendor] = useState();
@@ -186,7 +187,8 @@ function UserForm(props) {
 
   useEffect(() => {
     const fetchVendorData = async () => {
-      let allData = [{ id: "all", name: "All" }];
+      //let allData = [{ id: "all", name: "All" }];
+      let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
       const response = await api.get("/vendors");
       const workingData = response.data.data.data;
@@ -208,8 +210,8 @@ function UserForm(props) {
     setRole(event.target.value);
   };
 
-  const handleTypeChange = (event) => {
-    setType(event.target.value);
+  const handleUserTypeChange = (event) => {
+    setUserType(event.target.value);
   };
 
   const handleVendorChange = (event) => {
@@ -249,9 +251,9 @@ function UserForm(props) {
           >
             <MenuItem value={"admin"}>Admin</MenuItem>
             <MenuItem value={"user"}>User</MenuItem>
-            <MenuItem value={"partner_user"}>Partner User</MenuItem>
-            <MenuItem value={"partner_admin"}>Partner Admin</MenuItem>
-            <MenuItem value={"customer"}>Customer</MenuItem>
+            {/* <MenuItem value={"partner_user"}>Partner User</MenuItem>
+            <MenuItem value={"partner_admin"}>Partner Admin</MenuItem> */}
+            <MenuItem value={"staff"}>Staff</MenuItem>
           </Select>
           <FormHelperText>Select User Role</FormHelperText>
         </FormControl>
@@ -259,7 +261,7 @@ function UserForm(props) {
     );
   };
 
-  const renderTypeRadioField = ({
+  const renderUserTypeField = ({
     input,
     label,
     meta: { touched, error, invalid },
@@ -268,46 +270,76 @@ function UserForm(props) {
     ...custom
   }) => {
     return (
-      <Box style={{ marginTop: 15 }}>
-        <FormControl component="fieldset">
-          <FormLabel style={{ color: "blue" }} component="legend">
-            User Type
-          </FormLabel>
-          <RadioGroup
-            aria-label="type"
-            name="type"
-            value={type}
-            onChange={handleTypeChange}
+      <Box>
+        <FormControl variant="outlined">
+          {/* <InputLabel id="vendor_city">City</InputLabel> */}
+          <Select
+            labelId="userType"
+            id="userType"
+            value={userType}
+            onChange={handleUserTypeChange}
+            label="user Type"
+            style={{ width: 500, height: 38, marginTop: 15 }}
           >
-            <Grid item container direction="row">
-              <Grid item>
-                <FormControlLabel
-                  value="staff"
-                  control={<Radio />}
-                  label="Staff"
-                />
-              </Grid>
-
-              <Grid item>
-                <FormControlLabel
-                  value="partner"
-                  control={<Radio />}
-                  label="Partner"
-                />
-              </Grid>
-              <Grid item>
-                <FormControlLabel
-                  value="customer"
-                  control={<Radio />}
-                  label="Customer"
-                />
-              </Grid>
-            </Grid>
-          </RadioGroup>
+            <MenuItem value={"staff"}>Staff</MenuItem>
+            <MenuItem value={"customer"}>Customer</MenuItem>
+            <MenuItem value={"partner"}>Partner</MenuItem>
+          </Select>
+          <FormHelperText>User Type</FormHelperText>
         </FormControl>
       </Box>
     );
   };
+
+  // const renderTypeRadioField = ({
+  //   input,
+  //   label,
+  //   meta: { touched, error, invalid },
+  //   type,
+  //   id,
+  //   ...custom
+  // }) => {
+  //   return (
+  //     <Box style={{ marginTop: 15 }}>
+  //       <FormControl component="fieldset">
+  //         <FormLabel style={{ color: "blue" }} component="legend">
+  //           User Type
+  //         </FormLabel>
+  //         <RadioGroup
+  //           aria-label="type"
+  //           name="type"
+  //           value={type}
+  //           onChange={handleTypeChange}
+  //         >
+  //           <Grid item container direction="row">
+  //             <Grid item>
+  //               <FormControlLabel
+  //                 value="staff"
+  //                 control={<Radio />}
+  //                 label="Staff"
+  //               />
+  //             </Grid>
+
+  //             <Grid item>
+  //               <FormControlLabel
+  //                 value="partner"
+  //                 control={<Radio />}
+  //                 label="Partner"
+  //               />
+  //             </Grid>
+  //             <Grid item>
+  //               <FormControlLabel
+  //                 value="customer"
+  //                 control={<Radio />}
+  //                 label="Customer"
+  //               />
+  //             </Grid>
+  //           </Grid>
+  //         </RadioGroup>
+  //       </FormControl>
+  //     </Box>
+  //   );
+  // };
 
   const renderVendorField = ({
     input,
@@ -327,7 +359,7 @@ function UserForm(props) {
             value={vendor}
             onChange={handleVendorChange}
             label="Vendor"
-            style={{ height: 38, width: 500 }}
+            style={{ height: 38, width: 500, marginTop: 15 }}
           >
             {renderVendorList()}
           </Select>
@@ -343,20 +375,77 @@ function UserForm(props) {
 
   const onSubmit = (formValues) => {
     setLoading(true);
-    const data = {
-      name: formValues.name,
-      email: formValues.email,
-      role: role,
-      password: formValues.password,
-      passwordConfirm: formValues.passwordConfirm,
-      type: type,
-      vendor: vendor,
-    };
 
-    if (data) {
+    if (!formValues["name"]) {
+      props.handleFailedSnackbar("Please enter the name of the user");
+      setLoading(false);
+      return;
+    }
+
+    if (!formValues["email"]) {
+      props.handleFailedSnackbar("Please enter the email of the user");
+      setLoading(false);
+      return;
+    }
+
+    if (!formValues["password"]) {
+      props.handleFailedSnackbar(
+        "The password field cannot be empty. Please rectify and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!formValues["passwordConfirm"]) {
+      props.handleFailedSnackbar(
+        "The repeat password field cannot be empty. Please rectify and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!role) {
+      props.handleFailedSnackbar(
+        "The select the role of the user and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!userType) {
+      props.handleFailedSnackbar(
+        "The select the user type of the user and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (formValues["passwordConfirm"] !== formValues["password"]) {
+      props.handleFailedSnackbar(
+        "The password and the repeat password field must be the same. Please rectify and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    // const data = {
+    //   name: formValues["name"],
+    //   email: formValues["email"],
+    //   role: role,
+    //   password: formValues["password"],
+    //   passwordConfirm: formValues["passwordConfirm"],
+    //   type: userType,
+    //   //vendor: vendor,
+    // };
+
+    formValues["createdBy"] = props.userId;
+    formValues["type"] = userType;
+    formValues["role"] = role;
+
+    if (formValues) {
       const createForm = async () => {
         api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-        const response = await api.post(`/users`, data);
+        const response = await api.post(`/users`, formValues);
 
         if (response.data.status === "success") {
           dispatch({
@@ -400,7 +489,7 @@ function UserForm(props) {
         // onSubmit={onSubmit}
         sx={{
           width: 500,
-          height: 420,
+          height: 400,
         }}
         noValidate
         autoComplete="off"
@@ -439,6 +528,14 @@ function UserForm(props) {
             />
           </Grid>
         </Grid>
+        <Field
+          label=""
+          id="userType"
+          name="userType"
+          type="text"
+          component={renderUserTypeField}
+          style={{ marginTop: 10 }}
+        />
 
         <Field
           label=""
@@ -446,22 +543,17 @@ function UserForm(props) {
           name="role"
           type="text"
           component={renderUserRoleField}
+          style={{ marginTop: 10 }}
         />
-
-        <Field
-          label=""
-          id="type"
-          name="type"
-          type="text"
-          component={renderTypeRadioField}
-        />
+        {/* 
         <Field
           label=""
           id="vendor"
           name="vendor"
           type="text"
           component={renderVendorField}
-        />
+          style={{ marginTop: 10 }}
+        /> */}
 
         <Button
           variant="contained"

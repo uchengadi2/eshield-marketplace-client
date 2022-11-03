@@ -169,12 +169,12 @@ function UsersLayout(props) {
     >
       <Grid item container direction="column" sm={width}>
         <Grid item className={classes.selectField}>
-          <VendorSelectFilter
+          {/* <VendorSelectFilter
             token={props.token}
             vendorList={vendorList}
             selectedVendor={selectedVendor}
             handleVendorChange={handleVendorChange}
-          />
+          /> */}
         </Grid>
         <Grid item className={classes.headerContainer}>
           <Toolbar disableGutters className={classes.toolbar}>
@@ -188,8 +188,9 @@ function UsersLayout(props) {
           </Toolbar>
         </Grid>
         <Grid item className={classes.contentContainer}>
-          {renderDataList()}
+          {/* {renderDataList()} */}
           {/* <DataGridText /> */}
+          <UserList token={props.token} userId={props.userId} />
         </Grid>
       </Grid>
       <Dialog

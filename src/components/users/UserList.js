@@ -124,7 +124,7 @@ class UserList extends React.Component {
       { field: "name", headerName: "User Name", width: 300 },
       { field: "type", headerName: "Type", width: 150 },
       { field: "email", headerName: "Email Address", width: 250 },
-      { field: "vendor", headerName: "Vendor", width: 200 },
+      // { field: "vendor", headerName: "Vendor", width: 200 },
       {
         field: "editaction",
         headerName: "",
@@ -167,15 +167,14 @@ class UserList extends React.Component {
     ];
 
     this.props.users.map((user) => {
-      console.log("single user:", user);
       let row = {
         numbering: ++counter,
-        id: user.id,
+        id: user._id,
         name: user.name,
         type: user.type,
         role: user.role,
         email: user.email,
-        vendor: user.vendor,
+        // vendor: user.vendor,
       };
       rows.push(row);
     });
