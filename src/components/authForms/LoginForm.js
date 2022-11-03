@@ -9,7 +9,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 
 import { TextField } from "@material-ui/core";
 //import background from "./../../logistic_assets/cover_image_1.png";
-import background from "./../../assets/images/covers/footage_image.png";
+import background from "./../../assets/images/covers/cover3.png";
 
 import api from "./../../apis/local";
 
