@@ -1189,6 +1189,36 @@ const renderProductBaselineDeliveryCostWithinProductLocationField = ({
   );
 };
 
+const renderProductConfigurationField = ({
+  input,
+  label,
+  meta: { touched, error, invalid },
+  type,
+  id,
+  ...custom
+}) => {
+  return (
+    <TextField
+      //error={touched && invalid}
+      helperText="Product configuration"
+      variant="outlined"
+      label={label}
+      id={input.name}
+      //value={formInput.name}
+      fullWidth
+      //required
+      type={type}
+      {...custom}
+      onChange={input.onChange}
+      inputProps={{
+        style: {
+          height: 1,
+        },
+      }}
+    />
+  );
+};
+
 function ProductForm(props) {
   const classes = useStyles();
   const [city, setCity] = useState("");
@@ -1204,6 +1234,7 @@ function ProductForm(props) {
   const [currency, setCurrency] = useState();
   const [location, setLocation] = useState();
   const [country, setCountry] = useState();
+  const [isFeaturedProduct, setIsFeaturedProduct] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -1408,6 +1439,40 @@ function ProductForm(props) {
     setCountry(event.target.value);
   };
 
+  const handleIsFeaturedProductChange = (event) => {
+    setIsFeaturedProduct(event.target.value);
+  };
+
+  const renderIsProductFeatureField = ({
+    input,
+    label,
+    meta: { touched, error, invalid },
+    type,
+    id,
+    ...custom
+  }) => {
+    return (
+      <Box>
+        <FormControl variant="outlined">
+          {/* <InputLabel id="vendor_city">City</InputLabel> */}
+          <Select
+            labelId="isFeaturedProduct"
+            id="isFeaturedProduct"
+            value={isFeaturedProduct}
+            onChange={handleIsFeaturedProductChange}
+            label="Is Featured"
+            style={{ width: 500, marginTop: 0, height: 38 }}
+            //{...input}
+          >
+            <MenuItem value={"false"}>False</MenuItem>
+            <MenuItem value={"true"}>True</MenuItem>
+          </Select>
+          <FormHelperText>Set isFeatured Property</FormHelperText>
+        </FormControl>
+      </Box>
+    );
+  };
+
   const renderProductCountryField = ({
     input,
     label,
@@ -1591,6 +1656,8 @@ function ProductForm(props) {
 
     const form = new FormData();
     form.append("name", formValues.name);
+    form.append("configuration", formValues.configuration);
+    form.append("isFeaturedProduct", isFeaturedProduct);
     form.append("shortDescription", formValues.shortDescription);
     form.append("fullDescription", formValues.fullDescription);
 
@@ -1769,6 +1836,15 @@ function ProductForm(props) {
             name="name"
             type="text"
             component={renderProductNameField}
+            autoComplete="off"
+            style={{ marginTop: 20 }}
+          />
+          <Field
+            label=""
+            id="configuration"
+            name="configuration"
+            type="text"
+            component={renderProductConfigurationField}
             autoComplete="off"
             style={{ marginTop: 20 }}
           />
@@ -2031,6 +2107,19 @@ function ProductForm(props) {
               />
             </Grid>
           </Grid>
+          <Grid item container style={{ marginTop: 20, marginBottom: 20 }}>
+            <FormLabel style={{ color: "blue" }} component="legend">
+              Product isFeatured
+            </FormLabel>
+          </Grid>
+          <Field
+            label=""
+            id="isFeaturedProduct"
+            name="isFeaturedProduct"
+            type="text"
+            component={renderIsProductFeatureField}
+            // style={{ marginTop: 10 }}
+          />
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Delivery Within Product Location

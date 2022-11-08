@@ -196,6 +196,7 @@ class ProductList extends React.Component {
         numbering: ++counter,
         id: product.id,
         name: product.name,
+        configuration: product.configuration,
         weightPerUnit: product.weightPerUnit,
         totalUnits: product.totalUnits,
         remainingTotalUnits: product.remainingTotalUnits,
@@ -246,6 +247,7 @@ class ProductList extends React.Component {
         estimatedDeliveryPeriodInMinutes:
           product.estimatedDeliveryPeriodInMinutes,
         priceMarkupPerUnit: product.priceMarkupPerUnit,
+        isFeaturedProduct: product.isFeaturedProduct,
       };
       rows.push(row);
     });
