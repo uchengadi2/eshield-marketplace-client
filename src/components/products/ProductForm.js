@@ -1654,12 +1654,94 @@ function ProductForm(props) {
   const onSubmit = (formValues) => {
     setLoading(true);
 
+    if (!vendor) {
+      props.handleFailedSnackbar(
+        "Please select the vendor of this product and try again"
+      );
+      setLoading(false);
+      return;
+    }
+    if (!category) {
+      props.handleFailedSnackbar(
+        "Please select the product category and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!formValues["name"]) {
+      props.handleFailedSnackbar("Please enter the name of the product");
+      setLoading(false);
+      return;
+    }
+
+    if (!formValues["configuration"]) {
+      props.handleFailedSnackbar(
+        "Please enter the product configuration and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!formValues["pricePerUnit"]) {
+      props.handleFailedSnackbar(
+        "Please enter the product price per unit and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!currency) {
+      props.handleFailedSnackbar(
+        "Please select the price currency of the product and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!formValues["minimumQuantity"]) {
+      props.handleFailedSnackbar(
+        "Please enter the product's required minimum quantity and try again"
+      );
+      setLoading(false);
+      return;
+    }
+    if (!location) {
+      props.handleFailedSnackbar(
+        "Please select the product location/state and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!country) {
+      props.handleFailedSnackbar(
+        "Please select the product location/state country and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
+    if (!formValues["priceMarkupPerUnit"]) {
+      props.handleFailedSnackbar(
+        "Please enter the price markup per unit of this product and try again"
+      );
+      setLoading(false);
+      return;
+    }
+
     const form = new FormData();
     form.append("name", formValues.name);
     form.append("configuration", formValues.configuration);
     form.append("isFeaturedProduct", isFeaturedProduct);
-    form.append("shortDescription", formValues.shortDescription);
-    form.append("fullDescription", formValues.fullDescription);
+    form.append(
+      "shortDescription",
+      formValues.shortDescription ? formValues.shortDescription : ""
+    );
+    form.append(
+      "fullDescription",
+      formValues.fullDescription ? formValues.fullDescription : ""
+    );
 
     form.append("category", category);
     form.append("vendor", vendor);
@@ -1668,56 +1750,89 @@ function ProductForm(props) {
     form.append("locationCountry", country);
     form.append("createdBy", props.userId);
 
-    form.append("make", formValues.make);
+    form.append("make", formValues.make ? formValues.make : "");
     form.append("priceMarkupPerUnit", formValues.priceMarkupPerUnit);
-    form.append("model", formValues.model);
-    form.append("color", formValues.color);
-    form.append("weightPerUnit", formValues.weightPerUnit);
-    form.append("totalUnits", formValues.totalUnits);
-    form.append("remainingTotalUnits", formValues.totalUnits);
-    form.append("size", formValues.size);
-    form.append("design", formValues.design);
-    form.append("content", formValues.content);
-    form.append("smell", formValues.smell);
-    form.append("taste", formValues.taste);
-    form.append("feel", formValues.feel);
-    form.append("ingredients", formValues.ingredients);
-    form.append("reliability", formValues.reliability);
-    form.append("safety", formValues.safety);
-    form.append("packaging", formValues.packaging);
-    form.append("marketingClaims", formValues.marketingClaims);
-    form.append("durability", formValues.durability);
+    form.append("model", formValues.model ? formValues.model : "");
+    form.append("color", formValues.color ? formValues.color : "");
+    form.append(
+      "weightPerUnit",
+      formValues.weightPerUnit ? formValues.weightPerUnit : ""
+    );
+    form.append(
+      "totalUnits",
+      formValues.totalUnits ? formValues.totalUnits : ""
+    );
+    form.append(
+      "remainingTotalUnits",
+      formValues.totalUnits ? formValues.totalUnits : ""
+    );
+    form.append("size", formValues.size ? formValues.size : "");
+    form.append("design", formValues.design ? formValues.design : "");
+    form.append("content", formValues.content ? formValues.content : "");
+    form.append("smell", formValues.smell ? formValues.smell : "");
+    form.append("taste", formValues.taste ? formValues.taste : "");
+    form.append("feel", formValues.feel ? formValues.feel : "");
+    form.append(
+      "ingredients",
+      formValues.ingredients ? formValues.ingredients : ""
+    );
+    form.append(
+      "reliability",
+      formValues.reliability ? formValues.reliability : ""
+    );
+    form.append("safety", formValues.safety ? formValues.safety : "");
+    form.append("packaging", formValues.packaging ? formValues.packaging : "");
+    form.append(
+      "marketingClaims",
+      formValues.marketingClaims ? formValues.marketingClaims : ""
+    );
+    form.append(
+      "durability",
+      formValues.durability ? formValues.durability : ""
+    );
     form.append("pricePerUnit", formValues.pricePerUnit);
-    form.append("keyword1", formValues.keyword1);
-    form.append("keyword2", formValues.keyword2);
-    form.append("keyword3", formValues.keyword3);
+    form.append("keyword1", formValues.keyword1 ? formValues.keyword1 : "");
+    form.append("keyword2", formValues.keyword2 ? formValues.keyword2 : "");
+    form.append("keyword3", formValues.keyword3 ? formValues.keyword3 : "");
     form.append("minimumQuantity", formValues.minimumQuantity);
     form.append(
       "deliveryCostPerUnitWithinProductLocation",
       formValues.deliveryCostPerUnitWithinProductLocation
+        ? formValues.deliveryCostPerUnitWithinProductLocation
+        : ""
     );
     form.append(
       "maxmumQuantityForBaselineDelivery",
       formValues.maxmumQuantityForBaselineDelivery
+        ? formValues.maxmumQuantityForBaselineDelivery
+        : ""
     );
     form.append(
       "baselineDeliveryCostWithinProductLocation",
       formValues.baselineDeliveryCostWithinProductLocation
+        ? formValues.baselineDeliveryCostWithinProductLocation
+        : ""
     );
 
     form.append(
       "estimatedDeliveryPeriodInDays",
       formValues.estimatedDeliveryPeriodInDays
+        ? formValues.estimatedDeliveryPeriodInDays
+        : ""
     );
 
     form.append(
       "estimatedDeliveryPeriodInHours",
       formValues.estimatedDeliveryPeriodInHours
+        ? formValues.estimatedDeliveryPeriodInHours
+        : ""
     );
 
     form.append(
       "estimatedDeliveryPeriodInMinutes",
       formValues.estimatedDeliveryPeriodInMinutes
+        ? formValues.estimatedDeliveryPeriodInMinutes
+        : ""
     );
 
     if (!formValues["refNumber"]) {

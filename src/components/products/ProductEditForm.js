@@ -1690,12 +1690,16 @@ function ProductEditForm(props) {
       formValues.shortDescription
         ? formValues.shortDescription
         : params.shortDescription
+        ? params.shortDescription
+        : ""
     );
     form.append(
       "fullDescription",
       formValues.fullDescription
         ? formValues.fullDescription
         : params.fullDescription
+        ? params.fullDescription
+        : ""
     );
 
     form.append("category", category);
@@ -1705,33 +1709,62 @@ function ProductEditForm(props) {
     form.append("locationCountry", country);
     form.append("createdBy", props.userId);
 
-    form.append("make", formValues.make ? formValues.make : params.make);
-    form.append("model", formValues.model ? formValues.model : params.model);
-    form.append("color", formValues.color ? formValues.color : params.color);
+    form.append(
+      "make",
+      formValues.make ? formValues.make : params.make ? params.make : ""
+    );
+    form.append(
+      "model",
+      formValues.model ? formValues.model : params.model ? params.model : ""
+    );
+    form.append(
+      "color",
+      formValues.color ? formValues.color : params.color ? params.color : ""
+    );
     form.append(
       "weightPerUnit",
-      formValues.weightPerUnit ? formValues.weightPerUnit : params.weightPerUnit
+      formValues.weightPerUnit
+        ? formValues.weightPerUnit
+        : params.weightPerUnit
+        ? params.weightPerUnit
+        : ""
     );
     form.append(
       "totalUnits",
-      formValues.totalUnits ? formValues.totalUnits : params.totalUnits
+      formValues.totalUnits
+        ? formValues.totalUnits
+        : params.totalUnits
+        ? params.totalUnits
+        : ""
     );
     form.append(
       "remainingTotalUnits",
       formValues.remainingTotalUnits
         ? formValues.remainingTotalUnits
         : params.remainingTotalUnits
+        ? params.remainingTotalUnits
+        : ""
     );
-    form.append("size", formValues.size ? formValues.size : params.size);
+    form.append(
+      "size",
+      formValues.size ? formValues.size : params.size ? params.size : ""
+    );
     form.append(
       "design",
-      formValues.design ? formValues.design : params.design
+      formValues.design ? formValues.design : params.design ? params.design : ""
     );
     form.append(
       "content",
-      formValues.content ? formValues.content : params.content
+      formValues.content
+        ? formValues.content
+        : params.content
+        ? params.content
+        : ""
     );
-    form.append("smell", formValues.smell ? formValues.smell : params.smell);
+    form.append(
+      "smell",
+      formValues.smell ? formValues.smell : params.smell ? params.smell : ""
+    );
     form.append(
       "priceMarkupPerUnit",
       formValues.priceMarkupPerUnit
@@ -1739,68 +1772,101 @@ function ProductEditForm(props) {
         : params.priceMarkupPerUnit
     );
     form.append("taste", formValues.taste ? formValues.taste : params.taste);
-    form.append("feel", formValues.feel ? formValues.feel : params.feel);
+    form.append(
+      "feel",
+      formValues.feel ? formValues.feel : params.feel ? params.feel : ""
+    );
     form.append(
       "ingredients",
-      formValues.ingredients ? formValues.ingredients : params.ingredients
+      formValues.ingredients
+        ? formValues.ingredients
+        : params.ingredients
+        ? params.ingredients
+        : ""
     );
     form.append(
       "reliability",
-      formValues.reliability ? formValues.reliability : params.reliability
+      formValues.reliability
+        ? formValues.reliability
+        : params.reliability
+        ? params.reliability
+        : ""
     );
     form.append(
       "safety",
-      formValues.safety ? formValues.safety : params.safety
+      formValues.safety ? formValues.safety : params.safety ? params.safety : ""
     );
     form.append(
       "packaging",
-      formValues.packaging ? formValues.packaging : params.packaging
+      formValues.packaging
+        ? formValues.packaging
+        : params.packaging
+        ? params.packaging
+        : ""
     );
     form.append(
       "deliveryCostPerUnitWithinProductLocation",
       formValues.deliveryCostPerUnitWithinProductLocation
         ? formValues.deliveryCostPerUnitWithinProductLocation
         : params.deliveryCostPerUnitWithinProductLocation
+        ? params.deliveryCostPerUnitWithinProductLocation
+        : ""
     );
     form.append(
       "maxmumQuantityForBaselineDelivery",
       formValues.maxmumQuantityForBaselineDelivery
         ? formValues.maxmumQuantityForBaselineDelivery
         : params.maxmumQuantityForBaselineDelivery
+        ? params.maxmumQuantityForBaselineDelivery
+        : ""
     );
     form.append(
       "estimatedDeliveryPeriodInDays",
       formValues.estimatedDeliveryPeriodInDays
         ? formValues.estimatedDeliveryPeriodInDays
         : params.estimatedDeliveryPeriodInDays
+        ? params.estimatedDeliveryPeriodInDays
+        : ""
     );
     form.append(
       "estimatedDeliveryPeriodInHours",
       formValues.estimatedDeliveryPeriodInHours
         ? formValues.estimatedDeliveryPeriodInHours
         : params.estimatedDeliveryPeriodInHours
+        ? params.estimatedDeliveryPeriodInHours
+        : ""
     );
     form.append(
       "baselineDeliveryCostWithinProductLocation",
       formValues.baselineDeliveryCostWithinProductLocation
         ? formValues.baselineDeliveryCostWithinProductLocation
         : params.baselineDeliveryCostWithinProductLocation
+        ? params.baselineDeliveryCostWithinProductLocation
+        : ""
     );
     form.append(
       "estimatedDeliveryPeriodInMinutes",
       formValues.estimatedDeliveryPeriodInMinutes
         ? formValues.estimatedDeliveryPeriodInMinutes
         : params.estimatedDeliveryPeriodInMinutes
+        ? params.estimatedDeliveryPeriodInMinutes
+        : ""
     );
     form.append(
       "marketingClaims",
       formValues.marketingClaims
         ? formValues.marketingClaims
         : params.marketingClaims
+        ? params.marketingClaims
+        : ""
     );
     form.append(
       "durability",
-      formValues.durability ? formValues.durability : params.durability
+      formValues.durability
+        ? formValues.durability
+        : params.durability
+        ? params.durability
+        : ""
     );
     form.append(
       "pricePerUnit",
@@ -1808,15 +1874,27 @@ function ProductEditForm(props) {
     );
     form.append(
       "keyword1",
-      formValues.keyword1 ? formValues.keyword1 : params.keyword1
+      formValues.keyword1
+        ? formValues.keyword1
+        : params.keyword1
+        ? params.keyword1
+        : ""
     );
     form.append(
       "keyword2",
-      formValues.keyword2 ? formValues.keyword2 : params.keyword2
+      formValues.keyword2
+        ? formValues.keyword2
+        : params.keyword2
+        ? params.keyword2
+        : ""
     );
     form.append(
       "keyword3",
-      formValues.keyword3 ? formValues.keyword3 : params.keyword3
+      formValues.keyword3
+        ? formValues.keyword3
+        : params.keyword3
+        ? params.keyword3
+        : ""
     );
     form.append(
       "refNumber",
