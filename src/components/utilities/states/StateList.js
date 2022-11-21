@@ -145,7 +145,8 @@ class StateList extends React.Component {
       { field: "numbering", headerName: "S/n", width: 100 },
       { field: "name", headerName: "State Name", width: 200 },
       { field: "code", headerName: "State Code", width: 150 },
-      { field: "country", headerName: "Country", width: 200 },
+      { field: "country", headerName: "Country", width: 200, hide: true },
+      { field: "countryName", headerName: "Country", width: 200 },
       { field: "region", headerName: "Country Region", width: 200 },
 
       {
@@ -189,14 +190,15 @@ class StateList extends React.Component {
         ),
       },
     ];
-    this.props.states.map((state) => {
+    this.props.states.map((state, index) => {
       let row = {
         numbering: ++counter,
         id: state.id,
         name: state.name,
         code: state.code,
         region: state.region,
-        country: state.country,
+        country: state.country[0].id,
+        countryName: state.country[0].name,
         description: state.description,
       };
       rows.push(row);

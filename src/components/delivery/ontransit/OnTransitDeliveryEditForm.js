@@ -144,8 +144,8 @@ function OnTransitDeliveryEditForm(props) {
 
       allData.push({
         id: item._id,
-        order: item.order,
-        logisticsPartner: item.logisticsPartner,
+        order: item.order.id,
+        logisticsPartner: item.logisticsPartner.id,
         logisticsPartnerState: item.logisticsPartnerState,
         logisticsPartnerCountry: item.logisticsPartnerCountry,
       });
@@ -170,7 +170,7 @@ function OnTransitDeliveryEditForm(props) {
       allData.push({
         id: item._id,
         orderNumber: item.orderNumber,
-        product: item.product,
+        product: item.product.id,
         vendor: item.productVendor,
         orderedQuantity: item.orderedQuantity,
         orderedPrice: item.orderedPrice,
@@ -190,7 +190,7 @@ function OnTransitDeliveryEditForm(props) {
         paymentMethod: item.paymentMethod,
         status: item.status,
         rejectionReason: item.rejectionReason,
-        sku: item.sku,
+        sku: item.product.sku,
       });
 
       if (!allData) {

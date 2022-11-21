@@ -143,7 +143,8 @@ class CityList extends React.Component {
     const columns = [
       { field: "numbering", headerName: "S/n", width: 100 },
       { field: "name", headerName: "City Name", width: 300 },
-      { field: "country", headerName: "Country", width: 250 },
+      { field: "country", headerName: "Country", width: 250, hide: true },
+      { field: "countryName", headerName: "Country", width: 250 },
       { field: "code", headerName: "City Code", width: 150 },
       {
         field: "editaction",
@@ -209,7 +210,8 @@ class CityList extends React.Component {
         id: city.id,
         name: city.name,
         description: city.description,
-        country: city.country,
+        country: city.country[0].id,
+        countryName: city.country[0].name,
         code: city.code,
         state: city.state,
       };

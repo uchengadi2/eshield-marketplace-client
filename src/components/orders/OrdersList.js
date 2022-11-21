@@ -173,9 +173,16 @@ class OrdersList extends React.Component {
       { field: "numbering", headerName: "S/n", width: 100 },
       { field: "dateOrdered", headerName: "Date Ordered", width: 150 },
       { field: "orderNumber", headerName: "Order Number", width: 200 },
-      { field: "product", headerName: "Ordered Product", width: 200 },
+      { field: "productName", headerName: "Ordered Product", width: 200 },
+      {
+        field: "product",
+        headerName: "Ordered Product",
+        width: 200,
+        hide: true,
+      },
       { field: "orderedQuantity", headerName: "Ordered Quantity", width: 150 },
       { field: "status", headerName: "Status", width: 150 },
+
       // {
       //   field: "consignmentCountry",
       //   headerName: "Source Country",
@@ -262,7 +269,9 @@ class OrdersList extends React.Component {
         ),
       },
     ];
-    this.props.orders.map((order) => {
+    console.log("orders:", this.props.orders);
+
+    this.props.orders.map((order, index) => {
       let row = {
         numbering: ++counter,
         id: order.id,
@@ -271,7 +280,10 @@ class OrdersList extends React.Component {
         orderedQuantity: order.orderedQuantity,
         status: order.status,
         cartId: order.cartId,
-        product: order.product,
+        productName: order.product.name,
+        product: order.product.id,
+        sku: order.product.sku,
+
         productVendor: order.productVendor,
         productCategory: order.productCategory,
         quantityAdddedToCart: order.quantityAdddedToCart,

@@ -147,9 +147,9 @@ class ProductList extends React.Component {
       { field: "weightPerUnit", headerName: "Weight Per Unit(kg)", width: 120 },
       { field: "totalUnits", headerName: "Total Units", width: 100 },
       { field: "pricePerUnit", headerName: "Price per Units", width: 130 },
-      //{ field: "currency", headerName: "Currency", width: 150 },
+      { field: "isFeaturedProduct", headerName: "Is Featured", width: 150 },
       //{ field: "size", headerName: "Product Size", width: 100 },
-      { field: "vendor", headerName: "Vendor", width: 150 },
+      // { field: "vendor", headerName: "Vendor", width: 150 },
       {
         field: "editaction",
         headerName: "",

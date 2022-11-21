@@ -159,8 +159,8 @@ class PaymentList extends React.Component {
         headerName: "Payment Status",
         width: 150,
       },
-      { field: "order", headerName: "Order", width: 200 },
-      { field: "customer", headerName: "Customer", width: 200 },
+      { field: "orderNumber", headerName: "Order Number", width: 200 },
+      { field: "customerName", headerName: "Customer", width: 200 },
       // {
       //   field: "totalProductAmount",
       //   headerName: "Total Amount",
@@ -171,6 +171,8 @@ class PaymentList extends React.Component {
         headerName: "Amount Paid",
         width: 150,
       },
+      { field: "order", headerName: "", width: 0, hide: true },
+      { field: "customer", headerName: "", width: 0, hide: true },
 
       {
         field: "editaction",
@@ -233,14 +235,16 @@ class PaymentList extends React.Component {
         ),
       },
     ];
-    this.props.payments.map((payment) => {
+    this.props.payments.map((payment, index) => {
       let row = {
         numbering: ++counter,
         id: payment.id,
         refNumber: payment.refNumber,
-        order: payment.order,
+        orderNumber: payment.order.orderNumber,
+        order: payment.order.id,
         vendor: payment.vendor,
-        customer: payment.customer,
+        customerName: payment.customer[index].name,
+        customer: payment.customer[index].id,
         totalProductAmount: payment.totalProductAmount,
         amountPaid: payment.amountPaid,
         totalDeliveryCost: payment.totalDeliveryCost,

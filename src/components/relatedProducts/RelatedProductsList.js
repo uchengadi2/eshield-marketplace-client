@@ -142,8 +142,19 @@ class RelatedProductsList extends React.Component {
     let counter = 0;
     const columns = [
       { field: "numbering", headerName: "S/n", width: 100 },
-      { field: "product", headerName: "Product ", width: 200 },
-      { field: "relatedProduct", headerName: "Related Product", width: 200 },
+      { field: "product", headerName: "Product ", width: 200, hide: true },
+      { field: "productName", headerName: "Product ", width: 200 },
+      {
+        field: "relatedProduct",
+        headerName: "Related Product",
+        width: 200,
+        hide: true,
+      },
+      {
+        field: "relatedProductName",
+        headerName: "Related Product",
+        width: 200,
+      },
       { field: "vendor", headerName: "Vendor", width: 150 },
       {
         field: "editaction",
@@ -190,8 +201,10 @@ class RelatedProductsList extends React.Component {
       let row = {
         numbering: ++counter,
         id: related.id,
-        product: related.product,
-        relatedProduct: related.relatedProduct,
+        product: related.product.id,
+        productName: related.product.name,
+        relatedProduct: related.relatedProduct.id,
+        relatedProductName: related.relatedProduct.name,
         vendor: related.vendor,
         relatedBy: related.relatedBy,
       };

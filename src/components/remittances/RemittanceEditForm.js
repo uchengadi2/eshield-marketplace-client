@@ -346,8 +346,8 @@ function RemittanceEditForm(props) {
 
       allData.push({
         id: item._id,
-        order: item.order,
-        vendor: item.vendor,
+        order: item.order.id,
+        vendor: item.vendor.id,
         customer: item.customer,
         totalProductAmount: item.totalProductAmount,
         totalDeliveryCost: item.totalDeliveryCost,
@@ -403,7 +403,7 @@ function RemittanceEditForm(props) {
       allData.push({
         id: item._id,
         orderNumber: item.orderNumber,
-        product: item.product,
+        product: item.product.id,
         vendor: item.productVendor,
         orderedQuantity: item.orderedQuantity,
         orderedPrice: item.orderedPrice,
@@ -423,7 +423,7 @@ function RemittanceEditForm(props) {
         paymentMethod: item.paymentMethod,
         status: item.status,
         rejectionReason: item.rejectionReason,
-        sku: item.sku,
+        sku: item.product.sku,
       });
 
       if (!allData) {

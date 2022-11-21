@@ -144,7 +144,8 @@ class CurrencyList extends React.Component {
       { field: "numbering", headerName: "S/n", width: 100 },
       { field: "name", headerName: "Currency Name", width: 200 },
       { field: "code", headerName: "Currency Code", width: 200 },
-      { field: "country", headerName: "Country", width: 200 },
+      { field: "country", headerName: "Country", width: 200, hide: true },
+      { field: "countryName", headerName: "Country", width: 200 },
 
       {
         field: "editaction",
@@ -194,7 +195,8 @@ class CurrencyList extends React.Component {
         name: currency.name,
         code: currency.code,
         symbol: currency.symbol,
-        country: currency.country,
+        country: currency.country[0].id,
+        countryName: currency.country[0].name,
         description: currency.description,
       };
       rows.push(row);

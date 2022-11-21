@@ -158,8 +158,10 @@ class RemittanceList extends React.Component {
         headerName: "Remittance Status",
         width: 150,
       },
-      { field: "payment", headerName: "Payment", width: 200 },
-      { field: "vendor", headerName: "Vendor", width: 200 },
+      { field: "payment", headerName: "Payment", width: 200, hide: true },
+      { field: "vendor", headerName: "Vendor", width: 200, hide: true },
+      { field: "paymentRef", headerName: "Payment RefNumber", width: 200 },
+      { field: "vendorName", headerName: "Vendor", width: 200 },
       // {
       //   field: "totalProductAmount",
       //   headerName: "Total Amount",
@@ -232,15 +234,17 @@ class RemittanceList extends React.Component {
         ),
       },
     ];
-    this.props.remittances.map((remittance) => {
+    this.props.remittances.map((remittance, index) => {
       let row = {
         numbering: ++counter,
         id: remittance.id,
         refNumber: remittance.refNumber,
         order: remittance.order,
-        vendor: remittance.vendor,
+        vendor: remittance.vendor[index].id,
+        vendorName: remittance.vendor[index].name,
         customer: remittance.customer,
-        payment: remittance.payment,
+        payment: remittance.payment[index].id,
+        paymentRef: remittance.payment[index].refNumber,
         remittanceStatus: remittance.remittanceStatus,
         amountRemitted: remittance.amountRemitted,
         totalRemittableAmount: remittance.totalRemittableAmount,

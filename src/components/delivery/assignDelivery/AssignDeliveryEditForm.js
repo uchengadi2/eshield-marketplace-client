@@ -119,7 +119,7 @@ function AssignDeliveryEditForm(props) {
       allData.push({
         id: item._id,
         orderNumber: item.orderNumber,
-        product: item.product,
+        product: item.product.id,
         vendor: item.productVendor,
         orderedQuantity: item.orderedQuantity,
         orderedPrice: item.orderedPrice,

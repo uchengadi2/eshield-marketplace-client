@@ -1126,6 +1126,8 @@ function OrderEditForm(props) {
 
   const dispatch = useDispatch();
 
+  console.log("sku:", params.sku);
+
   useEffect(() => {
     const fetchData = async () => {
       let allData = [];
@@ -1900,7 +1902,7 @@ function OrderEditForm(props) {
                 label=""
                 id="sku"
                 name="sku"
-                params={params.sku}
+                defaultValue={params.sku}
                 type="text"
                 component={renderSkuField}
               />
@@ -2090,7 +2092,9 @@ function OrderEditForm(props) {
                 label=""
                 id="totalDeliveryCost"
                 name="totalDeliveryCost"
-                defaultValue={params.totalDeliveryCost}
+                defaultValue={params.totalDeliveryCost
+                  .toFixed(2)
+                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                 type="text"
                 component={renderTotalDeliveryCostField}
               />
@@ -2100,7 +2104,9 @@ function OrderEditForm(props) {
                 label=""
                 id="totalProductCost"
                 name="totalProductCost"
-                defaultValue={params.totalProductCost}
+                defaultValue={params.totalProductCost
+                  .toFixed(2)
+                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                 type="text"
                 component={renderTotalProductCostField}
               />

@@ -1935,7 +1935,7 @@ function OrderForDeliveryEditForm(props) {
                 label=""
                 id="sku"
                 name="sku"
-                params={params.sku}
+                defaultValue={params.sku}
                 type="text"
                 component={renderSkuField}
               />
@@ -1967,7 +1967,7 @@ function OrderForDeliveryEditForm(props) {
                 label=""
                 id="orderedPrice"
                 name="orderedPrice"
-                defaultValue={`${getCurrencyCode()}${params.orderedPrice}`}
+                defaultValue={params.orderedPrice}
                 type="text"
                 component={renderOrderedPriceField}
               />
@@ -2124,7 +2124,9 @@ function OrderForDeliveryEditForm(props) {
                 label=""
                 id="totalDeliveryCost"
                 name="totalDeliveryCost"
-                defaultValue={params.totalDeliveryCost}
+                defaultValue={params.totalDeliveryCost
+                  .toFixed(2)
+                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                 type="text"
                 component={renderTotalDeliveryCostField}
               />
@@ -2134,7 +2136,9 @@ function OrderForDeliveryEditForm(props) {
                 label=""
                 id="totalProductCost"
                 name="totalProductCost"
-                defaultValue={params.totalProductCost}
+                defaultValue={params.totalProductCost
+                  .toFixed(2)
+                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
                 type="text"
                 component={renderTotalProductCostField}
               />

@@ -142,13 +142,14 @@ class ProductsOnSaleList extends React.Component {
     let counter = 0;
     const columns = [
       { field: "numbering", headerName: "S/n", width: 100 },
-      { field: "product", headerName: "Product Name", width: 220 },
+      { field: "product", headerName: "Product", width: 220, hide: true },
+      { field: "productName", headerName: "Product Name", width: 220 },
       {
         field: "salesPricePerUnit",
         headerName: "Sales Price Per Unit",
         width: 150,
       },
-      { field: "vendor", headerName: "Vendor", width: 150 },
+
       {
         field: "editaction",
         headerName: "",
@@ -194,7 +195,8 @@ class ProductsOnSaleList extends React.Component {
       let row = {
         numbering: ++counter,
         id: sales.id,
-        product: sales.product,
+        product: sales.product.id,
+        productName: sales.product.name,
         salesPricePerUnit: sales.salesPricePerUnit,
         vendor: sales.vendor,
         startDate: sales.startDate,
