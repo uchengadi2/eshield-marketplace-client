@@ -153,17 +153,20 @@ function CategoryEditForm(props) {
     const Str = require("@supercharge/strings");
 
     const form = new FormData();
-    if (formValues["name"]) {
-      form.append("name", formValues.name);
-    }
-    if (formValues["description"]) {
-      form.append("description", formValues.description);
-    }
-
+    form.append("name", formValues.name ? formValues.name : params.name);
+    form.append(
+      "description",
+      formValues.description ? formValues.description : params.description
+    );
     form.append("createdBy", userId);
     if (formValues.image) {
       form.append("image", formValues.image[0]);
     }
+
+    // form.append("createdBy", userId);
+    // if (formValues.image) {
+    //   form.append("image", formValues.image[0]);
+    // }
 
     if (formValues) {
       const editForm = async () => {
