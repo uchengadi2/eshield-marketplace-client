@@ -1810,7 +1810,7 @@ function ProductEditForm(props) {
         ? formValues.deliveryCostPerUnitWithinProductLocation
         : params.deliveryCostPerUnitWithinProductLocation
         ? params.deliveryCostPerUnitWithinProductLocation
-        : ""
+        : 0
     );
     form.append(
       "maxmumQuantityForBaselineDelivery",
@@ -1818,7 +1818,7 @@ function ProductEditForm(props) {
         ? formValues.maxmumQuantityForBaselineDelivery
         : params.maxmumQuantityForBaselineDelivery
         ? params.maxmumQuantityForBaselineDelivery
-        : ""
+        : 0
     );
     form.append(
       "estimatedDeliveryPeriodInDays",
@@ -1826,7 +1826,7 @@ function ProductEditForm(props) {
         ? formValues.estimatedDeliveryPeriodInDays
         : params.estimatedDeliveryPeriodInDays
         ? params.estimatedDeliveryPeriodInDays
-        : ""
+        : 0
     );
     form.append(
       "estimatedDeliveryPeriodInHours",
@@ -1834,7 +1834,7 @@ function ProductEditForm(props) {
         ? formValues.estimatedDeliveryPeriodInHours
         : params.estimatedDeliveryPeriodInHours
         ? params.estimatedDeliveryPeriodInHours
-        : ""
+        : 0
     );
     form.append(
       "baselineDeliveryCostWithinProductLocation",
@@ -1842,7 +1842,7 @@ function ProductEditForm(props) {
         ? formValues.baselineDeliveryCostWithinProductLocation
         : params.baselineDeliveryCostWithinProductLocation
         ? params.baselineDeliveryCostWithinProductLocation
-        : ""
+        : 0
     );
     form.append(
       "estimatedDeliveryPeriodInMinutes",
@@ -1850,7 +1850,7 @@ function ProductEditForm(props) {
         ? formValues.estimatedDeliveryPeriodInMinutes
         : params.estimatedDeliveryPeriodInMinutes
         ? params.estimatedDeliveryPeriodInMinutes
-        : ""
+        : 0
     );
     form.append(
       "marketingClaims",

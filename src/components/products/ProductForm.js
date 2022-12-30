@@ -1799,40 +1799,40 @@ function ProductForm(props) {
       "deliveryCostPerUnitWithinProductLocation",
       formValues.deliveryCostPerUnitWithinProductLocation
         ? formValues.deliveryCostPerUnitWithinProductLocation
-        : ""
+        : 0
     );
     form.append(
       "maxmumQuantityForBaselineDelivery",
       formValues.maxmumQuantityForBaselineDelivery
         ? formValues.maxmumQuantityForBaselineDelivery
-        : ""
+        : 0
     );
     form.append(
       "baselineDeliveryCostWithinProductLocation",
       formValues.baselineDeliveryCostWithinProductLocation
         ? formValues.baselineDeliveryCostWithinProductLocation
-        : ""
+        : 0
     );
 
     form.append(
       "estimatedDeliveryPeriodInDays",
       formValues.estimatedDeliveryPeriodInDays
         ? formValues.estimatedDeliveryPeriodInDays
-        : ""
+        : 0
     );
 
     form.append(
       "estimatedDeliveryPeriodInHours",
       formValues.estimatedDeliveryPeriodInHours
         ? formValues.estimatedDeliveryPeriodInHours
-        : ""
+        : 0
     );
 
     form.append(
       "estimatedDeliveryPeriodInMinutes",
       formValues.estimatedDeliveryPeriodInMinutes
         ? formValues.estimatedDeliveryPeriodInMinutes
-        : ""
+        : 0
     );
 
     if (!formValues["refNumber"]) {
