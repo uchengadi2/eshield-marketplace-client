@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Field, reduxForm } from "redux-form";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import { useDispatch } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
-
+import { SIGN_IN } from "../../actions/types";
 import { TextField } from "@material-ui/core";
 //import background from "./../../logistic_assets/cover_image_1.png";
 import background from "./../../assets/images/covers/cover3.png";
@@ -131,6 +132,7 @@ const LoginForm = (props) => {
     backgroundColor: "",
   });
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const buttonContent = () => {
     return <React.Fragment>Login</React.Fragment>;
@@ -164,7 +166,52 @@ const LoginForm = (props) => {
   };
   let count = 0;
   const onSubmit = (formValues) => {
-    setLoading(true);
+    // setLoading(true);
+
+    // if (!formValues["email"] || !formValues["password"]) {
+    //   handleFailedLoginInSnackbar(
+    //     "Please enter your email and password login credentials and try again"
+    //   );
+    //   setLoading(false);
+    //   return;
+    // }
+
+    // if (!validateEmail(formValues["email"])) {
+    //   handleFailedLoginInSnackbar(
+    //     "You just entered an invalid email address. Please correct it and try again"
+    //   );
+    //   setLoading(false);
+
+    //   return;
+    // }
+
+    // if (formValues) {
+    //   const createForm = async () => {
+    //     api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+    //     const response = await api.post(`/users/login`, formValues);
+    //     console.log("login response:", response);
+
+    //     if (response.data.status === "success") {
+    //       //props.onSubmit(formValues);
+    //       ++count;
+    //       console.log("successfully logged in");
+    //       //setLoading(false);
+    //     } else {
+    //       props.handleFailedLoginInSnackbar("Incorrect Username or Password");
+    //     }
+    //   };
+    //   createForm().catch((err) => {
+    //     handleFailedLoginInSnackbar("Incorrect Username or Password");
+    //     setLoading(false);
+    //     console.log("err:", err.message);
+    //   });
+    // }
+
+    // props.onSubmit(formValues);
+    // setLoading(true);
+
+    setLoading(false);
+    // console.log("the url params at login:", params);
 
     if (!formValues["email"] || !formValues["password"]) {
       handleFailedLoginInSnackbar(
@@ -185,27 +232,49 @@ const LoginForm = (props) => {
 
     if (formValues) {
       const createForm = async () => {
-        api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+        // api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
         const response = await api.post(`/users/login`, formValues);
-        console.log("login response:", response);
 
-        if (response.data.status === "success") {
-          //props.onSubmit(formValues);
-          ++count;
-          console.log("successfully logged in");
-          //setLoading(false);
+        if (response.status === 200) {
+          const token = {
+            status: "success",
+            token: response.data.token,
+            userId: response.data.data.user.id,
+          };
+
+          props.setToken(token);
+          props.setUserId(token);
+          dispatch({
+            type: SIGN_IN,
+            payload: response.data,
+          });
+
+          props.handleSuccessfulLoginInSnackbar(
+            `You have successfully logged in`
+          );
+          //props.onSubmit(response.data.token);
+
+          setLoading(false);
         } else {
-          props.handleFailedLoginInSnackbar("Incorrect Username or Password");
+          handleFailedLoginInSnackbar(
+            "Incorrect Login Credentials. Check your email and password and try again 1111"
+          );
+          setLoading(false);
+
+          return;
         }
       };
       createForm().catch((err) => {
-        handleFailedLoginInSnackbar("Incorrect Username or Password");
+        handleFailedLoginInSnackbar(
+          "Incorrect Login Credentials. Check your email and password and try again"
+        );
         setLoading(false);
         console.log("err:", err.message);
+
+        return;
       });
     }
 
-    props.onSubmit(formValues);
     setLoading(true);
   };
 

@@ -349,28 +349,6 @@ const Header = (props) => {
     );
   };
 
-  // const renderLogout = () => {
-  //   return (
-  //     <Dialog
-  //       style={{ zIndex: 1302 }}
-  //       fullScreen
-  //       open={openLogout}
-  //       onClose={() => [setOpenLogout(false), history.push("/")]}
-  //       fullWidth
-  //       maxWidth="md"
-  //     >
-  //       <DialogContent>
-  //         <UserLogout
-  //           token={props.token}
-  //           handleLogoutProcess={props.handleLogoutProcess}
-  //           setToken={props.setToken}
-  //           // handleDialogOpenStatus={handleDialogOpenStatus}
-  //         />
-  //       </DialogContent>
-  //     </Dialog>
-  //   );
-  // };
-
   const drawer = (
     <React.Fragment>
       <SwipeableDrawer

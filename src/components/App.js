@@ -24,6 +24,7 @@ import UtilitiesLayout from "./ui/UtilitiesLayout";
 import TripsLayout from "./ui/TripLayout";
 import DeliveryLayout from "./ui/DeliveryLayout";
 import ReportsLayout from "./ui/ReportsLayout";
+import LoginForm from "./authForms/LoginForm";
 
 function App() {
   const { token, setToken } = useToken();
@@ -62,7 +63,7 @@ function App() {
 
   if (!token) {
     return (
-      <UserLogin
+      <LoginForm
         setToken={setToken}
         setUserId={setUserId}
         handleSuccessfulLoginInSnackbar={handleSuccessfulLoginInSnackbar}
@@ -82,8 +83,10 @@ function App() {
             setSelectedIndex={setSelectedIndex}
             token={token}
             userId={userId}
-            setToken={setToken}
-            setUserId={setUserId}
+            // setToken={setToken}
+            // setUserId={setUserId}
+            setToken={setToken ? setToken : null}
+            setUserId={setUserId ? setUserId : null}
             handleLogoutProcess={handleLogoutProcess}
           />
           ;
