@@ -95,8 +95,6 @@ function CategoryLayout({ token, userId }) {
 
   const width = 12;
 
-  console.log("thsi si userid at layout:", userId);
-
   return (
     <Grid
       container

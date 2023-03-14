@@ -178,14 +178,13 @@ class OnTransitDeliveryList extends React.Component {
         headerName: "Logistics Partner",
         width: 200,
       },
-      { field: "order", headerName: "Order", width: 200, hide: true },
+
       {
         field: "logisticsPartner",
         headerName: "Logistics Partnerr",
         width: 200,
         hide: true,
       },
-      { field: "quantity", headerName: "Quantity for Delivery", width: 150 },
       { field: "status", headerName: "Status", width: 150 },
       // {
       //   field: "consignmentCountry",
@@ -206,6 +205,7 @@ class OnTransitDeliveryList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <EditRoundedIcon
+              style={{ cursor: "pointer" }}
               onClick={() => [
                 this.setState({
                   editOpen: true,
@@ -263,7 +263,7 @@ class OnTransitDeliveryList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <DeleteRoundedIcon
-              style={{ color: "red" }}
+              style={{ color: "red", cursor: "pointer" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
                 history.push(`/deliveries/ontransit/delete/${params.id}`),
@@ -277,32 +277,28 @@ class OnTransitDeliveryList extends React.Component {
       let row = {
         numbering: ++counter,
         id: delivery.id,
-        orderNumber: delivery.order.orderNumber,
-        order: delivery.order.id,
         refNumber: delivery.refNumber,
-        product: delivery.product.id,
-        sku: delivery.product.sku,
-        productVendor: delivery.productVendor,
-        status: delivery.status,
-        quantity: delivery.quantity,
-        sourceState: delivery.sourceState,
-        sourceCountry: delivery.sourceCountry,
-        deliveryCost: delivery.deliveryCost,
+        orderNumber: delivery.orderNumber,
+
         recipientName: delivery.recipientName,
         recipientPhoneNumber: delivery.recipientPhoneNumber,
         recipientAddress: delivery.recipientAddress,
         destinationState: delivery.destinationState,
         destinationCountry: delivery.destinationCountry,
         customer: delivery.customer,
+        customerEmail: delivery.customerEmail,
+        customerPhoneNumber: delivery.customerPhoneNumber,
+        dateOrdered: delivery.dateOrdered,
         status: delivery.status,
         returnReason: delivery.returnReason,
         logisticsPartner: delivery.logisticsPartner.id,
         logisticsPartnerName: delivery.logisticsPartner.name,
         dateAssigned: delivery.dateAssigned,
         assignedBy: delivery.assignedBy,
-        deliveryCommencementDate: delivery.deliveryCommencementDate,
         logisticsPartnerState: delivery.logisticsPartnerState,
         logisticsPartnerCountry: delivery.logisticsPartnerCountry,
+        deliveryCommencementDate: delivery.deliveryCommencementDate,
+        transaction: delivery.transaction,
       };
       rows.push(row);
     });

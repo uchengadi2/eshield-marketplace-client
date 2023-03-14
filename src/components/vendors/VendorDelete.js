@@ -57,7 +57,7 @@ class VendorDelete extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { category: state.category[ownProps.match.params.id] };
+  return { vendor: state.vendor[ownProps.match.params.id] };
 };
 
 export default connect(null, { fetchVendor, deleteVendor })(VendorDelete);

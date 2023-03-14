@@ -193,7 +193,7 @@ const Header = (props) => {
     { name: "Deliveries", link: "/deliveries", activeIndex: 5 },
     { name: "Payments", link: "/payments", activeIndex: 6 },
     { name: "Remittances", link: "/remittances", activeIndex: 7 },
-    { name: "Reports", link: "/reports", activeIndex: 8 },
+    // { name: "Reports", link: "/reports", activeIndex: 8 },
     { name: "Utilities", link: "/utilities", activeIndex: 9 },
 
     // { name: "Sign Out", link: "/logout" },

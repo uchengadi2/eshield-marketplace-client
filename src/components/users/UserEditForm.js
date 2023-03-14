@@ -9,6 +9,7 @@ import { TextField } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import { Typography } from "@mui/material";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
@@ -422,6 +423,22 @@ function UserEditForm(props) {
 
   return (
     <div className={classes.root}>
+      <Grid
+        item
+        container
+        style={{ marginTop: 1, marginBottom: 2 }}
+        justifyContent="center"
+      >
+        <CancelRoundedIcon
+          style={{
+            marginLeft: 460,
+            fontSize: 30,
+            marginTop: "-20px",
+            cursor: "pointer",
+          }}
+          onClick={() => [props.handleEditDialogOpenStatus()]}
+        />
+      </Grid>
       <Grid item container justifyContent="center">
         <FormLabel
           style={{ color: "grey", fontSize: "1.3em" }}

@@ -482,7 +482,7 @@ function AllProductsLayout(props) {
       spacing={2}
     >
       <Grid item container direction="column" sm={width}>
-        <Grid item className={classes.selectField}>
+        {/* <Grid item className={classes.selectField}>
           <VendorSelectFilter
             token={props.token}
             userId={props.userId}
@@ -490,7 +490,7 @@ function AllProductsLayout(props) {
             selectedVendor={selectedVendor}
             handleVendorChange={handleVendorChange}
           />
-        </Grid>
+        </Grid> */}
         <Grid item className={classes.headerContainer}>
           <Toolbar disableGutters className={classes.toolbar}>
             <Button

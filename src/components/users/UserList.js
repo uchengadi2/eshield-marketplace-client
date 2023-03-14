@@ -123,6 +123,7 @@ class UserList extends React.Component {
       { field: "numbering", headerName: "S/n", width: 100 },
       { field: "name", headerName: "User Name", width: 300 },
       { field: "type", headerName: "Type", width: 150 },
+      { field: "role", headerName: "Role", width: 150 },
       { field: "email", headerName: "Email Address", width: 250 },
       // { field: "vendor", headerName: "Vendor", width: 200 },
       {
@@ -134,6 +135,7 @@ class UserList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <EditRoundedIcon
+              style={{ cursor: "pointer" }}
               onClick={() => [
                 this.setState({
                   editOpen: true,
@@ -155,7 +157,7 @@ class UserList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <DeleteRoundedIcon
-              style={{ color: "red" }}
+              style={{ color: "red", cursor: "pointer" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
                 history.push(`/users/delete/${params.id}`),

@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -58,11 +59,12 @@ const renderAmountPaidField = ({
   return (
     <TextField
       //error={touched && invalid}
-      helperText="Amount Paid"
+      helperText="Amount TopUp"
       variant="outlined"
       label={label}
       id={input.name}
       //value={formInput.name}
+      // defaultValue={params.amountPaid}
       fullWidth
       //required
       type={type}
@@ -106,7 +108,6 @@ const renderPaymentDateField = ({
     />
   );
 };
-
 function PaymentEditForm(props) {
   const { params } = props;
   const classes = useStyles();
@@ -121,7 +122,9 @@ function PaymentEditForm(props) {
   const [countryList, setCountryList] = useState([]);
   const [stateList, setStateList] = useState([]);
   const [currency, setCurrency] = useState();
-  const [paymentCurrency, setPaymentCurrency] = useState();
+  const [paymentCurrency, setPaymentCurrency] = useState(
+    params.paymentCurrency
+  );
   const [location, setLocation] = useState();
   const [country, setCountry] = useState();
   const [recipientState, setRecipientState] = useState();
@@ -134,12 +137,14 @@ function PaymentEditForm(props) {
   const [customerEmail, setCustomerEmail] = useState();
   const [customerPhoneNumber, setCustomerPhoneNumber] = useState();
   const [orderForDeliveryList, setOrderForDeliveryList] = useState([]);
-  const [orderForDelivery, setOrderForDelivery] = useState(params.order);
-  const [orderNumber, setOrderNumber] = useState();
+  const [orderForDelivery, setOrderForDelivery] = useState(params.transaction);
+  const [orderNumber, setOrderNumber] = useState(params.orderNumber);
   const [orderedQuantity, setOrderedQuantity] = useState();
   const [orderedPrice, setOrderedPrice] = useState(0);
   const [totalDeliveryCost, setTotalDeliveryCost] = useState(0);
-  const [totalProductCost, setTotalProductCost] = useState(0);
+  const [totalProductCost, setTotalProductCost] = useState(
+    params.totalProductCost
+  );
   const [recipientName, setRecipientName] = useState();
   const [recipientPhoneNumber, setRecipientPhoneNumber] = useState();
   const [recipientAddress, setRecipientAddress] = useState();
@@ -174,19 +179,16 @@ function PaymentEditForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders/${orderForDelivery}`);
+      const response = await api.get(`/transactions/${orderForDelivery}`);
       const item = response.data.data.data;
 
       allData.push({
         id: item._id,
         orderNumber: item.orderNumber,
-        product: item.product.id,
-        vendor: item.productVendor,
-        orderedQuantity: item.orderedQuantity,
-        orderedPrice: item.orderedPrice,
+
         currency: item.productCurrency,
-        location: item.productLocation,
-        country: item.locationCountry,
+        // location: item.productLocation,
+        // country: item.locationCountry,
         totalDeliveryCost: item.totalDeliveryCost,
         totalProductCost: item.totalProductCost,
         recipientName: item.recipientName,
@@ -194,27 +196,19 @@ function PaymentEditForm(props) {
         recipientAddress: item.recipientAddress,
         recipientState: item.recipientState,
         recipientCountry: item.recipientCountry,
-        dateOrdered: new Date(item.dateOrdered).toISOString().slice(0, 10),
+        dateOrdered: new Date(item.transactionDate).toISOString().slice(0, 10),
         orderedBy: item.orderedBy,
         paymentStatus: item.paymentStatus,
         paymentMethod: item.paymentMethod,
         status: item.status,
         rejectionReason: item.rejectionReason,
-        sku: item.product.sku,
       });
 
       if (!allData) {
         return;
       }
 
-      setVendor(allData[0].vendor);
       setOrderNumber(allData[0].orderNumber);
-      setProduct(allData[0].product);
-      setOrderedQuantity(allData[0].orderedQuantity);
-      setOrderedPrice(allData[0].orderedPrice);
-      setCurrency(allData[0].currency);
-      setLocation(allData[0].location);
-      setCountry(allData[0].country);
       setTotalDeliveryCost(allData[0].totalDeliveryCost);
       setTotalProductCost(allData[0].totalProductCost);
       setRecipientName(allData[0].recipientName);
@@ -228,7 +222,7 @@ function PaymentEditForm(props) {
       setPaymentMethod(allData[0].paymentMethod);
       setOrderStatus(allData[0].status);
       setRejectionReason(allData[0].rejectionReason);
-      setSku(allData[0].sku);
+      setCurrency(allData[0].currency);
     };
 
     //call the function
@@ -240,10 +234,10 @@ function PaymentEditForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders`);
+      const response = await api.get(`/transactions`);
       const workingData = response.data.data.data;
-      workingData.map((order) => {
-        allData.push({ id: order._id, name: order.orderNumber });
+      workingData.map((transaction) => {
+        allData.push({ id: transaction._id, name: transaction.orderNumber });
       });
       setOrderForDeliveryList(allData);
     };
@@ -1101,7 +1095,7 @@ function PaymentEditForm(props) {
     );
   };
 
-  const renderPaymentStatusField = ({
+  const renderConfirmationPaymentStatusField = ({
     input,
     label,
     meta: { touched, error, invalid },
@@ -1159,6 +1153,7 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1190,6 +1185,7 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1221,6 +1217,7 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1252,12 +1249,13 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
   };
 
-  const renderOrderPaymentStatusField = ({
+  const renderPaymentStatusField = ({
     input,
     label,
     meta: { touched, error, invalid },
@@ -1268,7 +1266,7 @@ function PaymentEditForm(props) {
     return (
       <TextField
         //error={touched && invalid}
-        helperText="Order Payment Status"
+        helperText="Payment Status"
         variant="outlined"
         label={label}
         id={input.name}
@@ -1283,6 +1281,7 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1314,6 +1313,7 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1340,6 +1340,9 @@ function PaymentEditForm(props) {
         //required
         type={type}
         {...custom}
+        inputProps={{
+          readOnly: true,
+        }}
         onChange={input.onChange}
         multiline={true}
         minRows={3}
@@ -1373,6 +1376,7 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1404,6 +1408,7 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1466,6 +1471,7 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1499,6 +1505,7 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1520,9 +1527,11 @@ function PaymentEditForm(props) {
         label={label}
         id={input.name}
         //value={formInput.name}
-        defaultValue={totalProductCost
-          .toFixed(2)
-          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+        // defaultValue={
+        //   totalProductCost
+        //   .toFixed(2)
+        //   .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+        // }
         fullWidth
         //required
         type={type}
@@ -1532,6 +1541,7 @@ function PaymentEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1601,6 +1611,38 @@ function PaymentEditForm(props) {
     );
   };
 
+  const renderAmountAlreadyPaidField = ({
+    input,
+    label,
+    meta: { touched, error, invalid },
+    type,
+    id,
+    ...custom
+  }) => {
+    return (
+      <TextField
+        //error={touched && invalid}
+        helperText="Amount Already Paid"
+        variant="outlined"
+        label={label}
+        id={input.name}
+        //value={formInput.name}
+        // defaultValue={params.amountPaid}
+        fullWidth
+        //required
+        type={type}
+        {...custom}
+        onChange={input.onChange}
+        inputProps={{
+          style: {
+            height: 1,
+          },
+          readOnly: true,
+        }}
+      />
+    );
+  };
+
   //   const DateOrdered = params.dateOrdered
   //     ? new Date(params.dateOrdered).toISOString().slice(0, 10)
   //     : "";
@@ -1633,36 +1675,40 @@ function PaymentEditForm(props) {
     }
 
     let paymentamount;
-    if (!formValues["amountPaid"]) {
-      paymentamount = params.amountPaid;
-    } else {
-      paymentamount = formValues["amountPaid"];
-    }
+    // if (!formValues["amountPaid"]) {
+    //   paymentamount = params.amountPaid;
+    // } else {
+    //   paymentamount = formValues["amountPaid"];
+    // }
 
-    const totalExpectedPayment = +totalProductCost + +totalDeliveryCost;
+    // const totalExpectedPayment = +totalProductCost + +totalDeliveryCost;
 
-    if (paymentConfirmation === "confirmed-full") {
-      if (+paymentamount !== +totalExpectedPayment) {
-        props.handleFailedSnackbar(
-          "The amount paid is not eqaul to the total amount expected. Change the payment confirmation status or enter the correct total amount"
-        );
-        setLoading(false);
-        return;
-      }
-    }
+    // if (paymentConfirmation === "confirmed-full") {
+    //   if (+paymentamount !== +totalExpectedPayment) {
+    //     props.handleFailedSnackbar(
+    //       "The amount paid is not eqaul to the total amount expected. Change the payment confirmation status or enter the correct total amount"
+    //     );
+    //     setLoading(false);
+    //     return;
+    //   }
+    // }
 
     const dataValue = {
       refNumber: "PAY-" + Math.floor(Math.random() * 100000000) + "-OR",
-      order: orderForDelivery,
-      vendor: vendor,
+      transaction: orderForDelivery,
+      orderNumber: orderNumber,
       customer: orderedBy,
       totalProductAmount: totalProductCost,
       totalDeliveryCost: totalDeliveryCost,
       paymentCurrency: paymentCurrency,
       paymentConfirmationStatus: paymentConfirmation,
       paymentConfirmedBy: props.userId,
-      paymentDate: formValues["paymentDate"],
-      amountPaid: formValues["amountPaid"],
+      paymentDate: formValues["paymentDate"]
+        ? formValues["paymentDate"]
+        : paymentDate,
+      amountAlreadyPaid: parseFloat(formValues["amountPaid"])
+        ? parseFloat(formValues["amountPaid"]) + params.amountAlreadyPaid
+        : parseFloat(params.amountAlreadyPaid),
     };
 
     if (dataValue) {
@@ -1682,23 +1728,12 @@ function PaymentEditForm(props) {
 
           //change the status of this order
 
-          if (
-            paymentConfirmation === "confirmed-full" &&
-            currentPaymentConfirmation === "confirmed-full"
-          ) {
+          if (paymentConfirmation === "confirmed-full") {
             const data = {
               paymentStatus: "paid",
             };
             const orderResponse = await api.patch(
-              `/orders/${orderForDelivery}`,
-              data
-            );
-          } else {
-            const data = {
-              paymentStatus: "to-be-confirmed",
-            };
-            const orderResponse = await api.patch(
-              `/orders/${orderForDelivery}`,
+              `/transactions/${orderForDelivery}`,
               data
             );
           }
@@ -1733,14 +1768,25 @@ function PaymentEditForm(props) {
         <Grid
           item
           container
-          style={{ marginTop: 20, marginBottom: 15 }}
+          style={{ marginTop: 1, marginBottom: 2 }}
           justifyContent="center"
         >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleEditDialogOpenStatus()]}
+          />
+        </Grid>
+        <Grid item container style={{ marginTop: 20 }} justifyContent="center">
           <FormLabel
             style={{ color: "grey", fontSize: "1.3em" }}
             component="legend"
           >
-            <Typography variant="h5">Payment Processing</Typography>
+            <Typography variant="h5">Process Payment</Typography>
           </FormLabel>
         </Grid>
         <Box
@@ -1751,78 +1797,20 @@ function PaymentEditForm(props) {
           noValidate
           autoComplete="off"
         >
-          <Field
-            label=""
-            id="order"
-            name="order"
-            type="text"
-            component={renderOrderForDeliveryField}
-          />
+          <Grid container direction="row" style={{ marginTop: 20 }}></Grid>
           <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 350 }}>
-              <Field
-                label=""
-                id="productVendor"
-                name="productVendor"
-                type="text"
-                component={renderVendorField}
-              />
-            </Grid>
-
-            <Grid item style={{ width: 140, marginLeft: 10 }}>
-              <Field
-                label=""
-                id="sku"
-                name="sku"
-                type="text"
-                component={renderSkuField}
-              />
-            </Grid>
-          </Grid>
-          <Field
-            label=""
-            id="product"
-            name="product"
-            type="text"
-            component={renderProductField}
-          />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
+            <Grid item style={{ width: "100%" }}>
               <Field
                 label=""
                 id="orderNumber"
                 name="orderNumber"
+                //defaultValue={params.orderNumber}
                 type="text"
                 component={renderOrderNumberField}
               />
             </Grid>
-            <Grid item style={{ marginLeft: 10, width: 150 }}>
-              <Field
-                label=""
-                id="orderedQuantity"
-                name="orderedQuantity"
-                type="text"
-                component={renderOrderedQuantityField}
-              />
-            </Grid>
-            {/* {getCurrencyCode()} */}
-            <Grid item style={{ width: 165, marginLeft: 15 }}>
-              <Field
-                label=""
-                id="orderedPrice"
-                name="orderedPrice"
-                type="text"
-                component={renderOrderedPriceField}
-              />
-            </Grid>
           </Grid>
-          <Field
-            label=""
-            id="productCurrency"
-            name="productCurrency"
-            type="text"
-            component={renderProductCurrencyField}
-          />
+
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Customer Details
@@ -1832,8 +1820,9 @@ function PaymentEditForm(props) {
             <Grid item style={{ width: 250 }}>
               <Field
                 label=""
-                id="dateOrdered"
-                name="dateOrdered"
+                id="transactionDate"
+                name="transactionDate"
+                //defaultValue={DateOrdered}
                 type="date"
                 component={renderDateOrderedField}
               />
@@ -1854,6 +1843,7 @@ function PaymentEditForm(props) {
                 label=""
                 id="customerEmail"
                 name="customerEmail"
+                //defaultValue={customerEmail}
                 type="text"
                 component={renderCustomerEmailField}
               />
@@ -1863,34 +1853,9 @@ function PaymentEditForm(props) {
                 label=""
                 id="customerPhoneNumber"
                 name="customerPhoneNumber"
+                // defaultValue={customerPhoneNumber}
                 type="text"
                 component={renderCustomerPhoneNumberField}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid item container style={{ marginTop: 20 }}>
-            <FormLabel style={{ color: "blue" }} component="legend">
-              Product Location
-            </FormLabel>
-          </Grid>
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 250 }}>
-              <Field
-                label=""
-                id="locationCountry"
-                name="locationCountry"
-                type="number"
-                component={renderProductCountryField}
-              />
-            </Grid>
-            <Grid item style={{ width: 250, marginLeft: 0 }}>
-              <Field
-                label=""
-                id="productLocation"
-                name="productLocation"
-                type="number"
-                component={renderProductLocationField}
               />
             </Grid>
           </Grid>
@@ -1905,6 +1870,7 @@ function PaymentEditForm(props) {
             label=""
             id="recipientName"
             name="recipientName"
+            //defaultValue={params.recipientName}
             type="text"
             component={renderRecipientNameField}
             style={{ marginTop: 10 }}
@@ -1914,6 +1880,7 @@ function PaymentEditForm(props) {
             label=""
             id="recipientPhoneNumber"
             name="recipientPhoneNumber"
+            //defaultValue={params.recipientPhoneNumber}
             type="text"
             component={renderRecipientPhoneNumberField}
             style={{ marginTop: 10 }}
@@ -1923,6 +1890,7 @@ function PaymentEditForm(props) {
             label=""
             id="recipientAddress"
             name="recipientAddress"
+            //defaultValue={params.recipientAddress}
             type="text"
             component={renderRecipientAddressField}
             style={{ marginTop: 10 }}
@@ -1961,6 +1929,13 @@ function PaymentEditForm(props) {
                 label=""
                 id="totalDeliveryCost"
                 name="totalDeliveryCost"
+                defaultValue={
+                  params.totalDeliveryCost
+                    ? params.totalDeliveryCost
+                        .toFixed(2)
+                        .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                    : 0
+                }
                 type="text"
                 component={renderTotalDeliveryCostField}
               />
@@ -1970,28 +1945,46 @@ function PaymentEditForm(props) {
                 label=""
                 id="totalProductCost"
                 name="totalProductCost"
+                defaultValue={
+                  totalProductCost
+                    ? totalProductCost
+                        .toFixed(2)
+                        .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                    : 0
+                }
                 type="text"
                 component={renderTotalProductCostField}
               />
             </Grid>
+
             <Grid item style={{ width: "33%", marginLeft: 10 }}>
               <Field
                 label=""
                 id="status"
                 name="status"
+                //defaultValue={params.status}
                 type="text"
                 component={renderOrderStatusField}
               />
             </Grid>
           </Grid>
+          <Field
+            label=""
+            id="productCurrency"
+            name="productCurrency"
+            defaultValue={params.currency}
+            type="text"
+            component={renderProductCurrencyField}
+          />
           <Grid container direction="row" style={{ marginTop: 20 }}>
             <Grid item style={{ width: 250 }}>
               <Field
                 label=""
-                id="orderPaymentStatus"
-                name="orderPaymentStatus"
+                id="paymentStatus"
+                name="paymentStatus"
+                defaultValue={paymentStatus}
                 type="text"
-                component={renderOrderPaymentStatusField}
+                component={renderPaymentStatusField}
               />
             </Grid>
             <Grid item style={{ width: 240, marginLeft: 10 }}>
@@ -1999,6 +1992,7 @@ function PaymentEditForm(props) {
                 label=""
                 id="paymentMethod"
                 name="paymentMethod"
+                defaultValue={paymentMethod}
                 type="text"
                 component={renderPaymentMethodField}
               />
@@ -2010,17 +2004,29 @@ function PaymentEditForm(props) {
             </FormLabel>
           </Grid>
           <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 250 }}>
+            <Grid item style={{ width: 150 }}>
+              <Field
+                label=""
+                id="amountAlreadyPaid"
+                name="amountAlreadyPaid"
+                defaultValue={params.amountAlreadyPaid
+                  .toFixed(2)
+                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                type="text"
+                component={renderAmountAlreadyPaidField}
+              />
+            </Grid>
+            <Grid item style={{ width: 150, marginLeft: 10 }}>
               <Field
                 label=""
                 id="amountPaid"
                 name="amountPaid"
-                defaultValue={params.amountPaid}
-                type="number"
+                defaultValue={0}
+                type="text"
                 component={renderAmountPaidField}
               />
             </Grid>
-            <Grid item style={{ width: 240, marginLeft: 10 }}>
+            <Grid item style={{ width: 180, marginLeft: 10 }}>
               <Field
                 label=""
                 id="paymentDate"
@@ -2036,7 +2042,7 @@ function PaymentEditForm(props) {
             id="paymentConfirmation"
             name="paymentConfirmation"
             type="text"
-            component={renderPaymentStatusField}
+            component={renderConfirmationPaymentStatusField}
           />
 
           <Button

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
@@ -369,6 +370,27 @@ function UserForm(props) {
     );
   };
 
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
+  function telephoneCheck(phoneNumber) {
+    var found = phoneNumber.search(
+      /^(\+{1}\d{2,3}\s?[(]{1}\d{1,3}[)]{1}\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}$/
+    );
+    if (found > -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  console.log("token:", props.token);
+
   const buttonContent = () => {
     return <React.Fragment> Submit</React.Fragment>;
   };
@@ -376,15 +398,18 @@ function UserForm(props) {
   const onSubmit = (formValues) => {
     setLoading(true);
 
-    if (!formValues["name"]) {
-      props.handleFailedSnackbar("Please enter the name of the user");
+    if (!formValues["email"]) {
+      props.handleFailedSnackbar("Please enter the email of the user");
       setLoading(false);
       return;
     }
 
-    if (!formValues["email"]) {
-      props.handleFailedSnackbar("Please enter the email of the user");
+    if (!validateEmail(formValues["email"])) {
+      props.handleFailedSnackbar(
+        "The  email address you entered is invalid. Please correct it and try again"
+      );
       setLoading(false);
+
       return;
     }
 
@@ -400,6 +425,12 @@ function UserForm(props) {
       props.handleFailedSnackbar(
         "The repeat password field cannot be empty. Please rectify and try again"
       );
+      setLoading(false);
+      return;
+    }
+
+    if (!formValues["name"]) {
+      props.handleFailedSnackbar("Please enter the name of the user");
       setLoading(false);
       return;
     }
@@ -428,16 +459,6 @@ function UserForm(props) {
       return;
     }
 
-    // const data = {
-    //   name: formValues["name"],
-    //   email: formValues["email"],
-    //   role: role,
-    //   password: formValues["password"],
-    //   passwordConfirm: formValues["passwordConfirm"],
-    //   type: userType,
-    //   //vendor: vendor,
-    // };
-
     formValues["createdBy"] = props.userId;
     formValues["type"] = userType;
     formValues["role"] = role;
@@ -445,6 +466,7 @@ function UserForm(props) {
     if (formValues) {
       const createForm = async () => {
         api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+
         const response = await api.post(`/users`, formValues);
 
         if (response.data.status === "success") {
@@ -462,19 +484,40 @@ function UserForm(props) {
           props.handleFailedSnackbar(
             "Something went wrong, please try again!!!"
           );
+          setLoading(false);
         }
       };
       createForm().catch((err) => {
-        props.handleFailedSnackbar();
+        props.handleFailedSnackbar(
+          "Very likely this email is already in use or you do not have the right to create users. Please try another"
+        );
         console.log("err:", err.message);
+        setLoading(false);
       });
     } else {
       props.handleFailedSnackbar("Something went wrong, please try again!!!");
+      setLoading(false);
     }
   };
 
   return (
     <div className={classes.root}>
+      <Grid
+        item
+        container
+        style={{ marginTop: 1, marginBottom: 2 }}
+        justifyContent="center"
+      >
+        <CancelRoundedIcon
+          style={{
+            marginLeft: 480,
+            fontSize: 30,
+            marginTop: "-20px",
+            cursor: "pointer",
+          }}
+          onClick={() => [props.handleDialogOpenStatus()]}
+        />
+      </Grid>
       <Grid item container justifyContent="center">
         <FormLabel
           style={{ color: "grey", fontSize: "1.3em" }}

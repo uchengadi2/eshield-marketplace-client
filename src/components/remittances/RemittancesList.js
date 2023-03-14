@@ -151,26 +151,21 @@ class RemittanceList extends React.Component {
     let rows = [];
     let counter = 0;
     const columns = [
-      { field: "numbering", headerName: "S/n", width: 100 },
-      { field: "refNumber", headerName: "Reference Number", width: 150 },
+      { field: "numbering", headerName: "S/n", width: 60 },
+      { field: "refNumber", headerName: "Reference Number", width: 130 },
+      { field: "paymentRefNumber", headerName: "Payment Ref", width: 140 },
+
+      { field: "amountRemitted", headerName: "Amount Remitted", width: 130 },
+      { field: "remittanceMethod", headerName: "Remitted Method", width: 130 },
       {
         field: "remittanceStatus",
         headerName: "Remittance Status",
-        width: 150,
+        width: 130,
       },
-      { field: "payment", headerName: "Payment", width: 200, hide: true },
-      { field: "vendor", headerName: "Vendor", width: 200, hide: true },
-      { field: "paymentRef", headerName: "Payment RefNumber", width: 200 },
-      { field: "vendorName", headerName: "Vendor", width: 200 },
-      // {
-      //   field: "totalProductAmount",
-      //   headerName: "Total Amount",
-      //   width: 200,
-      // },
       {
-        field: "amountRemitted",
-        headerName: "Amount Remitted",
-        width: 150,
+        field: "dateRemitted",
+        headerName: "Date Remitted",
+        width: 170,
       },
 
       {
@@ -182,6 +177,7 @@ class RemittanceList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <EditRoundedIcon
+              style={{ cursor: "pointer" }}
               onClick={() => [
                 this.setState({
                   editOpen: true,
@@ -224,7 +220,7 @@ class RemittanceList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <DeleteRoundedIcon
-              style={{ color: "red" }}
+              style={{ color: "red", cursor: "pointer" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
                 history.push(`/remittances/remittances/delete/${params.id}`),
@@ -239,25 +235,18 @@ class RemittanceList extends React.Component {
         numbering: ++counter,
         id: remittance.id,
         refNumber: remittance.refNumber,
-        order: remittance.order,
-        vendor: remittance.vendor[index].id,
-        vendorName: remittance.vendor[index].name,
+        transaction: remittance.transaction,
+        payment: remittance.payment,
         customer: remittance.customer,
-        payment: remittance.payment[index].id,
-        paymentRef: remittance.payment[index].refNumber,
-        remittanceStatus: remittance.remittanceStatus,
         amountRemitted: remittance.amountRemitted,
         totalRemittableAmount: remittance.totalRemittableAmount,
+        remittanceCurrency: remittance.remittanceCurrency,
         dateRemitted: remittance.dateRemitted,
         remittanceMethod: remittance.remittanceMethod,
-        bankName: remittance.bankName,
-        bankAccountNumber: remittance.bankAccountNumber,
-        accountTitle: remittance.accountTitle,
-        chequeNumber: remittance.chequeNumber,
-        bankChequeOwner: remittance.bankChequeOwner,
-        postedBy: remittance.postedBy,
         datePosted: remittance.datePosted,
-        remittanceCurrency: remittance.remittanceCurrency,
+        postedBy: remittance.postedBy,
+        remittanceStatus: remittance.remittanceStatus,
+        paymentRefNumber: remittance.paymentRefNumber,
       };
       rows.push(row);
     });

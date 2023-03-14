@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -212,6 +213,22 @@ function CategoryEditForm(props) {
         noValidate
         autoComplete="off"
       >
+        <Grid
+          item
+          container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 500,
+              fontSize: 30,
+              marginTop: "-15px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleEditDialogOpenStatus()]}
+          />
+        </Grid>
         <Grid
           item
           container

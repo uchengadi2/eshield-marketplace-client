@@ -178,14 +178,13 @@ class AssignDeliveryList extends React.Component {
         headerName: "Logistics Partner",
         width: 200,
       },
-      { field: "order", headerName: "Order", width: 200, hide: true },
+
       {
         field: "logisticsPartner",
         headerName: "Logistics Partnerr",
         width: 200,
         hide: true,
       },
-      { field: "quantity", headerName: "Quantity for Delivery", width: 150 },
       { field: "status", headerName: "Status", width: 150 },
       // {
       //   field: "consignmentCountry",
@@ -206,6 +205,7 @@ class AssignDeliveryList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <EditRoundedIcon
+              style={{ cursor: "pointer" }}
               onClick={() => [
                 this.setState({
                   editOpen: true,
@@ -263,7 +263,7 @@ class AssignDeliveryList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <DeleteRoundedIcon
-              style={{ color: "red" }}
+              style={{ color: "red", cursor: "pointer" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
                 history.push(`/deliveries/assigned/delete/${params.id}`),
@@ -278,22 +278,24 @@ class AssignDeliveryList extends React.Component {
         numbering: ++counter,
         id: delivery.id,
         refNumber: delivery.refNumber,
-        orderNumber: delivery.order.orderNumber,
-        order: delivery.order.id,
-        product: delivery.product.id,
-        sku: delivery.product.sku,
-        productVendor: delivery.productVendor,
-        status: delivery.status,
-        quantity: delivery.quantity,
-        sourceState: delivery.sourceState,
-        sourceCountry: delivery.sourceCountry,
-        deliveryCost: delivery.deliveryCost,
+        orderNumber: delivery.orderNumber,
+        // order: delivery.order.id,
+        // product: delivery.product.id,
+        // sku: delivery.product.sku,
+        // productVendor: delivery.productVendor,
+        // quantity: delivery.quantity,
+        // sourceState: delivery.sourceState,
+        // sourceCountry: delivery.sourceCountry,
+        // deliveryCost: delivery.deliveryCost,
         recipientName: delivery.recipientName,
         recipientPhoneNumber: delivery.recipientPhoneNumber,
         recipientAddress: delivery.recipientAddress,
         destinationState: delivery.destinationState,
         destinationCountry: delivery.destinationCountry,
         customer: delivery.customer,
+        customerEmail: delivery.customerEmail,
+        customerPhoneNumber: delivery.customerPhoneNumber,
+        dateOrdered: delivery.dateOrdered,
         status: delivery.status,
         returnReason: delivery.returnReason,
         logisticsPartner: delivery.logisticsPartner.id,

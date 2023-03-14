@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -98,6 +99,8 @@ function AssignDeliveryCreateForm(props) {
   const [logisticsPartner, setLogisticsPartner] = useState();
   const [logisticsPartnerList, setLogisticsPartnerList] = useState([]);
 
+  const [orderedDate, setOrderedDate] = useState();
+
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -106,8 +109,10 @@ function AssignDeliveryCreateForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders/${orderForDelivery}`);
+      const response = await api.get(`/transactions/${orderForDelivery}`);
       const item = response.data.data.data;
+
+      console.log("the item is:", item);
 
       allData.push({
         id: item._id,
@@ -126,7 +131,7 @@ function AssignDeliveryCreateForm(props) {
         recipientAddress: item.recipientAddress,
         recipientState: item.recipientState,
         recipientCountry: item.recipientCountry,
-        dateOrdered: new Date(item.dateOrdered).toISOString().slice(0, 10),
+        dateOrdered: new Date(item.transactionDate).toISOString().slice(0, 10),
         orderedBy: item.orderedBy,
         paymentStatus: item.paymentStatus,
         paymentMethod: item.paymentMethod,
@@ -135,6 +140,7 @@ function AssignDeliveryCreateForm(props) {
         sku: item.sku,
       });
 
+      console.log("all data is:", allData);
       if (!allData) {
         return;
       }
@@ -172,7 +178,7 @@ function AssignDeliveryCreateForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders`, {
+      const response = await api.get(`/transactions`, {
         params: { status: "ready-for-delivery" },
       });
       const workingData = response.data.data.data;
@@ -387,6 +393,7 @@ function AssignDeliveryCreateForm(props) {
 
       setCustomerEmail(allData[0].email);
       setCustomerPhoneNumber(allData[0].phoneNumber);
+      //setOrderedDate(allData[0].dateOrdered);
     };
 
     //call the function
@@ -639,6 +646,8 @@ function AssignDeliveryCreateForm(props) {
   const handleLogisticsPartnerChange = (event) => {
     setLogisticsPartner(event.target.value);
   };
+
+  console.log("order number is:", orderNumber);
 
   const renderLogisticsPartnersField = ({
     input,
@@ -1006,6 +1015,7 @@ function AssignDeliveryCreateForm(props) {
             value={orderedBy}
             onChange={handleOrderedByChange}
             label="OrderedBy"
+            readOnly
             style={{ marginLeft: 10, width: 240, height: 38 }}
             //{...input}
           >
@@ -1061,6 +1071,7 @@ function AssignDeliveryCreateForm(props) {
         variant="outlined"
         label={label}
         id={input.name}
+        readOnly
         //value={formInput.name}
         defaultValue={customerEmail}
         fullWidth
@@ -1103,6 +1114,7 @@ function AssignDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1165,6 +1177,7 @@ function AssignDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1196,6 +1209,7 @@ function AssignDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1227,6 +1241,7 @@ function AssignDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1248,7 +1263,7 @@ function AssignDeliveryCreateForm(props) {
         label={label}
         id={input.name}
         //value={formInput.name}
-        defaultValue={recipientAddress}
+        //defaultValue={recipientAddress}
         fullWidth
         //required
         type={type}
@@ -1307,7 +1322,7 @@ function AssignDeliveryCreateForm(props) {
         label={label}
         id={input.name}
         //value={formInput.name}
-        defaultValue={recipientName}
+        //defaultValue={recipientName}
         fullWidth
         //required
         type={type}
@@ -1369,7 +1384,7 @@ function AssignDeliveryCreateForm(props) {
         label={label}
         id={input.name}
         //value={formInput.name}
-        defaultValue={dateOrdered}
+        //defaultValue={dateOrdered}
         fullWidth
         //required
         type={type}
@@ -1379,6 +1394,7 @@ function AssignDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1400,9 +1416,9 @@ function AssignDeliveryCreateForm(props) {
         label={label}
         id={input.name}
         //value={formInput.name}
-        defaultValue={totalDeliveryCost
-          .toFixed(2)
-          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+        //  defaultValue={totalDeliveryCost
+        //     .toFixed(2)
+        //     .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
         fullWidth
         //required
         type={type}
@@ -1433,9 +1449,9 @@ function AssignDeliveryCreateForm(props) {
         label={label}
         id={input.name}
         //value={formInput.name}
-        defaultValue={totalProductCost
-          .toFixed(2)
-          .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+        // defaultValue={totalProductCost
+        //   .toFixed(2)
+        //   .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
         fullWidth
         //required
         type={type}
@@ -1527,19 +1543,17 @@ function AssignDeliveryCreateForm(props) {
 
     const dataValue = {
       refNumber: "DEL-" + Math.floor(Math.random() * 100000000) + "-OR",
-      order: orderForDelivery,
-      product: product,
-      productVendor: vendor,
-      quantity: orderedQuantity,
-      sourceState: location,
-      sourceCountry: country,
-      deliveryCost: totalDeliveryCost,
+      orderNumber: orderNumber,
+      transaction: orderForDelivery,
       recipientName: recipientName,
       recipientPhoneNumber: recipientPhoneNumber,
       recipientAddress: recipientAddress,
       destinationState: recipientState,
       destinationCountry: recipientCountry,
       customer: orderedBy,
+      customerEmail: customerEmail,
+      customerPhoneNumber: customerPhoneNumber,
+      dateOrdered: dateOrdered,
       status: "assigned",
       logisticsPartner: logisticsPartner,
       assignedBy: props.userId,
@@ -1560,7 +1574,7 @@ function AssignDeliveryCreateForm(props) {
         //confirm if this order is already assigned
         api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
         const conResponse = await api.get(`/deliveries`, {
-          params: { order: orderForDelivery },
+          params: { transaction: orderForDelivery },
         });
 
         if (conResponse.data.results > 0) {
@@ -1584,13 +1598,13 @@ function AssignDeliveryCreateForm(props) {
 
           //change the status of this order
 
-          //   const data = {
-          //     status: "assigned-for-delivery",
-          //   };
-          //   const orderResponse = await api.patch(
-          //     `/orders/${orderForDelivery}`,
-          //     data
-          //   );
+          const data = {
+            status: "assigned-for-delivery",
+          };
+          const orderResponse = await api.patch(
+            `/transactions/${orderForDelivery}`,
+            data
+          );
 
           props.handleSuccessfulCreateSnackbar(
             `Order assignment to Logistics Partner is processed successfully!!!`
@@ -1615,6 +1629,22 @@ function AssignDeliveryCreateForm(props) {
   return (
     <div>
       <form id="assignDeliveryCreateForm" className={classes.formStyles}>
+        <Grid
+          item
+          container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleDialogOpenStatus()]}
+          />
+        </Grid>
         <Grid
           item
           container
@@ -1643,8 +1673,8 @@ function AssignDeliveryCreateForm(props) {
             type="text"
             component={renderOrderForDeliveryField}
           />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 350 }}>
+          {/* <Grid container direction="row" style={{ marginTop: 20 }}> */}
+          {/* <Grid item style={{ width: 350 }}>
               <Field
                 label=""
                 id="productVendor"
@@ -1652,9 +1682,9 @@ function AssignDeliveryCreateForm(props) {
                 type="text"
                 component={renderVendorField}
               />
-            </Grid>
+            </Grid> */}
 
-            <Grid item style={{ width: 140, marginLeft: 10 }}>
+          {/* <Grid item style={{ width: 140, marginLeft: 10 }}>
               <Field
                 label=""
                 id="sku"
@@ -1662,17 +1692,17 @@ function AssignDeliveryCreateForm(props) {
                 type="text"
                 component={renderSkuField}
               />
-            </Grid>
-          </Grid>
-          <Field
+            </Grid> */}
+          {/* </Grid> */}
+          {/* <Field
             label=""
             id="product"
             name="product"
             type="text"
             component={renderProductField}
-          />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
+          /> */}
+          {/* <Grid container direction="row" style={{ marginTop: 20 }}> */}
+          {/* <Grid item style={{ width: 160 }}>
               <Field
                 label=""
                 id="orderNumber"
@@ -1680,8 +1710,8 @@ function AssignDeliveryCreateForm(props) {
                 type="text"
                 component={renderOrderNumberField}
               />
-            </Grid>
-            <Grid item style={{ marginLeft: 10, width: 150 }}>
+            </Grid> */}
+          {/* <Grid item style={{ marginLeft: 10, width: 150 }}>
               <Field
                 label=""
                 id="orderedQuantity"
@@ -1689,9 +1719,9 @@ function AssignDeliveryCreateForm(props) {
                 type="text"
                 component={renderOrderedQuantityField}
               />
-            </Grid>
-            {/* {getCurrencyCode()} */}
-            <Grid item style={{ width: 165, marginLeft: 15 }}>
+            </Grid> */}
+          {/* {getCurrencyCode()} */}
+          {/* <Grid item style={{ width: 165, marginLeft: 15 }}>
               <Field
                 label=""
                 id="orderedPrice"
@@ -1699,15 +1729,15 @@ function AssignDeliveryCreateForm(props) {
                 type="text"
                 component={renderOrderedPriceField}
               />
-            </Grid>
-          </Grid>
-          <Field
+            </Grid> */}
+          {/* </Grid> */}
+          {/* <Field
             label=""
             id="productCurrency"
             name="productCurrency"
             type="text"
             component={renderProductCurrencyField}
-          />
+          /> */}
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Customer Details
@@ -1719,6 +1749,7 @@ function AssignDeliveryCreateForm(props) {
                 label=""
                 id="dateOrdered"
                 name="dateOrdered"
+                defaultValue={dateOrdered}
                 type="date"
                 component={renderDateOrderedField}
               />
@@ -1739,6 +1770,7 @@ function AssignDeliveryCreateForm(props) {
                 label=""
                 id="customerEmail"
                 name="customerEmail"
+                defaultValue={customerEmail}
                 type="text"
                 component={renderCustomerEmailField}
               />
@@ -1748,13 +1780,14 @@ function AssignDeliveryCreateForm(props) {
                 label=""
                 id="customerPhoneNumber"
                 name="customerPhoneNumber"
+                defaultValue={customerPhoneNumber}
                 type="text"
                 component={renderCustomerPhoneNumberField}
               />
             </Grid>
           </Grid>
 
-          <Grid item container style={{ marginTop: 20 }}>
+          {/* <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Product Location
             </FormLabel>
@@ -1778,7 +1811,7 @@ function AssignDeliveryCreateForm(props) {
                 component={renderProductLocationField}
               />
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Grid item container style={{ marginTop: 15 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
@@ -1790,6 +1823,7 @@ function AssignDeliveryCreateForm(props) {
             label=""
             id="recipientName"
             name="recipientName"
+            defaultValue={recipientName}
             type="text"
             component={renderRecipientNameField}
             style={{ marginTop: 10 }}
@@ -1808,6 +1842,7 @@ function AssignDeliveryCreateForm(props) {
             label=""
             id="recipientAddress"
             name="recipientAddress"
+            defaultValue={recipientAddress}
             type="text"
             component={renderRecipientAddressField}
             style={{ marginTop: 10 }}
@@ -1841,7 +1876,7 @@ function AssignDeliveryCreateForm(props) {
           </Grid>
 
           <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: "30%" }}>
+            {/* <Grid item style={{ width: "30%" }}>
               <Field
                 label=""
                 id="totalDeliveryCost"
@@ -1849,8 +1884,8 @@ function AssignDeliveryCreateForm(props) {
                 type="text"
                 component={renderTotalDeliveryCostField}
               />
-            </Grid>
-            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+            </Grid> */}
+            {/* <Grid item style={{ width: "33%", marginLeft: 10 }}>
               <Field
                 label=""
                 id="totalProductCost"
@@ -1858,8 +1893,8 @@ function AssignDeliveryCreateForm(props) {
                 type="text"
                 component={renderTotalProductCostField}
               />
-            </Grid>
-            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+            </Grid> */}
+            <Grid item style={{ width: "100%", marginLeft: 0 }}>
               <Field
                 label=""
                 id="status"
@@ -1875,6 +1910,7 @@ function AssignDeliveryCreateForm(props) {
                 label=""
                 id="paymentStatus"
                 name="paymentStatus"
+                defaultValue={paymentMethod}
                 type="text"
                 component={renderPaymentStatusField}
               />
@@ -1884,6 +1920,7 @@ function AssignDeliveryCreateForm(props) {
                 label=""
                 id="paymentMethod"
                 name="paymentMethod"
+                defaultValue={paymentMethod}
                 type="text"
                 component={renderPaymentMethodField}
               />

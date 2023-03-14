@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -321,6 +322,7 @@ function RemittanceForm(props) {
   const [remittanceMethod, setRemittanceMethod] = useState();
   const [isChequePayment, setIsChequePayment] = useState(false);
   const [totalSumRemittance, setTotalSumRemittance] = useState();
+  const [paymentRefNumber, setPaymentRefNumber] = useState();
 
   const [loading, setLoading] = useState(false);
 
@@ -335,16 +337,17 @@ function RemittanceForm(props) {
 
       allData.push({
         id: item._id,
-        order: item.order,
-        vendor: item.vendor,
+        order: item.transaction,
         customer: item.customer,
         totalProductAmount: item.totalProductAmount,
         totalDeliveryCost: item.totalDeliveryCost,
         amountPaid: item.amountPaid,
+        amountAlreadyPaid: item.amountAlreadyPaid,
         paymentConfirmationStatus: item.paymentConfirmationStatus,
         paymentConfirmedBy: item.paymentConfirmedBy,
         paymentDate: new Date(item.paymentDate).toISOString().slice(0, 10),
         totalSumRemittance: item.totalSumRemittance,
+        paymentRefNumber: item.refNumber,
       });
 
       if (!allData) {
@@ -354,10 +357,11 @@ function RemittanceForm(props) {
       setProductVendor(allData[0].vendor);
       setCustomerForOrder(allData[0].customer);
       setTotalProductAmount(allData[0].totalProductAmount);
-      setAmountPaid(allData[0].amountPaid);
+      setAmountPaid(allData[0].amountAlreadyPaid);
       setPaymentConfirmation(allData[0].paymentConfirmationStatus);
       setPaymentConfirmedBy(allData[0].paymentConfirmedBy);
       setPaymentDate(allData[0].paymentDate);
+      setPaymentRefNumber(allData[0].paymentRefNumber);
     };
 
     //call the function
@@ -369,7 +373,9 @@ function RemittanceForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/payments`);
+      const response = await api.get(`/payments`, {
+        params: { remittanceStatus: "pending-or-partial" },
+      });
       const workingData = response.data.data.data;
       workingData.map((payment) => {
         allData.push({ id: payment._id, name: payment.refNumber });
@@ -386,19 +392,12 @@ function RemittanceForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders/${orderForDelivery}`);
+      const response = await api.get(`/transactions/${orderForDelivery}`);
       const item = response.data.data.data;
 
       allData.push({
         id: item._id,
         orderNumber: item.orderNumber,
-        product: item.product,
-        vendor: item.productVendor,
-        orderedQuantity: item.orderedQuantity,
-        orderedPrice: item.orderedPrice,
-        currency: item.productCurrency,
-        location: item.productLocation,
-        country: item.locationCountry,
         totalDeliveryCost: item.totalDeliveryCost,
         totalProductCost: item.totalProductCost,
         recipientName: item.recipientName,
@@ -406,27 +405,20 @@ function RemittanceForm(props) {
         recipientAddress: item.recipientAddress,
         recipientState: item.recipientState,
         recipientCountry: item.recipientCountry,
-        dateOrdered: new Date(item.dateOrdered).toISOString().slice(0, 10),
+        dateOrdered: new Date(item.transactionDate).toISOString().slice(0, 10),
         orderedBy: item.orderedBy,
         paymentStatus: item.paymentStatus,
         paymentMethod: item.paymentMethod,
         status: item.status,
         rejectionReason: item.rejectionReason,
-        sku: item.sku,
+        productCurrency: item.productCurrency,
       });
 
       if (!allData) {
         return;
       }
 
-      setVendor(allData[0].vendor);
       setOrderNumber(allData[0].orderNumber);
-      setProduct(allData[0].product);
-      setOrderedQuantity(allData[0].orderedQuantity);
-      setOrderedPrice(allData[0].orderedPrice);
-      setCurrency(allData[0].currency);
-      setLocation(allData[0].location);
-      setCountry(allData[0].country);
       setTotalDeliveryCost(allData[0].totalDeliveryCost);
       setTotalProductCost(allData[0].totalProductCost);
       setRecipientName(allData[0].recipientName);
@@ -440,7 +432,7 @@ function RemittanceForm(props) {
       setPaymentMethod(allData[0].paymentMethod);
       setOrderStatus(allData[0].status);
       setRejectionReason(allData[0].rejectionReason);
-      setSku(allData[0].sku);
+      setCurrency(allData[0].productCurrency);
     };
 
     //call the function
@@ -452,10 +444,10 @@ function RemittanceForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders`);
+      const response = await api.get(`/transactions`);
       const workingData = response.data.data.data;
-      workingData.map((order) => {
-        allData.push({ id: order._id, name: order.orderNumber });
+      workingData.map((transaction) => {
+        allData.push({ id: transaction._id, name: transaction.orderNumber });
       });
       setOrderForDeliveryList(allData);
     };
@@ -1521,6 +1513,7 @@ function RemittanceForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1552,6 +1545,7 @@ function RemittanceForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1614,6 +1608,7 @@ function RemittanceForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1645,6 +1640,7 @@ function RemittanceForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1676,6 +1672,7 @@ function RemittanceForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1828,6 +1825,7 @@ function RemittanceForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1861,6 +1859,7 @@ function RemittanceForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1894,6 +1893,7 @@ function RemittanceForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1974,7 +1974,7 @@ function RemittanceForm(props) {
     return (
       <TextField
         //error={touched && invalid}
-        helperText="Amount Paid"
+        helperText="Confirmed Payment"
         variant="outlined"
         label={label}
         id={input.name}
@@ -1989,6 +1989,7 @@ function RemittanceForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -2020,6 +2021,7 @@ function RemittanceForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -2074,8 +2076,7 @@ function RemittanceForm(props) {
 
     const dataValue = {
       refNumber: "REM-" + Math.floor(Math.random() * 100000000) + "-PY",
-      order: orderForDelivery,
-      vendor: vendor,
+      transaction: orderForDelivery,
       customer: orderedBy,
       payment: paymentForRemittance,
       remittanceStatus: remittanceStatus,
@@ -2084,12 +2085,13 @@ function RemittanceForm(props) {
       remittanceCurrency: currency,
       dateRemitted: formValues["dateRemitted"],
       remittanceMethod: remittanceMethod,
-      bankName: formValues["bankName"],
-      bankAccountNumber: formValues["bankAccountNumber"],
-      accountTitle: formValues["accountTitle"],
-      chequeNumber: formValues["chequeNumber"],
-      bankChequeOwner: formValues["bankChequeOwner"],
+      // bankName: formValues["bankName"],
+      // bankAccountNumber: formValues["bankAccountNumber"],
+      // accountTitle: formValues["accountTitle"],
+      // chequeNumber: formValues["chequeNumber"],
+      // bankChequeOwner: formValues["bankChequeOwner"],
       postedBy: props.userId,
+      paymentRefNumber: paymentRefNumber,
     };
 
     if (dataValue) {
@@ -2166,6 +2168,22 @@ function RemittanceForm(props) {
         <Grid
           item
           container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleDialogOpenStatus()]}
+          />
+        </Grid>
+        <Grid
+          item
+          container
           style={{ marginTop: 20, marginBottom: 15 }}
           justifyContent="center"
         >
@@ -2191,85 +2209,8 @@ function RemittanceForm(props) {
             type="text"
             component={renderPaymentField}
           />
-          <Grid item container style={{ marginTop: 20 }}>
-            <FormLabel style={{ color: "blue" }} component="legend">
-              Order Details
-            </FormLabel>
-          </Grid>
-          <Field
-            label=""
-            id="order"
-            name="order"
-            type="text"
-            component={renderOrderForDeliveryField}
-            style={{ marginTop: 20 }}
-          />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 350 }}>
-              <Field
-                label=""
-                id="productVendor"
-                name="productVendor"
-                type="text"
-                component={renderVendorField}
-              />
-            </Grid>
 
-            <Grid item style={{ width: 140, marginLeft: 10 }}>
-              <Field
-                label=""
-                id="sku"
-                name="sku"
-                type="text"
-                component={renderSkuField}
-              />
-            </Grid>
-          </Grid>
-          <Field
-            label=""
-            id="product"
-            name="product"
-            type="text"
-            component={renderProductField}
-          />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
-              <Field
-                label=""
-                id="orderNumber"
-                name="orderNumber"
-                type="text"
-                component={renderOrderNumberField}
-              />
-            </Grid>
-            <Grid item style={{ marginLeft: 10, width: 150 }}>
-              <Field
-                label=""
-                id="orderedQuantity"
-                name="orderedQuantity"
-                type="text"
-                component={renderOrderedQuantityField}
-              />
-            </Grid>
-            {/* {getCurrencyCode()} */}
-            <Grid item style={{ width: 165, marginLeft: 15 }}>
-              <Field
-                label=""
-                id="orderedPrice"
-                name="orderedPrice"
-                type="text"
-                component={renderOrderedPriceField}
-              />
-            </Grid>
-          </Grid>
-          <Field
-            label=""
-            id="productCurrency"
-            name="productCurrency"
-            type="text"
-            component={renderProductCurrencyField}
-          />
-          <Grid item container style={{ marginTop: 20 }}>
+          {/* <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Customer Details
             </FormLabel>
@@ -2291,6 +2232,54 @@ function RemittanceForm(props) {
                 name="orderedBy"
                 type="number"
                 component={renderOrderedByField}
+              />
+            </Grid>
+          </Grid> */}
+          <Grid item container style={{ marginTop: 20 }}>
+            <FormLabel style={{ color: "blue" }} component="legend">
+              Customer Details
+            </FormLabel>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: 250 }}>
+              <Field
+                label=""
+                id="transactionDate"
+                name="transactionDate"
+                //defaultValue={DateOrdered}
+                type="date"
+                component={renderDateOrderedField}
+              />
+            </Grid>
+            <Grid item style={{ width: 250, marginLeft: 0 }}>
+              <Field
+                label=""
+                id="orderedBy"
+                name="orderedBy"
+                type="number"
+                component={renderOrderedByField}
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction="row" style={{ marginTop: 20 }}>
+            <Grid item style={{ width: 250 }}>
+              <Field
+                label=""
+                id="customerEmail"
+                name="customerEmail"
+                //defaultValue={customerEmail}
+                type="text"
+                component={renderCustomerEmailField}
+              />
+            </Grid>
+            <Grid item style={{ width: 240, marginLeft: 10 }}>
+              <Field
+                label=""
+                id="customerPhoneNumber"
+                name="customerPhoneNumber"
+                // defaultValue={customerPhoneNumber}
+                type="text"
+                component={renderCustomerPhoneNumberField}
               />
             </Grid>
           </Grid>
@@ -2428,37 +2417,8 @@ function RemittanceForm(props) {
               />
             </Grid>
           </Grid>
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
-              <Field
-                label=""
-                id="bankName"
-                name="bankName"
-                type="text"
-                component={renderBankNameField}
-              />
-            </Grid>
-            <Grid item style={{ marginLeft: 10, width: 150 }}>
-              <Field
-                label=""
-                id="bankAccountNumber"
-                name="bankAccountNumber"
-                type="text"
-                component={renderBankAccountNumberField}
-              />
-            </Grid>
-            {/* {getCurrencyCode()} */}
-            <Grid item style={{ width: 165, marginLeft: 15 }}>
-              <Field
-                label=""
-                id="accountTitle"
-                name="accountTitle"
-                type="text"
-                component={renderAccountTitleField}
-              />
-            </Grid>
-          </Grid>
-          {isChequePayment && (
+
+          {/* {isChequePayment && (
             <Grid container direction="row" style={{ marginTop: 20 }}>
               <Grid item style={{ width: 250 }}>
                 <Field
@@ -2479,7 +2439,7 @@ function RemittanceForm(props) {
                 />
               </Grid>
             </Grid>
-          )}
+          )} */}
           <Field
             label=""
             id="remittanceStatus"

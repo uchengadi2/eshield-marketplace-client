@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -113,7 +114,7 @@ function AssignDeliveryEditForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders/${orderForDelivery}`);
+      const response = await api.get(`/transactions/${orderForDelivery}`);
       const item = response.data.data.data;
 
       allData.push({
@@ -179,7 +180,7 @@ function AssignDeliveryEditForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders`, {
+      const response = await api.get(`/transactions`, {
         params: { status: "ready-for-delivery" },
       });
       const workingData = response.data.data.data;
@@ -808,7 +809,7 @@ function AssignDeliveryEditForm(props) {
           <Select
             labelId="recipientCountry"
             id="recipientCountry"
-            value={recipientCountry}
+            value={params.destinationCountry}
             onChange={handleRecipientCountryChange}
             label="Country"
             style={{ width: 250, marginTop: 0, height: 38 }}
@@ -866,7 +867,7 @@ function AssignDeliveryEditForm(props) {
           <Select
             labelId="recipientState"
             id="recipientState"
-            value={recipientState}
+            value={params.destinationState}
             onChange={handleRecipientStateChange}
             label="Recipient State"
             style={{ width: 240, marginTop: 0, height: 38, marginLeft: 10 }}
@@ -1011,8 +1012,9 @@ function AssignDeliveryEditForm(props) {
           <Select
             labelId="orderedBy"
             id="orderedBy"
-            value={orderedBy}
+            value={params.customer}
             onChange={handleOrderedByChange}
+            readOnly
             label="OrderedBy"
             style={{ marginLeft: 10, width: 240, height: 38 }}
             //{...input}
@@ -1080,6 +1082,7 @@ function AssignDeliveryEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1111,6 +1114,7 @@ function AssignDeliveryEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1261,6 +1265,10 @@ function AssignDeliveryEditForm(props) {
         //required
         type={type}
         {...custom}
+        // inputProps={{
+
+        //   readOnly: true,
+        // }}
         onChange={input.onChange}
         multiline={true}
         minRows={3}
@@ -1294,6 +1302,7 @@ function AssignDeliveryEditForm(props) {
           style: {
             height: 1,
           },
+          //readOnly: true,
         }}
       />
     );
@@ -1325,6 +1334,7 @@ function AssignDeliveryEditForm(props) {
           style: {
             height: 1,
           },
+          //readOnly: true,
         }}
       />
     );
@@ -1387,6 +1397,7 @@ function AssignDeliveryEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1537,7 +1548,7 @@ function AssignDeliveryEditForm(props) {
       refNumber: formValues["refNumber"]
         ? formValues["refNumber"]
         : params.refNumber,
-      order: orderForDelivery,
+      transaction: orderForDelivery,
       product: product,
       productVendor: vendor,
       quantity: orderedQuantity,
@@ -1570,7 +1581,7 @@ function AssignDeliveryEditForm(props) {
         //confirm if this order is already assigned
         api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
         const conResponse = await api.get(`/deliveries`, {
-          params: { order: orderForDelivery },
+          params: { transaction: orderForDelivery },
         });
 
         // if (conResponse.data.results > 0) {
@@ -1622,9 +1633,29 @@ function AssignDeliveryEditForm(props) {
     }
   };
 
+  const DateOrdered = params.dateOrdered
+    ? new Date(params.dateOrdered).toISOString().slice(0, 10)
+    : "";
+
   return (
     <div>
       <form id="assignDeliveryCreateForm" className={classes.formStyles}>
+        <Grid
+          item
+          container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleEditDialogOpenStatus()]}
+          />
+        </Grid>
         <Grid
           item
           container
@@ -1648,12 +1679,13 @@ function AssignDeliveryEditForm(props) {
         >
           <Field
             label=""
-            id="order"
-            name="order"
+            id="orderNumber"
+            name="orderNumber"
+            defaultValue={params.orderNumber}
             type="text"
-            component={renderOrderForDeliveryField}
+            component={renderOrderNumberField}
           />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
+          {/* <Grid container direction="row" style={{ marginTop: 20 }}>
             <Grid item style={{ width: 350 }}>
               <Field
                 label=""
@@ -1673,16 +1705,16 @@ function AssignDeliveryEditForm(props) {
                 component={renderSkuField}
               />
             </Grid>
-          </Grid>
-          <Field
+          </Grid> */}
+          {/* <Field
             label=""
             id="product"
             name="product"
             type="text"
             component={renderProductField}
-          />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
+          /> */}
+          {/* <Grid container direction="row" style={{ marginTop: 20 }}> */}
+          {/* <Grid item style={{ width: 160 }}>
               <Field
                 label=""
                 id="orderNumber"
@@ -1699,9 +1731,9 @@ function AssignDeliveryEditForm(props) {
                 type="text"
                 component={renderOrderedQuantityField}
               />
-            </Grid>
-            {/* {getCurrencyCode()} */}
-            <Grid item style={{ width: 165, marginLeft: 15 }}>
+            </Grid> */}
+          {/* {getCurrencyCode()} */}
+          {/* <Grid item style={{ width: 165, marginLeft: 15 }}>
               <Field
                 label=""
                 id="orderedPrice"
@@ -1709,15 +1741,15 @@ function AssignDeliveryEditForm(props) {
                 type="text"
                 component={renderOrderedPriceField}
               />
-            </Grid>
-          </Grid>
-          <Field
+            </Grid> */}
+          {/* </Grid> */}
+          {/* <Field
             label=""
             id="productCurrency"
             name="productCurrency"
             type="text"
             component={renderProductCurrencyField}
-          />
+          /> */}
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Customer Details
@@ -1729,6 +1761,7 @@ function AssignDeliveryEditForm(props) {
                 label=""
                 id="dateOrdered"
                 name="dateOrdered"
+                defaultValue={DateOrdered}
                 type="date"
                 component={renderDateOrderedField}
               />
@@ -1738,6 +1771,7 @@ function AssignDeliveryEditForm(props) {
                 label=""
                 id="orderedBy"
                 name="orderedBy"
+                // defaultValue={params.customer}
                 type="number"
                 component={renderOrderedByField}
               />
@@ -1749,6 +1783,7 @@ function AssignDeliveryEditForm(props) {
                 label=""
                 id="customerEmail"
                 name="customerEmail"
+                defaultValue={params.customerEmail}
                 type="text"
                 component={renderCustomerEmailField}
               />
@@ -1758,13 +1793,14 @@ function AssignDeliveryEditForm(props) {
                 label=""
                 id="customerPhoneNumber"
                 name="customerPhoneNumber"
+                defaultValue={params.customerPhoneNumber}
                 type="text"
                 component={renderCustomerPhoneNumberField}
               />
             </Grid>
           </Grid>
 
-          <Grid item container style={{ marginTop: 20 }}>
+          {/* <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Product Location
             </FormLabel>
@@ -1788,7 +1824,7 @@ function AssignDeliveryEditForm(props) {
                 component={renderProductLocationField}
               />
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Grid item container style={{ marginTop: 15 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
@@ -1800,6 +1836,7 @@ function AssignDeliveryEditForm(props) {
             label=""
             id="recipientName"
             name="recipientName"
+            defaultValue={params.recipientName}
             type="text"
             component={renderRecipientNameField}
             style={{ marginTop: 10 }}
@@ -1809,6 +1846,7 @@ function AssignDeliveryEditForm(props) {
             label=""
             id="recipientPhoneNumber"
             name="recipientPhoneNumber"
+            defaultValue={params.recipientPhoneNumber}
             type="text"
             component={renderRecipientPhoneNumberField}
             style={{ marginTop: 10 }}
@@ -1818,6 +1856,7 @@ function AssignDeliveryEditForm(props) {
             label=""
             id="recipientAddress"
             name="recipientAddress"
+            defaultValue={params.recipientAddress}
             type="text"
             component={renderRecipientAddressField}
             style={{ marginTop: 10 }}
@@ -1844,14 +1883,14 @@ function AssignDeliveryEditForm(props) {
             </Grid>
           </Grid>
 
-          <Grid item container style={{ marginTop: 15 }}>
+          {/* <Grid item container style={{ marginTop: 15 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Payment Details
             </FormLabel>
-          </Grid>
+          </Grid> */}
 
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: "30%" }}>
+          {/* <Grid container direction="row" style={{ marginTop: 20 }}> */}
+          {/* <Grid item style={{ width: "30%" }}>
               <Field
                 label=""
                 id="totalDeliveryCost"
@@ -1868,8 +1907,8 @@ function AssignDeliveryEditForm(props) {
                 type="text"
                 component={renderTotalProductCostField}
               />
-            </Grid>
-            <Grid item style={{ width: "33%", marginLeft: 10 }}>
+            </Grid> */}
+          {/* <Grid item style={{ width: "100%", marginLeft: 0 }}>
               <Field
                 label=""
                 id="status"
@@ -1877,9 +1916,9 @@ function AssignDeliveryEditForm(props) {
                 type="text"
                 component={renderOrderStatusField}
               />
-            </Grid>
-          </Grid>
-          <Grid container direction="row" style={{ marginTop: 20 }}>
+            </Grid> */}
+          {/* </Grid> */}
+          {/* <Grid container direction="row" style={{ marginTop: 20 }}>
             <Grid item style={{ width: 250 }}>
               <Field
                 label=""
@@ -1898,7 +1937,7 @@ function AssignDeliveryEditForm(props) {
                 component={renderPaymentMethodField}
               />
             </Grid>
-          </Grid>
+          </Grid> */}
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Logistics Partner

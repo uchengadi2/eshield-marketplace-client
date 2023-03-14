@@ -159,6 +159,7 @@ class ProductList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <EditRoundedIcon
+              style={{ cursor: "pointer" }}
               onClick={() => [
                 this.setState({
                   editOpen: true,
@@ -181,7 +182,7 @@ class ProductList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <DeleteRoundedIcon
-              style={{ color: "red" }}
+              style={{ color: "red", cursor: "pointer" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
                 history.push(`/products/delete/${params.id}`),

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Field, reduxForm } from "redux-form";
 import { useDispatch } from "react-redux";
-
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -32,6 +32,20 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.blue,
     "&:hover": {
       backgroundColor: theme.palette.common.blue,
+    },
+  },
+  cancelButton: {
+    submitButton: {
+      borderRadius: 10,
+      height: 40,
+      width: 100,
+      marginLeft: 5,
+      marginTop: 40,
+      color: "black",
+      backgroundColor: theme.palette.common.grey,
+      "&:hover": {
+        backgroundColor: theme.palette.common.grey,
+      },
     },
   },
 }));
@@ -149,6 +163,26 @@ function CategoryForm(props) {
   const onSubmit = (formValues) => {
     setLoading(true);
 
+    if (
+      !formValues["name"] ||
+      formValues["name"].replace(/\s/g, "").length === 0
+    ) {
+      props.handleFailedSnackbar("The category name field cannot be empty");
+      setLoading(false);
+      return;
+    }
+
+    if (
+      !formValues["description"] ||
+      formValues["description"].replace(/\s/g, "").length === 0
+    ) {
+      props.handleFailedSnackbar(
+        "The category description field cannot be empty"
+      );
+      setLoading(false);
+      return;
+    }
+
     const Str = require("@supercharge/strings");
 
     const form = new FormData();
@@ -198,11 +232,27 @@ function CategoryForm(props) {
         // onSubmit={onSubmit}
         sx={{
           width: 300,
-          height: 400,
+          height: 430,
         }}
         noValidate
         autoComplete="off"
       >
+        <Grid
+          item
+          container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 300,
+              fontSize: 30,
+              marginTop: "-10px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleDialogOpenStatus()]}
+          />
+        </Grid>
         <Grid
           item
           container
@@ -241,7 +291,6 @@ function CategoryForm(props) {
           floatingLabelText={"Upload Image"}
           fullWidth={true}
         />
-
         <Button
           variant="contained"
           className={classes.submitButton}

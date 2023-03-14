@@ -107,7 +107,7 @@ function ProductLayout({ token, userId, vendorId, roleId }) {
             history.push(`/products/allproducts`);
           }}
         />
-        <Tab
+        {/* <Tab
           label="Related Products"
           {...a11yProps(1)}
           onClick={(event) => {
@@ -122,7 +122,7 @@ function ProductLayout({ token, userId, vendorId, roleId }) {
             event.preventDefault();
             history.push(`/products/productsonsale`);
           }}
-        />
+        /> */}
         {/* <Tab
           label="Clusters"
           {...a11yProps(3)}

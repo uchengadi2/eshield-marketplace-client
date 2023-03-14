@@ -34,6 +34,7 @@ import deliveryReducer from "./deliveryReducer";
 import onTransitDeliveryReducer from "./onTransitDeliveryReducer";
 import completedDeliveryReducer from "./completedDeliveryReducer";
 import returnedDeliveryReducer from "./returnedDeliveryReducer";
+import transactionReducer from "./transactionReducer";
 
 export default combineReducers({
   auth: authReducer,
@@ -70,4 +71,5 @@ export default combineReducers({
   onTransitDelivery: onTransitDeliveryReducer,
   completedDelivery: completedDeliveryReducer,
   returnedDelivery: returnedDeliveryReducer,
+  transaction: transactionReducer,
 });

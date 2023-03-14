@@ -60,7 +60,7 @@ function LinkTab(props) {
       //label={route.name}
       onClick={(event) => {
         event.preventDefault();
-        history.push(`/partners`);
+        history.push(`/partners/vendors`);
       }}
       {...props}
     />

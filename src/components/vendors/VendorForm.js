@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -1107,8 +1108,98 @@ function VendorForm(props) {
     );
   };
 
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
+  function telephoneCheck(phoneNumber) {
+    var found = phoneNumber.search(
+      /^(\+{1}\d{2,3}\s?[(]{1}\d{1,3}[)]{1}\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}$/
+    );
+    if (found > -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   const onSubmit = (formValues) => {
     setLoading(true);
+
+    if (
+      !formValues["name"] ||
+      formValues["name"].replace(/\s/g, "").length === 0
+    ) {
+      props.handleFailedSnackbar("The name field cannot be empty");
+      setLoading(false);
+      return;
+    }
+
+    if (!vendorType) {
+      props.handleFailedSnackbar("Please select  the vendor type");
+      setLoading(false);
+      return;
+    }
+    if (
+      !formValues["locationAddress"] ||
+      formValues["locationAddress"].replace(/\s/g, "").length === 0
+    ) {
+      props.handleFailedSnackbar(
+        "The partner location Address field cannot be empty"
+      );
+      setLoading(false);
+      return;
+    }
+    if (!locationCountry) {
+      props.handleFailedSnackbar("Please select  the partner country");
+      setLoading(false);
+      return;
+    }
+    if (!locationState) {
+      props.handleFailedSnackbar("Please select  the partner state");
+      setLoading(false);
+      return;
+    }
+    if (
+      !formValues["contactPersonName"] ||
+      formValues["contactPersonName"].replace(/\s/g, "").length === 0
+    ) {
+      props.handleFailedSnackbar(
+        "The contact person's name field cannot be empty"
+      );
+      setLoading(false);
+      return;
+    }
+    if (!validateEmail(formValues["contactPersonEmailAddress"])) {
+      props.handleFailedSnackbar(
+        "The contact email address you entered is invalid. Please correct it and try again"
+      );
+      setLoading(false);
+
+      return;
+    }
+
+    if (!telephoneCheck(formValues["contactPersonPhoneNumber"])) {
+      props.handleFailedSnackbar(
+        "The telephone number you enteted is invalid phone number. Please correct this and try again"
+      );
+      setLoading(false);
+
+      return;
+    }
+
+    if (
+      !formValues["description"] ||
+      formValues["description"].replace(/\s/g, "").length === 0
+    ) {
+      props.handleFailedSnackbar("The description field cannot be empty");
+      setLoading(false);
+      return;
+    }
     const data = {
       vendorNumber: Math.floor(Math.random() * 100000000),
       name: formValues["name"],
@@ -1207,6 +1298,22 @@ function VendorForm(props) {
   return (
     <div className={classes.root}>
       <form id="vendorCategory" className={classes.formStyles}>
+        <Grid
+          item
+          container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleDialogOpenStatus()]}
+          />
+        </Grid>
         <Grid container style={{ marginTop: 20 }} justifyContent="center">
           <FormLabel
             style={{ color: "blue", fontSize: "1.5em" }}

@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -143,15 +144,24 @@ function OnTransitDeliveryCreateForm(props) {
 
       allData.push({
         id: item._id,
-        order: item.order,
+        transaction: item.transaction,
         logisticsPartner: item.logisticsPartner,
         logisticsPartnerState: item.logisticsPartnerState,
         logisticsPartnerCountry: item.logisticsPartnerCountry,
+        customer: item.customer,
+        customerEmail: item.customerEmail,
+        customerPhoneNumber: item.customerPhoneNumber,
+        destinationState: item.destinationState,
+        destinationCountry: item.destinationCountry,
       });
-      setOrderForDelivery(allData[0].order);
+      setOrderForDelivery(allData[0].transaction);
       setLogisticsPartnerCountry(allData[0].logisticsPartnerCountry);
       setLogisticsPartnerState(allData[0].logisticsPartnerState);
-      setLogisticsPartner(allData[0].logisticsPartner);
+      setLogisticsPartner(allData[0].logisticsPartner.id);
+      setCustomerEmail(allData[0].customerEmail);
+      setCustomerPhoneNumber(allData[0].customerPhoneNumber);
+      setRecipientState(allData[0].destinationState);
+      setRecipientCountry(allData[0].destinationCountry);
     };
 
     //call the function
@@ -163,30 +173,27 @@ function OnTransitDeliveryCreateForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders/${orderForDelivery}`);
+      const response = await api.get(`/deliveries/${deliveriesForTransit}`);
       const item = response.data.data.data;
 
       allData.push({
         id: item._id,
         orderNumber: item.orderNumber,
-        product: item.product,
-        vendor: item.productVendor,
-        orderedQuantity: item.orderedQuantity,
-        orderedPrice: item.orderedPrice,
-        currency: item.productCurrency,
-        location: item.productLocation,
-        country: item.locationCountry,
-        totalDeliveryCost: item.totalDeliveryCost,
-        totalProductCost: item.totalProductCost,
+        refNumber: item.refNumber,
+        customerEmail: item.customerEmail,
+        customerPhoneNumber: item.customerPhoneNumber,
         recipientName: item.recipientName,
         recipientPhoneNumber: item.recipientPhoneNumber,
         recipientAddress: item.recipientAddress,
-        recipientState: item.recipientState,
-        recipientCountry: item.recipientCountry,
+        destinationState: item.destinationState,
+        destinationCountry: item.destinationCountry,
         dateOrdered: new Date(item.dateOrdered).toISOString().slice(0, 10),
-        orderedBy: item.orderedBy,
-        paymentStatus: item.paymentStatus,
-        paymentMethod: item.paymentMethod,
+        customer: item.customer,
+        logisticsPartner: item.logisticsPartner,
+        logisticsPartnerState: item.logisticsPartnerState,
+        logisticsPartnerCountry: item.logisticsPartnerCountry,
+        dateAssigned: item.dateAssigned,
+        assignedBy: item.assignedBy,
         status: item.status,
         rejectionReason: item.rejectionReason,
         sku: item.sku,
@@ -209,10 +216,10 @@ function OnTransitDeliveryCreateForm(props) {
       setRecipientName(allData[0].recipientName);
       setRecipientPhoneNumber(allData[0].recipientPhoneNumber);
       setRecipientAddress(allData[0].recipientAddress);
-      setRecipientState(allData[0].recipientState);
-      setRecipientCountry(allData[0].recipientCountry);
+      // setRecipientState(allData[0].recipientState);
+      // setRecipientCountry(allData[0].recipientCountry);
       setDateOrdered(allData[0].dateOrdered);
-      setOrderedBy(allData[0].orderedBy);
+      setOrderedBy(allData[0].customer);
       setPaymentStatus(allData[0].paymentStatus);
       setPaymentMethod(allData[0].paymentMethod);
       setOrderStatus(allData[0].status);
@@ -223,7 +230,7 @@ function OnTransitDeliveryCreateForm(props) {
     //call the function
 
     fetchData().catch(console.error);
-  }, [orderForDelivery]);
+  }, [deliveriesForTransit]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -248,10 +255,10 @@ function OnTransitDeliveryCreateForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders`);
+      const response = await api.get(`/deliveries`);
       const workingData = response.data.data.data;
-      workingData.map((order) => {
-        allData.push({ id: order._id, name: order.orderNumber });
+      workingData.map((delivery) => {
+        allData.push({ id: delivery._id, name: delivery.refNumber });
       });
       setOrderForDeliveryList(allData);
     };
@@ -441,32 +448,32 @@ function OnTransitDeliveryCreateForm(props) {
     fetchData().catch(console.error);
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let allData = [];
-      api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/users/${orderedBy}`);
-      const item = response.data.data.data;
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     let allData = [];
+  //     api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+  //     const response = await api.get(`/users/${orderedBy}`);
+  //     const item = response.data.data.data;
 
-      allData.push({
-        id: item._id,
-        name: item.name,
-        email: item.email,
-        phoneNumber: item.phoneNumber,
-      });
+  //     allData.push({
+  //       id: item._id,
+  //       name: item.name,
+  //       email: item.email,
+  //       phoneNumber: item.phoneNumber,
+  //     });
 
-      if (!allData) {
-        return;
-      }
+  //     if (!allData) {
+  //       return;
+  //     }
 
-      setCustomerEmail(allData[0].email);
-      setCustomerPhoneNumber(allData[0].phoneNumber);
-    };
+  //     setCustomerEmail(allData[0].email);
+  //     setCustomerPhoneNumber(allData[0].phoneNumber);
+  //   };
 
-    //call the function
+  //call the function
 
-    fetchData().catch(console.error);
-  }, [orderedBy]);
+  //   fetchData().catch(console.error);
+  // }, [orderedBy]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -643,6 +650,8 @@ function OnTransitDeliveryCreateForm(props) {
       );
     });
   };
+
+  console.log("delivery list is:", deliveriesForTransitList);
 
   //get the assigned orders for deliveries list
   const renderAssignedOrdersForDeliveryList = () => {
@@ -1203,6 +1212,7 @@ function OnTransitDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1234,6 +1244,7 @@ function OnTransitDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1265,6 +1276,7 @@ function OnTransitDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1387,6 +1399,9 @@ function OnTransitDeliveryCreateForm(props) {
         onChange={input.onChange}
         multiline={true}
         minRows={3}
+        inputProps={{
+          readOnly: true,
+        }}
       />
     );
   };
@@ -1417,6 +1432,7 @@ function OnTransitDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1448,6 +1464,7 @@ function OnTransitDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1479,6 +1496,7 @@ function OnTransitDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1510,6 +1528,7 @@ function OnTransitDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1691,7 +1710,7 @@ function OnTransitDeliveryCreateForm(props) {
             status: "assigned-for-delivery",
           };
           const orderResponse = await api.patch(
-            `/orders/${orderForDelivery}`,
+            `/transactions/${orderForDelivery}`,
             data
           );
 
@@ -1718,6 +1737,22 @@ function OnTransitDeliveryCreateForm(props) {
   return (
     <div>
       <form id="onTransitDeliveryCreateForm" className={classes.formStyles}>
+        <Grid
+          item
+          container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleDialogOpenStatus()]}
+          />
+        </Grid>
         <Grid
           item
           container
@@ -1748,12 +1783,14 @@ function OnTransitDeliveryCreateForm(props) {
           />
           <Field
             label=""
-            id="order"
-            name="order"
+            id="orderNumber"
+            name="orderNumber"
+            defaultValue={orderNumber}
             type="text"
-            component={renderOrderForDeliveryField}
+            component={renderOrderNumberField}
+            style={{ marginTop: 10 }}
           />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
+          {/* <Grid container direction="row" style={{ marginTop: 20 }}>
             <Grid item style={{ width: 350 }}>
               <Field
                 label=""
@@ -1773,16 +1810,16 @@ function OnTransitDeliveryCreateForm(props) {
                 component={renderSkuField}
               />
             </Grid>
-          </Grid>
-          <Field
+          </Grid> */}
+          {/* <Field
             label=""
             id="product"
             name="product"
             type="text"
             component={renderProductField}
-          />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
+          /> */}
+          {/* <Grid container direction="row" style={{ marginTop: 20 }}> */}
+          {/* <Grid item style={{ width: 160 }}>
               <Field
                 label=""
                 id="orderNumber"
@@ -1799,9 +1836,9 @@ function OnTransitDeliveryCreateForm(props) {
                 type="text"
                 component={renderOrderedQuantityField}
               />
-            </Grid>
-            {/* {getCurrencyCode()} */}
-            <Grid item style={{ width: 165, marginLeft: 15 }}>
+            </Grid> */}
+          {/* {getCurrencyCode()} */}
+          {/* <Grid item style={{ width: 165, marginLeft: 15 }}>
               <Field
                 label=""
                 id="orderedPrice"
@@ -1809,15 +1846,15 @@ function OnTransitDeliveryCreateForm(props) {
                 type="text"
                 component={renderOrderedPriceField}
               />
-            </Grid>
-          </Grid>
-          <Field
+            </Grid> */}
+          {/* </Grid> */}
+          {/* <Field
             label=""
             id="productCurrency"
             name="productCurrency"
             type="text"
             component={renderProductCurrencyField}
-          />
+          /> */}
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Customer Details
@@ -1864,7 +1901,7 @@ function OnTransitDeliveryCreateForm(props) {
             </Grid>
           </Grid>
 
-          <Grid item container style={{ marginTop: 20 }}>
+          {/* <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Product Location
             </FormLabel>
@@ -1888,7 +1925,7 @@ function OnTransitDeliveryCreateForm(props) {
                 component={renderProductLocationField}
               />
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Grid item container style={{ marginTop: 15 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
@@ -1944,7 +1981,7 @@ function OnTransitDeliveryCreateForm(props) {
             </Grid>
           </Grid>
 
-          <Grid item container style={{ marginTop: 15 }}>
+          {/* <Grid item container style={{ marginTop: 15 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Payment Details
             </FormLabel>
@@ -1998,7 +2035,7 @@ function OnTransitDeliveryCreateForm(props) {
                 component={renderPaymentMethodField}
               />
             </Grid>
-          </Grid>
+          </Grid> */}
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Logistics Partner

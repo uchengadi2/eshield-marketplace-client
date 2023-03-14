@@ -10,6 +10,7 @@ import { TextField } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import { Typography } from "@mui/material";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Radio from "@material-ui/core/Radio";
@@ -1017,8 +1018,51 @@ function VendorEditForm(props) {
     );
   };
 
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
+  function telephoneCheck(phoneNumber) {
+    var found = phoneNumber.search(
+      /^(\+{1}\d{2,3}\s?[(]{1}\d{1,3}[)]{1}\s?\d+|\+\d{2,3}\s{1}\d+|\d+){1}[\s|-]?\d+([\s|-]?\d+){1,2}$/
+    );
+    if (found > -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   const onSubmit = (formValues) => {
     setLoading(true);
+
+    // if (
+    //   !validateEmail(formValues["contactPersonEmailAddress"]) ||
+    //   !params.contactPerson.contactPersonEmailAddress
+    // ) {
+    //   props.handleFailedSnackbar(
+    //     "The contact email address you entered is invalid. Please correct it and try again"
+    //   );
+    //   setLoading(false);
+
+    //   return;
+    // }
+
+    // if (
+    //   !telephoneCheck(formValues["contactPersonPhoneNumber"]) ||
+    //   !params.contactPerson.contactPersonPhoneNumber
+    // ) {
+    //   props.handleFailedSnackbar(
+    //     "The telephone number you enteted is invalid phone number. Please correct this and try again"
+    //   );
+    //   setLoading(false);
+
+    //   return;
+    // }
     const data = {
       vendorNumber: formValues["vendorNumber"]
         ? formValues["vendorNumber"]
@@ -1110,6 +1154,22 @@ function VendorEditForm(props) {
   return (
     <div className={classes.root}>
       <form id="vendorEditForm" className={classes.formStyles}>
+        <Grid
+          item
+          container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleEditDialogOpenStatus()]}
+          />
+        </Grid>
         <Grid container style={{ marginTop: 20 }} justifyContent="center">
           <FormLabel
             style={{ color: "blue", fontSize: "1.5em" }}

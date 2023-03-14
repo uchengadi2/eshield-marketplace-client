@@ -165,6 +165,11 @@ import {
   FETCH_RETURNDELIVERY,
   EDIT_RETURNDELIVERY,
   DELETE_RETURNDELIVERY,
+  CREATE_TRANSACTION,
+  FETCH_TRANSACTIONS,
+  FETCH_TRANSACTION,
+  DELETE_TRANSACTION,
+  EDIT_TRANSACTION,
 } from "./types";
 
 //authentication and authorization  operations
@@ -361,7 +366,6 @@ export const fetchVendors = (tokens) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
   return async (dispatch) => {
     const response = await data.get("/vendors");
-    console.log("vendor response is:", response);
 
     dispatch({ type: FETCH_VENDORS, payload: response.data.data.data });
   };
@@ -380,7 +384,6 @@ export const editVendor = (id, formValues, token) => {
   return async (dispatch) => {
     const response = await data.patch(`/vendors/${id}`, formValues);
     dispatch({ type: EDIT_VENDOR, payload: response.data });
-    history.push("/vendors");
   };
 };
 
@@ -389,7 +392,6 @@ export const deleteVendor = (id, token) => {
   return async (dispatch) => {
     await data.delete(`/vendors/${id}`);
     dispatch({ type: DELETE_VENDOR, payload: id });
-    history.push("/vendors");
   };
 };
 
@@ -1539,9 +1541,10 @@ export const deleteProductOnSale = (id, token) => {
 export const fetchOrdersForDelivery = (tokens, status) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
   return async (dispatch) => {
-    const response = await data.get(`/orders`, {
+    const response = await data.get(`/transactions`, {
       params: { status: "ready-for-delivery" },
     });
+    console.log("response is:", response);
     dispatch({
       type: FETCH_ORDERSFORDELIVERY,
       payload: response.data.data.data,
@@ -1552,7 +1555,7 @@ export const fetchOrdersForDelivery = (tokens, status) => {
 export const fetchOrderForDelivery = (id, token) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   return async (dispatch) => {
-    const response = await data.get(`/orders/${id}`);
+    const response = await data.get(`/transactions/${id}`);
     dispatch({ type: FETCH_ORDERFORDELIVERY, payload: response.data });
   };
 };
@@ -1560,7 +1563,7 @@ export const fetchOrderForDelivery = (id, token) => {
 export const editOrderForDelivery = (id, formValues, token) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   return async (dispatch) => {
-    const response = await data.patch(`/orders/${id}`, formValues);
+    const response = await data.patch(`/transactions/${id}`, formValues);
     dispatch({ type: EDIT_ORDERFORDELIVERY, payload: response.data });
   };
 };
@@ -1568,9 +1571,9 @@ export const editOrderForDelivery = (id, formValues, token) => {
 export const deleteOrderForDelivery = (id, token) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   return async (dispatch) => {
-    await data.delete(`/orders/${id}`);
+    await data.delete(`/transactions/${id}`);
     dispatch({ type: DELETE_ORDERFORDELIVERY, payload: id });
-    history.push("/orders");
+    //history.push("/orders");
   };
 };
 
@@ -1580,7 +1583,7 @@ export const deleteOrderForDelivery = (id, token) => {
 export const fetchRejectedOrders = (tokens, status) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
   return async (dispatch) => {
-    const response = await data.get(`/orders`, {
+    const response = await data.get(`/transactions`, {
       params: { status: "rejected" },
     });
     dispatch({
@@ -1593,7 +1596,7 @@ export const fetchRejectedOrders = (tokens, status) => {
 export const fetchRejectedOrder = (id, token) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   return async (dispatch) => {
-    const response = await data.get(`/orders/${id}`);
+    const response = await data.get(`/transactions/${id}`);
     dispatch({ type: FETCH_REJECTEDORDER, payload: response.data });
   };
 };
@@ -1601,7 +1604,7 @@ export const fetchRejectedOrder = (id, token) => {
 export const editRejectedOrder = (id, formValues, token) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   return async (dispatch) => {
-    const response = await data.patch(`/orders/${id}`, formValues);
+    const response = await data.patch(`/transactions/${id}`, formValues);
     dispatch({ type: EDIT_REJECTEDORDER, payload: response.data });
   };
 };
@@ -1609,9 +1612,9 @@ export const editRejectedOrder = (id, formValues, token) => {
 export const deleteRejectedOrder = (id, token) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   return async (dispatch) => {
-    await data.delete(`/orders/${id}`);
+    await data.delete(`/transactions/${id}`);
     dispatch({ type: DELETE_REJECTEDORDER, payload: id });
-    history.push("/orders");
+    // history.push("/orders");
   };
 };
 
@@ -1889,5 +1892,49 @@ export const deleteReturnDelivery = (id, token) => {
   return async (dispatch) => {
     await data.delete(`/deliveries/${id}`);
     dispatch({ type: DELETE_RETURNDELIVERY, payload: id });
+  };
+};
+
+///////////////////////////////////////////////////////////////////////
+
+//transaction resource crud operation
+export const createTransaction = (formValues, token) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  return async (dispatch) => {
+    const response = await data.post("/transactions", formValues);
+
+    dispatch({ type: CREATE_TRANSACTION, payload: response.data });
+  };
+};
+
+export const fetchTransactions = (tokens, status) => {
+  data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
+  return async (dispatch) => {
+    const response = await data.get("/transactions", {
+      params: { status: status },
+    });
+
+    dispatch({ type: FETCH_TRANSACTIONS, payload: response.data.data.data });
+  };
+};
+
+export const fetchTransaction = (id) => {
+  return async (dispatch) => {
+    const response = await data.get(`/transactions/${id}`);
+    dispatch({ type: FETCH_TRANSACTION, payload: response.data });
+  };
+};
+
+export const editTransaction = (id, formValues) => {
+  return async (dispatch) => {
+    const response = await data.patch(`/transactions/${id}`, formValues);
+    dispatch({ type: EDIT_TRANSACTION, payload: response.data });
+  };
+};
+
+export const deleteTransaction = (id) => {
+  return async (dispatch) => {
+    await data.delete(`/transactions/${id}`);
+    dispatch({ type: DELETE_TRANSACTION, payload: id });
   };
 };

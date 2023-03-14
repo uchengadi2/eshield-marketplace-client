@@ -9,7 +9,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import Typography from "@material-ui/core/Typography";
 import history from "../../history";
-import { fetchOrders } from "../../actions";
+import { fetchTransactions } from "../../actions";
 import DataGridContainer from "../DataGridContainer";
 import OrderAssignmentFormContainer from "./OrderAssignmentFormContainer";
 import OrdersEdit from "./OrdersEdit";
@@ -31,11 +31,20 @@ class OrdersList extends React.Component {
         message: "",
         backgroundColor: "",
       },
+      isReloading: false,
     };
   }
   componentDidMount() {
-    this.props.fetchOrders(this.props.token, this.props.status);
+    this.props.fetchTransactions(this.props.token, "unprocessed");
   }
+
+  componentDidUpdate() {
+    //this.handleReloading();
+  }
+
+  handleReloading = () => {
+    this.setState({ isReloading: true });
+  };
 
   handleDialogOpenStatus = () => {
     // history.push("/categories/new");
@@ -170,18 +179,18 @@ class OrdersList extends React.Component {
     let rows = [];
     let counter = 0;
     const columns = [
-      { field: "numbering", headerName: "S/n", width: 100 },
-      { field: "dateOrdered", headerName: "Date Ordered", width: 150 },
-      { field: "orderNumber", headerName: "Order Number", width: 200 },
-      { field: "productName", headerName: "Ordered Product", width: 200 },
+      { field: "numbering", headerName: "S/n", width: 70 },
+      { field: "transactionDate", headerName: "Date Ordered", width: 150 },
+      { field: "orderNumber", headerName: "Order Number", width: 150 },
       {
-        field: "product",
-        headerName: "Ordered Product",
-        width: 200,
-        hide: true,
+        field: "totalProductCost",
+        headerName: "Total Product Cost",
+        width: 150,
       },
-      { field: "orderedQuantity", headerName: "Ordered Quantity", width: 150 },
-      { field: "status", headerName: "Status", width: 150 },
+
+      { field: "paymentStatus", headerName: "Payment Status", width: 150 },
+      { field: "paymentMethod", headerName: "Payment Method", width: 150 },
+      { field: "status", headerName: "Status", width: 100 },
 
       // {
       //   field: "consignmentCountry",
@@ -202,6 +211,7 @@ class OrdersList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <EditRoundedIcon
+              style={{ cursor: "pointer" }}
               onClick={() => [
                 this.setState({
                   editOpen: true,
@@ -259,7 +269,7 @@ class OrdersList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <DeleteRoundedIcon
-              style={{ color: "red" }}
+              style={{ color: "red", cursor: "pointer" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
                 history.push(`/orders/freshorders/delete/${params.id}`),
@@ -269,40 +279,37 @@ class OrdersList extends React.Component {
         ),
       },
     ];
-    console.log("orders:", this.props.orders);
 
-    this.props.orders.map((order, index) => {
+    this.props.transactions.map((order, index) => {
       let row = {
         numbering: ++counter,
         id: order.id,
         orderNumber: order.orderNumber,
-        dateOrdered: order.dateOrdered,
-        orderedQuantity: order.orderedQuantity,
-        status: order.status,
-        cartId: order.cartId,
-        productName: order.product.name,
-        product: order.product.id,
-        sku: order.product.sku,
-
-        productVendor: order.productVendor,
-        productCategory: order.productCategory,
-        quantityAdddedToCart: order.quantityAdddedToCart,
-        orderedPrice: order.orderedPrice,
+        totalProductWeight: order.totalProductWeight,
         productCurrency: order.productCurrency,
-        productLocation: order.productLocation,
-        locationCountry: order.locationCountry,
-        totalDeliveryCost: order.totalDeliveryCost,
-        totalProductCost: order.totalProductCost,
+        status: order.status,
+        totalDeliveryCost: order.totalDeliveryCost
+          ? order.totalDeliveryCost
+              .toFixed(2)
+              .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+          : 0,
+        totalProductCost: order.totalProductCost
+          ? order.totalProductCost
+              .toFixed(2)
+              .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+          : 0,
         recipientName: order.recipientName,
         recipientPhoneNumber: order.recipientPhoneNumber,
+
         recipientAddress: order.recipientAddress,
         recipientState: order.recipientState,
         recipientCountry: order.recipientCountry,
-        dateAddedToCart: order.dateAddedToCart,
+        transactionDate: order.transactionDate,
         orderedBy: order.orderedBy,
+
         paymentStatus: order.paymentStatus,
         paymentMethod: order.paymentMethod,
-        status: order.status,
+
         rejectionReason: order.rejectionReason,
       };
       rows.push(row);
@@ -334,7 +341,7 @@ class OrdersList extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { orders: Object.values(state.order) };
+  return { transactions: Object.values(state.transaction) };
 };
 
-export default connect(mapStateToProps, { fetchOrders })(OrdersList);
+export default connect(mapStateToProps, { fetchTransactions })(OrdersList);

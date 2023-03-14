@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -20,7 +21,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import api from "./../../apis/local";
-import { EDIT_ORDER } from "../../actions/types";
+import { EDIT_ORDER, EDIT_TRANSACTION } from "../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -496,6 +497,7 @@ const renderPaymentMethodField = ({
         style: {
           height: 1,
         },
+        readOnly: true,
       }}
     />
   );
@@ -526,6 +528,7 @@ const renderPaymentStatusField = ({
         style: {
           height: 1,
         },
+        readOnly: true,
       }}
     />
   );
@@ -556,6 +559,7 @@ const renderOrderStatusField = ({
         style: {
           height: 1,
         },
+        readOnly: true,
       }}
     />
   );
@@ -818,6 +822,7 @@ const renderDateOrderedField = ({
         style: {
           height: 1,
         },
+        readOnly: true,
       }}
     />
   );
@@ -879,6 +884,7 @@ const renderTotalDeliveryCostField = ({
         style: {
           height: 1,
         },
+        readOnly: true,
       }}
     />
   );
@@ -909,6 +915,7 @@ const renderTotalProductCostField = ({
         style: {
           height: 1,
         },
+        readOnly: true,
       }}
     />
   );
@@ -1059,6 +1066,7 @@ const renderOrderedQuantityField = ({
         style: {
           height: 1,
         },
+        readOnly: true,
       }}
     />
   );
@@ -1089,6 +1097,7 @@ const renderOrderNumberField = ({
         style: {
           height: 1,
         },
+        readOnly: true,
       }}
     />
   );
@@ -1618,6 +1627,7 @@ function OrderEditForm(props) {
             value={currency}
             onChange={handleCurrencyChange}
             label="Currency"
+            readOnly
             style={{ width: 500, marginTop: 10, height: 38 }}
             //{...input}
           >
@@ -1646,8 +1656,9 @@ function OrderEditForm(props) {
             id="product"
             value={product}
             onChange={handleProductChange}
+            readOnly
             label="Product"
-            style={{ marginTop: 0, width: 150, height: 38, marginLeft: 10 }}
+            style={{ marginTop: 0, width: 320, height: 38, marginLeft: 0 }}
             //{...input}
           >
             {renderProductList()}
@@ -1705,6 +1716,7 @@ function OrderEditForm(props) {
             value={orderedBy}
             onChange={handleOrderedByChange}
             label="OrderedBy"
+            readOnly
             style={{ marginLeft: 10, width: 240, height: 38 }}
             //{...input}
           >
@@ -1770,6 +1782,7 @@ function OrderEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1800,13 +1813,14 @@ function OrderEditForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
   };
 
-  const DateOrdered = params.dateOrdered
-    ? new Date(params.dateOrdered).toISOString().slice(0, 10)
+  const DateOrdered = params.transactionDate
+    ? new Date(params.transactionDate).toISOString().slice(0, 10)
     : "";
 
   const buttonContent = () => {
@@ -1831,13 +1845,25 @@ function OrderEditForm(props) {
     if (formValues) {
       const editForm = async () => {
         api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-        const response = await api.patch(`/orders/${params.id}`, dataValue);
+        const response = await api.patch(
+          `/transactions/${params.id}`,
+          dataValue
+        );
 
         if (response.data.status === "success") {
           dispatch({
-            type: EDIT_ORDER,
+            type: EDIT_TRANSACTION,
             payload: response.data.data.data,
           });
+
+          // const response = await api.patch(
+          //   `/orders?transactionId=${params.id}`,
+          //   dataValue
+          // );
+          // dispatch({
+          //   type: EDIT_ORDER,
+          //   payload: response.data.data.data,
+          // });
 
           props.handleSuccessfulEditSnackbar(
             `${params.orderNumber} Order is processed successfully!!!`
@@ -1862,6 +1888,22 @@ function OrderEditForm(props) {
   return (
     <div>
       <form id="productEditForm" className={classes.formStyles}>
+        <Grid
+          item
+          container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleEditDialogOpenStatus()]}
+          />
+        </Grid>
         <Grid item container style={{ marginTop: 20 }} justifyContent="center">
           <FormLabel
             style={{ color: "grey", fontSize: "1.3em" }}
@@ -1879,7 +1921,7 @@ function OrderEditForm(props) {
           autoComplete="off"
         >
           <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
+            {/* <Grid item style={{ width: 160 }}>
               <Field
                 label=""
                 id="productVendor"
@@ -1887,8 +1929,8 @@ function OrderEditForm(props) {
                 type="text"
                 component={renderVendorField}
               />
-            </Grid>
-            <Grid item style={{ marginLeft: 10, width: 150 }}>
+            </Grid> */}
+            {/* <Grid item style={{ marginLeft: 0, width: 320 }}>
               <Field
                 label=""
                 id="product"
@@ -1897,7 +1939,7 @@ function OrderEditForm(props) {
                 component={renderProductField}
               />
             </Grid>
-            <Grid item style={{ width: 165, marginLeft: 15 }}>
+            <Grid item style={{ width: 170, marginLeft: 10 }}>
               <Field
                 label=""
                 id="sku"
@@ -1906,10 +1948,10 @@ function OrderEditForm(props) {
                 type="text"
                 component={renderSkuField}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
           <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
+            <Grid item style={{ width: "100%" }}>
               <Field
                 label=""
                 id="orderNumber"
@@ -1919,7 +1961,7 @@ function OrderEditForm(props) {
                 component={renderOrderNumberField}
               />
             </Grid>
-            <Grid item style={{ marginLeft: 10, width: 150 }}>
+            {/* <Grid item style={{ marginLeft: 10, width: 150 }}>
               <Field
                 label=""
                 id="orderedQuantity"
@@ -1938,16 +1980,9 @@ function OrderEditForm(props) {
                 type="text"
                 component={renderOrderedPriceField}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
-          <Field
-            label=""
-            id="productCurrency"
-            name="productCurrency"
-            defaultValue={params.orderedPrice}
-            type="text"
-            component={renderProductCurrencyField}
-          />
+
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Customer Details
@@ -1957,8 +1992,8 @@ function OrderEditForm(props) {
             <Grid item style={{ width: 250 }}>
               <Field
                 label=""
-                id="dateOrdered"
-                name="dateOrdered"
+                id="transactionDate"
+                name="transactionDate"
                 defaultValue={DateOrdered}
                 type="date"
                 component={renderDateOrderedField}
@@ -1997,7 +2032,7 @@ function OrderEditForm(props) {
             </Grid>
           </Grid>
 
-          <Grid item container style={{ marginTop: 20 }}>
+          {/* <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Product Location
             </FormLabel>
@@ -2021,7 +2056,7 @@ function OrderEditForm(props) {
                 component={renderProductLocationField}
               />
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Grid item container style={{ marginTop: 15 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
@@ -2092,9 +2127,13 @@ function OrderEditForm(props) {
                 label=""
                 id="totalDeliveryCost"
                 name="totalDeliveryCost"
-                defaultValue={params.totalDeliveryCost
-                  .toFixed(2)
-                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                defaultValue={
+                  params.totalDeliveryCost
+                    ? params.totalDeliveryCost
+                        .toFixed(2)
+                        .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                    : 0
+                }
                 type="text"
                 component={renderTotalDeliveryCostField}
               />
@@ -2104,13 +2143,12 @@ function OrderEditForm(props) {
                 label=""
                 id="totalProductCost"
                 name="totalProductCost"
-                defaultValue={params.totalProductCost
-                  .toFixed(2)
-                  .replace(/\d(?=(\d{3})+\.)/g, "$&,")}
+                defaultValue={params.totalProductCost}
                 type="text"
                 component={renderTotalProductCostField}
               />
             </Grid>
+
             <Grid item style={{ width: "33%", marginLeft: 10 }}>
               <Field
                 label=""
@@ -2122,6 +2160,14 @@ function OrderEditForm(props) {
               />
             </Grid>
           </Grid>
+          <Field
+            label=""
+            id="productCurrency"
+            name="productCurrency"
+            defaultValue={params.orderedPrice}
+            type="text"
+            component={renderProductCurrencyField}
+          />
           <Grid container direction="row" style={{ marginTop: 20 }}>
             <Grid item style={{ width: 250 }}>
               <Field

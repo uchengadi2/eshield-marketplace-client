@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -143,15 +144,24 @@ function ReturnDeliveryCreateForm(props) {
 
       allData.push({
         id: item._id,
-        order: item.order,
+        transaction: item.transaction,
         logisticsPartner: item.logisticsPartner,
         logisticsPartnerState: item.logisticsPartnerState,
         logisticsPartnerCountry: item.logisticsPartnerCountry,
+        customer: item.customer,
+        customerEmail: item.customerEmail,
+        customerPhoneNumber: item.customerPhoneNumber,
+        destinationState: item.destinationState,
+        destinationCountry: item.destinationCountry,
       });
-      setOrderForDelivery(allData[0].order);
+      setOrderForDelivery(allData[0].transaction);
       setLogisticsPartnerCountry(allData[0].logisticsPartnerCountry);
       setLogisticsPartnerState(allData[0].logisticsPartnerState);
-      setLogisticsPartner(allData[0].logisticsPartner);
+      setLogisticsPartner(allData[0].logisticsPartner.id);
+      setCustomerEmail(allData[0].customerEmail);
+      setCustomerPhoneNumber(allData[0].customerPhoneNumber);
+      setRecipientState(allData[0].destinationState);
+      setRecipientCountry(allData[0].destinationCountry);
     };
 
     //call the function
@@ -163,30 +173,27 @@ function ReturnDeliveryCreateForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders/${orderForDelivery}`);
+      const response = await api.get(`/deliveries/${deliveriesForTransit}`);
       const item = response.data.data.data;
 
       allData.push({
         id: item._id,
         orderNumber: item.orderNumber,
-        product: item.product,
-        vendor: item.productVendor,
-        orderedQuantity: item.orderedQuantity,
-        orderedPrice: item.orderedPrice,
-        currency: item.productCurrency,
-        location: item.productLocation,
-        country: item.locationCountry,
-        totalDeliveryCost: item.totalDeliveryCost,
-        totalProductCost: item.totalProductCost,
+        refNumber: item.refNumber,
+        customerEmail: item.customerEmail,
+        customerPhoneNumber: item.customerPhoneNumber,
         recipientName: item.recipientName,
         recipientPhoneNumber: item.recipientPhoneNumber,
         recipientAddress: item.recipientAddress,
-        recipientState: item.recipientState,
-        recipientCountry: item.recipientCountry,
+        destinationState: item.destinationState,
+        destinationCountry: item.destinationCountry,
         dateOrdered: new Date(item.dateOrdered).toISOString().slice(0, 10),
-        orderedBy: item.orderedBy,
-        paymentStatus: item.paymentStatus,
-        paymentMethod: item.paymentMethod,
+        customer: item.customer,
+        logisticsPartner: item.logisticsPartner,
+        logisticsPartnerState: item.logisticsPartnerState,
+        logisticsPartnerCountry: item.logisticsPartnerCountry,
+        dateAssigned: item.dateAssigned,
+        assignedBy: item.assignedBy,
         status: item.status,
         rejectionReason: item.rejectionReason,
         sku: item.sku,
@@ -209,10 +216,10 @@ function ReturnDeliveryCreateForm(props) {
       setRecipientName(allData[0].recipientName);
       setRecipientPhoneNumber(allData[0].recipientPhoneNumber);
       setRecipientAddress(allData[0].recipientAddress);
-      setRecipientState(allData[0].recipientState);
-      setRecipientCountry(allData[0].recipientCountry);
+      // setRecipientState(allData[0].recipientState);
+      // setRecipientCountry(allData[0].recipientCountry);
       setDateOrdered(allData[0].dateOrdered);
-      setOrderedBy(allData[0].orderedBy);
+      setOrderedBy(allData[0].customer);
       setPaymentStatus(allData[0].paymentStatus);
       setPaymentMethod(allData[0].paymentMethod);
       setOrderStatus(allData[0].status);
@@ -223,14 +230,14 @@ function ReturnDeliveryCreateForm(props) {
     //call the function
 
     fetchData().catch(console.error);
-  }, [orderForDelivery]);
+  }, [deliveriesForTransit]);
 
   useEffect(() => {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
       const response = await api.get(`/deliveries`, {
-        params: { status: "on-transit" },
+        params: { status: "assigned" },
       });
       const workingData = response.data.data.data;
       workingData.map((delivery) => {
@@ -248,10 +255,10 @@ function ReturnDeliveryCreateForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders`);
+      const response = await api.get(`/deliveries`);
       const workingData = response.data.data.data;
-      workingData.map((order) => {
-        allData.push({ id: order._id, name: order.orderNumber });
+      workingData.map((delivery) => {
+        allData.push({ id: delivery._id, name: delivery.refNumber });
       });
       setOrderForDeliveryList(allData);
     };
@@ -441,32 +448,32 @@ function ReturnDeliveryCreateForm(props) {
     fetchData().catch(console.error);
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let allData = [];
-      api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/users/${orderedBy}`);
-      const item = response.data.data.data;
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     let allData = [];
+  //     api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
+  //     const response = await api.get(`/users/${orderedBy}`);
+  //     const item = response.data.data.data;
 
-      allData.push({
-        id: item._id,
-        name: item.name,
-        email: item.email,
-        phoneNumber: item.phoneNumber,
-      });
+  //     allData.push({
+  //       id: item._id,
+  //       name: item.name,
+  //       email: item.email,
+  //       phoneNumber: item.phoneNumber,
+  //     });
 
-      if (!allData) {
-        return;
-      }
+  //     if (!allData) {
+  //       return;
+  //     }
 
-      setCustomerEmail(allData[0].email);
-      setCustomerPhoneNumber(allData[0].phoneNumber);
-    };
+  //     setCustomerEmail(allData[0].email);
+  //     setCustomerPhoneNumber(allData[0].phoneNumber);
+  //   };
 
-    //call the function
+  //call the function
 
-    fetchData().catch(console.error);
-  }, [orderedBy]);
+  //   fetchData().catch(console.error);
+  // }, [orderedBy]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -1203,6 +1210,7 @@ function ReturnDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1234,6 +1242,7 @@ function ReturnDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1265,6 +1274,7 @@ function ReturnDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1296,6 +1306,7 @@ function ReturnDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1384,6 +1395,9 @@ function ReturnDeliveryCreateForm(props) {
         //required
         type={type}
         {...custom}
+        inputProps={{
+          readOnly: true,
+        }}
         onChange={input.onChange}
         multiline={true}
         minRows={3}
@@ -1417,6 +1431,7 @@ function ReturnDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1448,6 +1463,7 @@ function ReturnDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1510,6 +1526,7 @@ function ReturnDeliveryCreateForm(props) {
           style: {
             height: 1,
           },
+          readOnly: true,
         }}
       />
     );
@@ -1685,15 +1702,15 @@ function ReturnDeliveryCreateForm(props) {
             payload: response.data.data.data,
           });
 
-          // //change the status of this order
+          //change the status of this order
 
-          // const data = {
-          //   status: "assigned-for-delivery",
-          // };
-          // const orderResponse = await api.patch(
-          //   `/orders/${orderForDelivery}`,
-          //   data
-          // );
+          const data = {
+            status: "returned",
+          };
+          const orderResponse = await api.patch(
+            `/transactions/${orderForDelivery}`,
+            data
+          );
 
           props.handleSuccessfulCreateSnackbar(
             `Delivery is returned successfully!!!`
@@ -1721,6 +1738,22 @@ function ReturnDeliveryCreateForm(props) {
         <Grid
           item
           container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleDialogOpenStatus()]}
+          />
+        </Grid>
+        <Grid
+          item
+          container
           style={{ marginTop: 20, marginBottom: 15 }}
           justifyContent="center"
         >
@@ -1728,7 +1761,7 @@ function ReturnDeliveryCreateForm(props) {
             style={{ color: "grey", fontSize: "1.3em" }}
             component="legend"
           >
-            <Typography variant="h5">Return Delivery</Typography>
+            <Typography variant="h5">On Return Delivery</Typography>
           </FormLabel>
         </Grid>
         <Box
@@ -1748,76 +1781,14 @@ function ReturnDeliveryCreateForm(props) {
           />
           <Field
             label=""
-            id="order"
-            name="order"
+            id="orderNumber"
+            name="orderNumber"
+            defaultValue={orderNumber}
             type="text"
-            component={renderOrderForDeliveryField}
+            component={renderOrderNumberField}
+            style={{ marginTop: 10 }}
           />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 350 }}>
-              <Field
-                label=""
-                id="productVendor"
-                name="productVendor"
-                type="text"
-                component={renderVendorField}
-              />
-            </Grid>
 
-            <Grid item style={{ width: 140, marginLeft: 10 }}>
-              <Field
-                label=""
-                id="sku"
-                name="sku"
-                type="text"
-                component={renderSkuField}
-              />
-            </Grid>
-          </Grid>
-          <Field
-            label=""
-            id="product"
-            name="product"
-            type="text"
-            component={renderProductField}
-          />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
-              <Field
-                label=""
-                id="orderNumber"
-                name="orderNumber"
-                type="text"
-                component={renderOrderNumberField}
-              />
-            </Grid>
-            <Grid item style={{ marginLeft: 10, width: 150 }}>
-              <Field
-                label=""
-                id="orderedQuantity"
-                name="orderedQuantity"
-                type="text"
-                component={renderOrderedQuantityField}
-              />
-            </Grid>
-            {/* {getCurrencyCode()} */}
-            <Grid item style={{ width: 165, marginLeft: 15 }}>
-              <Field
-                label=""
-                id="orderedPrice"
-                name="orderedPrice"
-                type="text"
-                component={renderOrderedPriceField}
-              />
-            </Grid>
-          </Grid>
-          <Field
-            label=""
-            id="productCurrency"
-            name="productCurrency"
-            type="text"
-            component={renderProductCurrencyField}
-          />
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Customer Details
@@ -1860,32 +1831,6 @@ function ReturnDeliveryCreateForm(props) {
                 name="customerPhoneNumber"
                 type="text"
                 component={renderCustomerPhoneNumberField}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid item container style={{ marginTop: 20 }}>
-            <FormLabel style={{ color: "blue" }} component="legend">
-              Product Location
-            </FormLabel>
-          </Grid>
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 250 }}>
-              <Field
-                label=""
-                id="locationCountry"
-                name="locationCountry"
-                type="number"
-                component={renderProductCountryField}
-              />
-            </Grid>
-            <Grid item style={{ width: 250, marginLeft: 0 }}>
-              <Field
-                label=""
-                id="productLocation"
-                name="productLocation"
-                type="number"
-                component={renderProductLocationField}
               />
             </Grid>
           </Grid>
@@ -1944,61 +1889,6 @@ function ReturnDeliveryCreateForm(props) {
             </Grid>
           </Grid>
 
-          <Grid item container style={{ marginTop: 15 }}>
-            <FormLabel style={{ color: "blue" }} component="legend">
-              Payment Details
-            </FormLabel>
-          </Grid>
-
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: "30%" }}>
-              <Field
-                label=""
-                id="totalDeliveryCost"
-                name="totalDeliveryCost"
-                type="text"
-                component={renderTotalDeliveryCostField}
-              />
-            </Grid>
-            <Grid item style={{ width: "33%", marginLeft: 10 }}>
-              <Field
-                label=""
-                id="totalProductCost"
-                name="totalProductCost"
-                type="text"
-                component={renderTotalProductCostField}
-              />
-            </Grid>
-            <Grid item style={{ width: "33%", marginLeft: 10 }}>
-              <Field
-                label=""
-                id="status"
-                name="status"
-                type="text"
-                component={renderOrderStatusField}
-              />
-            </Grid>
-          </Grid>
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 250 }}>
-              <Field
-                label=""
-                id="paymentStatus"
-                name="paymentStatus"
-                type="text"
-                component={renderPaymentStatusField}
-              />
-            </Grid>
-            <Grid item style={{ width: 240, marginLeft: 10 }}>
-              <Field
-                label=""
-                id="paymentMethod"
-                name="paymentMethod"
-                type="text"
-                component={renderPaymentMethodField}
-              />
-            </Grid>
-          </Grid>
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Logistics Partner

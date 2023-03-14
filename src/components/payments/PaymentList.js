@@ -160,19 +160,16 @@ class PaymentList extends React.Component {
         width: 150,
       },
       { field: "orderNumber", headerName: "Order Number", width: 200 },
-      { field: "customerName", headerName: "Customer", width: 200 },
-      // {
-      //   field: "totalProductAmount",
-      //   headerName: "Total Amount",
-      //   width: 200,
-      // },
+      {
+        field: "totalProductAmount",
+        headerName: "Total Expected Amount",
+        width: 200,
+      },
       {
         field: "amountPaid",
         headerName: "Amount Paid",
         width: 150,
       },
-      { field: "order", headerName: "", width: 0, hide: true },
-      { field: "customer", headerName: "", width: 0, hide: true },
 
       {
         field: "editaction",
@@ -183,6 +180,7 @@ class PaymentList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <EditRoundedIcon
+              style={{ cursor: "pointer" }}
               onClick={() => [
                 this.setState({
                   editOpen: true,
@@ -225,7 +223,7 @@ class PaymentList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <DeleteRoundedIcon
-              style={{ color: "red" }}
+              style={{ color: "red", cursor: "pointer" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
                 history.push(`/payments/payments/delete/${params.id}`),
@@ -240,19 +238,22 @@ class PaymentList extends React.Component {
         numbering: ++counter,
         id: payment.id,
         refNumber: payment.refNumber,
-        orderNumber: payment.order.orderNumber,
-        order: payment.order.id,
-        vendor: payment.vendor,
-        customerName: payment.customer[index].name,
-        customer: payment.customer[index].id,
-        totalProductAmount: payment.totalProductAmount,
-        amountPaid: payment.amountPaid,
+        orderNumber: payment.orderNumber,
+        transaction: payment.transaction,
+        customer: payment.customer,
+        totalProductAmount: payment.totalProductAmount
+          .toFixed(2)
+          .replace(/\d(?=(\d{3})+\.)/g, "$&,"),
+        amountPaid: payment.amountPaid
+          .toFixed(2)
+          .replace(/\d(?=(\d{3})+\.)/g, "$&,"),
         totalDeliveryCost: payment.totalDeliveryCost,
         paymentCurrency: payment.paymentCurrency,
         paymentConfirmationStatus: payment.paymentConfirmationStatus,
         paymentConfirmedBy: payment.paymentConfirmedBy,
         paymentDate: payment.paymentDate,
         datePosted: payment.datePosted,
+        amountAlreadyPaid: payment.amountAlreadyPaid,
       };
       rows.push(row);
     });

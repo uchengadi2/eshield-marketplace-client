@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -93,8 +94,10 @@ function ReturnDeliveryEditForm(props) {
   const [currency, setCurrency] = useState();
   const [location, setLocation] = useState();
   const [country, setCountry] = useState();
-  const [recipientState, setRecipientState] = useState();
-  const [recipientCountry, setRecipientCountry] = useState();
+  const [recipientState, setRecipientState] = useState(params.destinationState);
+  const [recipientCountry, setRecipientCountry] = useState(
+    params.destinationCountry
+  );
   const [recipientStateList, setRecipientStateList] = useState([]);
   const [recipientCountryList, setRecipientCountryList] = useState([]);
   const [orderedByList, setOrderedByList] = useState([]);
@@ -144,87 +147,23 @@ function ReturnDeliveryEditForm(props) {
 
       allData.push({
         id: item._id,
-        order: item.order.id,
+        transaction: item.transaction,
         logisticsPartner: item.logisticsPartner.id,
         logisticsPartnerState: item.logisticsPartnerState,
         logisticsPartnerCountry: item.logisticsPartnerCountry,
+        customer: item.customer,
       });
-      setOrderForDelivery(allData[0].order);
+      setOrderForDelivery(allData[0].transaction);
       setLogisticsPartnerCountry(allData[0].logisticsPartnerCountry);
       setLogisticsPartnerState(allData[0].logisticsPartnerState);
       setLogisticsPartner(allData[0].logisticsPartner);
+      setOrderedBy(allData[0].customer);
     };
 
     //call the function
 
     fetchData().catch(console.error);
   }, [deliveriesForTransit]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      let allData = [];
-      api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders/${orderForDelivery}`);
-      const item = response.data.data.data;
-
-      allData.push({
-        id: item._id,
-        orderNumber: item.orderNumber,
-        product: item.product.id,
-        vendor: item.productVendor,
-        orderedQuantity: item.orderedQuantity,
-        orderedPrice: item.orderedPrice,
-        currency: item.productCurrency,
-        location: item.productLocation,
-        country: item.locationCountry,
-        totalDeliveryCost: item.totalDeliveryCost,
-        totalProductCost: item.totalProductCost,
-        recipientName: item.recipientName,
-        recipientPhoneNumber: item.recipientPhoneNumber,
-        recipientAddress: item.recipientAddress,
-        recipientState: item.recipientState,
-        recipientCountry: item.recipientCountry,
-        dateOrdered: new Date(item.dateOrdered).toISOString().slice(0, 10),
-        orderedBy: item.orderedBy,
-        paymentStatus: item.paymentStatus,
-        paymentMethod: item.paymentMethod,
-        status: item.status,
-        rejectionReason: item.rejectionReason,
-        sku: item.product.sku,
-      });
-
-      if (!allData) {
-        return;
-      }
-
-      setVendor(allData[0].vendor);
-      setOrderNumber(allData[0].orderNumber);
-      setProduct(allData[0].product);
-      setOrderedQuantity(allData[0].orderedQuantity);
-      setOrderedPrice(allData[0].orderedPrice);
-      setCurrency(allData[0].currency);
-      setLocation(allData[0].location);
-      setCountry(allData[0].country);
-      setTotalDeliveryCost(allData[0].totalDeliveryCost);
-      setTotalProductCost(allData[0].totalProductCost);
-      setRecipientName(allData[0].recipientName);
-      setRecipientPhoneNumber(allData[0].recipientPhoneNumber);
-      setRecipientAddress(allData[0].recipientAddress);
-      setRecipientState(allData[0].recipientState);
-      setRecipientCountry(allData[0].recipientCountry);
-      setDateOrdered(allData[0].dateOrdered);
-      setOrderedBy(allData[0].orderedBy);
-      setPaymentStatus(allData[0].paymentStatus);
-      setPaymentMethod(allData[0].paymentMethod);
-      setOrderStatus(allData[0].status);
-      setRejectionReason(allData[0].rejectionReason);
-      setSku(allData[0].sku);
-    };
-
-    //call the function
-
-    fetchData().catch(console.error);
-  }, [orderForDelivery]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -247,10 +186,10 @@ function ReturnDeliveryEditForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders`);
+      const response = await api.get(`/transactions`);
       const workingData = response.data.data.data;
-      workingData.map((order) => {
-        allData.push({ id: order._id, name: order.orderNumber });
+      workingData.map((transaction) => {
+        allData.push({ id: transaction._id, name: transaction.orderNumber });
       });
       setOrderForDeliveryList(allData);
     };
@@ -1684,15 +1623,15 @@ function ReturnDeliveryEditForm(props) {
             payload: response.data.data.data,
           });
 
-          // //change the status of this order
+          //change the status of this order
 
-          // const data = {
-          //   status: "assigned-for-delivery",
-          // };
-          // const orderResponse = await api.patch(
-          //   `/orders/${orderForDelivery}`,
-          //   data
-          // );
+          const data = {
+            status: "returned",
+          };
+          const orderResponse = await api.patch(
+            `/transactions/${orderForDelivery}`,
+            data
+          );
 
           props.handleSuccessfulEditSnackbar(
             `Delivery is returned successfully!!!`
@@ -1714,9 +1653,33 @@ function ReturnDeliveryEditForm(props) {
     }
   };
 
+  const deliveryReturnedDate = params.deliveryReturnedDate
+    ? new Date(params.deliveryReturnedDate).toISOString().slice(0, 10)
+    : "";
+
+  const DateOrdered = params.dateOrdered
+    ? new Date(params.dateOrdered).toISOString().slice(0, 10)
+    : "";
+
   return (
     <div>
       <form id="returnDeliveryEditForm" className={classes.formStyles}>
+        <Grid
+          item
+          container
+          style={{ marginTop: 1, marginBottom: 2 }}
+          justifyContent="center"
+        >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleEditDialogOpenStatus()]}
+          />
+        </Grid>
         <Grid
           item
           container
@@ -1727,7 +1690,7 @@ function ReturnDeliveryEditForm(props) {
             style={{ color: "grey", fontSize: "1.3em" }}
             component="legend"
           >
-            <Typography variant="h5">Return Delivery</Typography>
+            <Typography variant="h5">On Returned Delivery</Typography>
           </FormLabel>
         </Grid>
         <Box
@@ -1740,83 +1703,13 @@ function ReturnDeliveryEditForm(props) {
         >
           <Field
             label=""
-            id="deliveriesForTransit"
-            name="deliveriesForTransit"
+            id="orderNumber"
+            name="orderNumber"
+            defaultValue={params.orderNumber}
             type="text"
-            component={renderOnTransitDeliveriesField}
+            component={renderOrderNumberField}
           />
-          <Field
-            label=""
-            id="order"
-            name="order"
-            type="text"
-            component={renderOrderForDeliveryField}
-          />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 350 }}>
-              <Field
-                label=""
-                id="productVendor"
-                name="productVendor"
-                type="text"
-                component={renderVendorField}
-              />
-            </Grid>
 
-            <Grid item style={{ width: 140, marginLeft: 10 }}>
-              <Field
-                label=""
-                id="sku"
-                name="sku"
-                type="text"
-                component={renderSkuField}
-              />
-            </Grid>
-          </Grid>
-          <Field
-            label=""
-            id="product"
-            name="product"
-            type="text"
-            component={renderProductField}
-          />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
-              <Field
-                label=""
-                id="orderNumber"
-                name="orderNumber"
-                type="text"
-                component={renderOrderNumberField}
-              />
-            </Grid>
-            <Grid item style={{ marginLeft: 10, width: 150 }}>
-              <Field
-                label=""
-                id="orderedQuantity"
-                name="orderedQuantity"
-                type="text"
-                component={renderOrderedQuantityField}
-              />
-            </Grid>
-            {/* {getCurrencyCode()} */}
-            <Grid item style={{ width: 165, marginLeft: 15 }}>
-              <Field
-                label=""
-                id="orderedPrice"
-                name="orderedPrice"
-                type="text"
-                component={renderOrderedPriceField}
-              />
-            </Grid>
-          </Grid>
-          <Field
-            label=""
-            id="productCurrency"
-            name="productCurrency"
-            type="text"
-            component={renderProductCurrencyField}
-          />
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Customer Details
@@ -1828,6 +1721,7 @@ function ReturnDeliveryEditForm(props) {
                 label=""
                 id="dateOrdered"
                 name="dateOrdered"
+                defaultValue={DateOrdered}
                 type="date"
                 component={renderDateOrderedField}
               />
@@ -1837,6 +1731,7 @@ function ReturnDeliveryEditForm(props) {
                 label=""
                 id="orderedBy"
                 name="orderedBy"
+                defaultValue={params.customer}
                 type="number"
                 component={renderOrderedByField}
               />
@@ -1848,6 +1743,7 @@ function ReturnDeliveryEditForm(props) {
                 label=""
                 id="customerEmail"
                 name="customerEmail"
+                defaultValue={params.customerEmail}
                 type="text"
                 component={renderCustomerEmailField}
               />
@@ -1857,34 +1753,9 @@ function ReturnDeliveryEditForm(props) {
                 label=""
                 id="customerPhoneNumber"
                 name="customerPhoneNumber"
+                defaultValue={params.customerPhoneNumber}
                 type="text"
                 component={renderCustomerPhoneNumberField}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid item container style={{ marginTop: 20 }}>
-            <FormLabel style={{ color: "blue" }} component="legend">
-              Product Location
-            </FormLabel>
-          </Grid>
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 250 }}>
-              <Field
-                label=""
-                id="locationCountry"
-                name="locationCountry"
-                type="number"
-                component={renderProductCountryField}
-              />
-            </Grid>
-            <Grid item style={{ width: 250, marginLeft: 0 }}>
-              <Field
-                label=""
-                id="productLocation"
-                name="productLocation"
-                type="number"
-                component={renderProductLocationField}
               />
             </Grid>
           </Grid>
@@ -1899,6 +1770,7 @@ function ReturnDeliveryEditForm(props) {
             label=""
             id="recipientName"
             name="recipientName"
+            defaultValue={params.recipientName}
             type="text"
             component={renderRecipientNameField}
             style={{ marginTop: 10 }}
@@ -1908,6 +1780,7 @@ function ReturnDeliveryEditForm(props) {
             label=""
             id="recipientPhoneNumber"
             name="recipientPhoneNumber"
+            defaultValue={params.recipientPhoneNumber}
             type="text"
             component={renderRecipientPhoneNumberField}
             style={{ marginTop: 10 }}
@@ -1917,6 +1790,7 @@ function ReturnDeliveryEditForm(props) {
             label=""
             id="recipientAddress"
             name="recipientAddress"
+            defaultValue={params.recipientAddress}
             type="text"
             component={renderRecipientAddressField}
             style={{ marginTop: 10 }}
@@ -1943,61 +1817,6 @@ function ReturnDeliveryEditForm(props) {
             </Grid>
           </Grid>
 
-          <Grid item container style={{ marginTop: 15 }}>
-            <FormLabel style={{ color: "blue" }} component="legend">
-              Payment Details
-            </FormLabel>
-          </Grid>
-
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: "30%" }}>
-              <Field
-                label=""
-                id="totalDeliveryCost"
-                name="totalDeliveryCost"
-                type="text"
-                component={renderTotalDeliveryCostField}
-              />
-            </Grid>
-            <Grid item style={{ width: "33%", marginLeft: 10 }}>
-              <Field
-                label=""
-                id="totalProductCost"
-                name="totalProductCost"
-                type="text"
-                component={renderTotalProductCostField}
-              />
-            </Grid>
-            <Grid item style={{ width: "33%", marginLeft: 10 }}>
-              <Field
-                label=""
-                id="status"
-                name="status"
-                type="text"
-                component={renderOrderStatusField}
-              />
-            </Grid>
-          </Grid>
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 250 }}>
-              <Field
-                label=""
-                id="paymentStatus"
-                name="paymentStatus"
-                type="text"
-                component={renderPaymentStatusField}
-              />
-            </Grid>
-            <Grid item style={{ width: 240, marginLeft: 10 }}>
-              <Field
-                label=""
-                id="paymentMethod"
-                name="paymentMethod"
-                type="text"
-                component={renderPaymentMethodField}
-              />
-            </Grid>
-          </Grid>
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Logistics Partner
@@ -2039,7 +1858,7 @@ function ReturnDeliveryEditForm(props) {
             label=""
             id="deliveryReturnedDate"
             name="deliveryReturnedDate"
-            defaultValue={deliveryReturnDate}
+            defaultValue={deliveryReturnedDate}
             type="date"
             component={renderDeliveryReturnDateField}
             style={{ marginTop: 10 }}

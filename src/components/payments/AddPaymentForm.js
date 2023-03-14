@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { TextField } from "@material-ui/core";
@@ -168,19 +169,12 @@ function AddPaymentForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders/${orderForDelivery}`);
+      const response = await api.get(`/transactions/${orderForDelivery}`);
       const item = response.data.data.data;
 
       allData.push({
         id: item._id,
         orderNumber: item.orderNumber,
-        product: item.product,
-        vendor: item.productVendor,
-        orderedQuantity: item.orderedQuantity,
-        orderedPrice: item.orderedPrice,
-        currency: item.productCurrency,
-        location: item.productLocation,
-        country: item.locationCountry,
         totalDeliveryCost: item.totalDeliveryCost,
         totalProductCost: item.totalProductCost,
         recipientName: item.recipientName,
@@ -188,27 +182,20 @@ function AddPaymentForm(props) {
         recipientAddress: item.recipientAddress,
         recipientState: item.recipientState,
         recipientCountry: item.recipientCountry,
-        dateOrdered: new Date(item.dateOrdered).toISOString().slice(0, 10),
+        dateOrdered: new Date(item.transactionDate).toISOString().slice(0, 10),
         orderedBy: item.orderedBy,
         paymentStatus: item.paymentStatus,
         paymentMethod: item.paymentMethod,
         status: item.status,
         rejectionReason: item.rejectionReason,
-        sku: item.sku,
+        productCurrency: item.productCurrency,
       });
 
       if (!allData) {
         return;
       }
 
-      setVendor(allData[0].vendor);
       setOrderNumber(allData[0].orderNumber);
-      setProduct(allData[0].product);
-      setOrderedQuantity(allData[0].orderedQuantity);
-      setOrderedPrice(allData[0].orderedPrice);
-      setCurrency(allData[0].currency);
-      setLocation(allData[0].location);
-      setCountry(allData[0].country);
       setTotalDeliveryCost(allData[0].totalDeliveryCost);
       setTotalProductCost(allData[0].totalProductCost);
       setRecipientName(allData[0].recipientName);
@@ -222,7 +209,7 @@ function AddPaymentForm(props) {
       setPaymentMethod(allData[0].paymentMethod);
       setOrderStatus(allData[0].status);
       setRejectionReason(allData[0].rejectionReason);
-      setSku(allData[0].sku);
+      setCurrency(allData[0].productCurrency);
     };
 
     //call the function
@@ -234,14 +221,14 @@ function AddPaymentForm(props) {
     const fetchData = async () => {
       let allData = [];
       api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-      const response = await api.get(`/orders`, {
+      const response = await api.get(`/transactions`, {
         params: {
           paymentStatus: "to-be-confirmed",
         },
       });
       const workingData = response.data.data.data;
-      workingData.map((order) => {
-        allData.push({ id: order._id, name: order.orderNumber });
+      workingData.map((transaction) => {
+        allData.push({ id: transaction._id, name: transaction.orderNumber });
       });
       setOrderForDeliveryList(allData);
     };
@@ -503,6 +490,8 @@ function AddPaymentForm(props) {
     });
   };
 
+  console.log("the order number is:", orderNumber);
+
   //get the vendor list
   const renderVendorList = () => {
     return vendorList.map((item) => {
@@ -707,6 +696,68 @@ function AddPaymentForm(props) {
 
   const handlePaymentConfirmationChange = (event) => {
     setPaymentConfirmation(event.target.value);
+  };
+
+  const renderPaymentMethodField = ({
+    input,
+    label,
+    meta: { touched, error, invalid },
+    type,
+    id,
+    ...custom
+  }) => {
+    return (
+      <TextField
+        //error={touched && invalid}
+        helperText="Payment Method"
+        variant="outlined"
+        label={label}
+        id={input.name}
+        defaultValue={paymentMethod}
+        fullWidth
+        //required
+        type={type}
+        {...custom}
+        onChange={input.onChange}
+        inputProps={{
+          style: {
+            height: 1,
+          },
+          readOnly: true,
+        }}
+      />
+    );
+  };
+
+  const renderPaymentStatusField = ({
+    input,
+    label,
+    meta: { touched, error, invalid },
+    type,
+    id,
+    ...custom
+  }) => {
+    return (
+      <TextField
+        //error={touched && invalid}
+        helperText="Payment Status"
+        variant="outlined"
+        label={label}
+        id={input.name}
+        defaultValue={paymentMethod}
+        fullWidth
+        //required
+        type={type}
+        {...custom}
+        onChange={input.onChange}
+        inputProps={{
+          style: {
+            height: 1,
+          },
+          readOnly: true,
+        }}
+      />
+    );
   };
 
   const renderLogisticsPartnersField = ({
@@ -1086,7 +1137,7 @@ function AddPaymentForm(props) {
     );
   };
 
-  const renderPaymentStatusField = ({
+  const renderProcessingPaymentStatusField = ({
     input,
     label,
     meta: { touched, error, invalid },
@@ -1197,37 +1248,6 @@ function AddPaymentForm(props) {
         id={input.name}
         //value={formInput.name}
         defaultValue={orderNumber}
-        fullWidth
-        //required
-        type={type}
-        {...custom}
-        onChange={input.onChange}
-        inputProps={{
-          style: {
-            height: 1,
-          },
-        }}
-      />
-    );
-  };
-
-  const renderPaymentMethodField = ({
-    input,
-    label,
-    meta: { touched, error, invalid },
-    type,
-    id,
-    ...custom
-  }) => {
-    return (
-      <TextField
-        //error={touched && invalid}
-        helperText="Payment Method"
-        variant="outlined"
-        label={label}
-        id={input.name}
-        //value={formInput.name}
-        defaultValue={paymentMethod}
         fullWidth
         //required
         type={type}
@@ -1617,7 +1637,8 @@ function AddPaymentForm(props) {
       return;
     }
 
-    const totalExpectedPayment = +totalProductCost + +totalDeliveryCost;
+    const totalExpectedPayment =
+      +totalProductCost + parseFloat(totalDeliveryCost);
 
     if (paymentConfirmation === "confirmed-full") {
       if (+formValues["amountPaid"] !== +totalExpectedPayment) {
@@ -1631,8 +1652,8 @@ function AddPaymentForm(props) {
 
     const dataValue = {
       refNumber: "PAY-" + Math.floor(Math.random() * 100000000) + "-OR",
-      order: orderForDelivery,
-      vendor: vendor,
+      transaction: orderForDelivery,
+      orderNumber: orderNumber,
       customer: orderedBy,
       totalProductAmount: totalProductCost,
       totalDeliveryCost: totalDeliveryCost,
@@ -1641,6 +1662,7 @@ function AddPaymentForm(props) {
       paymentConfirmedBy: props.userId,
       paymentDate: formValues["paymentDate"],
       amountPaid: formValues["amountPaid"],
+      amountAlreadyPaid: formValues["amountPaid"],
     };
 
     if (dataValue) {
@@ -1661,7 +1683,7 @@ function AddPaymentForm(props) {
               paymentStatus: "paid",
             };
             const orderResponse = await api.patch(
-              `/orders/${orderForDelivery}`,
+              `/transactions/${orderForDelivery}`,
               data
             );
           }
@@ -1692,14 +1714,25 @@ function AddPaymentForm(props) {
         <Grid
           item
           container
-          style={{ marginTop: 20, marginBottom: 15 }}
+          style={{ marginTop: 1, marginBottom: 2 }}
           justifyContent="center"
         >
+          <CancelRoundedIcon
+            style={{
+              marginLeft: 520,
+              fontSize: 30,
+              marginTop: "-20px",
+              cursor: "pointer",
+            }}
+            onClick={() => [props.handleDialogOpenStatus()]}
+          />
+        </Grid>
+        <Grid item container style={{ marginTop: 20 }} justifyContent="center">
           <FormLabel
             style={{ color: "grey", fontSize: "1.3em" }}
             component="legend"
           >
-            <Typography variant="h5">Payment Processing</Typography>
+            <Typography variant="h5">Process Payment</Typography>
           </FormLabel>
         </Grid>
         <Box
@@ -1710,78 +1743,20 @@ function AddPaymentForm(props) {
           noValidate
           autoComplete="off"
         >
-          <Field
-            label=""
-            id="order"
-            name="order"
-            type="text"
-            component={renderOrderForDeliveryField}
-          />
+          <Grid container direction="row" style={{ marginTop: 20 }}></Grid>
           <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 350 }}>
-              <Field
-                label=""
-                id="productVendor"
-                name="productVendor"
-                type="text"
-                component={renderVendorField}
-              />
-            </Grid>
-
-            <Grid item style={{ width: 140, marginLeft: 10 }}>
-              <Field
-                label=""
-                id="sku"
-                name="sku"
-                type="text"
-                component={renderSkuField}
-              />
-            </Grid>
-          </Grid>
-          <Field
-            label=""
-            id="product"
-            name="product"
-            type="text"
-            component={renderProductField}
-          />
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 160 }}>
+            <Grid item style={{ width: "100%" }}>
               <Field
                 label=""
                 id="orderNumber"
                 name="orderNumber"
+                //defaultValue={params.orderNumber}
                 type="text"
-                component={renderOrderNumberField}
-              />
-            </Grid>
-            <Grid item style={{ marginLeft: 10, width: 150 }}>
-              <Field
-                label=""
-                id="orderedQuantity"
-                name="orderedQuantity"
-                type="text"
-                component={renderOrderedQuantityField}
-              />
-            </Grid>
-            {/* {getCurrencyCode()} */}
-            <Grid item style={{ width: 165, marginLeft: 15 }}>
-              <Field
-                label=""
-                id="orderedPrice"
-                name="orderedPrice"
-                type="text"
-                component={renderOrderedPriceField}
+                component={renderOrderForDeliveryField}
               />
             </Grid>
           </Grid>
-          <Field
-            label=""
-            id="productCurrency"
-            name="productCurrency"
-            type="text"
-            component={renderProductCurrencyField}
-          />
+
           <Grid item container style={{ marginTop: 20 }}>
             <FormLabel style={{ color: "blue" }} component="legend">
               Customer Details
@@ -1791,8 +1766,9 @@ function AddPaymentForm(props) {
             <Grid item style={{ width: 250 }}>
               <Field
                 label=""
-                id="dateOrdered"
-                name="dateOrdered"
+                id="transactionDate"
+                name="transactionDate"
+                //defaultValue={DateOrdered}
                 type="date"
                 component={renderDateOrderedField}
               />
@@ -1813,6 +1789,7 @@ function AddPaymentForm(props) {
                 label=""
                 id="customerEmail"
                 name="customerEmail"
+                //defaultValue={customerEmail}
                 type="text"
                 component={renderCustomerEmailField}
               />
@@ -1822,34 +1799,9 @@ function AddPaymentForm(props) {
                 label=""
                 id="customerPhoneNumber"
                 name="customerPhoneNumber"
+                // defaultValue={customerPhoneNumber}
                 type="text"
                 component={renderCustomerPhoneNumberField}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid item container style={{ marginTop: 20 }}>
-            <FormLabel style={{ color: "blue" }} component="legend">
-              Product Location
-            </FormLabel>
-          </Grid>
-          <Grid container direction="row" style={{ marginTop: 20 }}>
-            <Grid item style={{ width: 250 }}>
-              <Field
-                label=""
-                id="locationCountry"
-                name="locationCountry"
-                type="number"
-                component={renderProductCountryField}
-              />
-            </Grid>
-            <Grid item style={{ width: 250, marginLeft: 0 }}>
-              <Field
-                label=""
-                id="productLocation"
-                name="productLocation"
-                type="number"
-                component={renderProductLocationField}
               />
             </Grid>
           </Grid>
@@ -1864,6 +1816,7 @@ function AddPaymentForm(props) {
             label=""
             id="recipientName"
             name="recipientName"
+            //defaultValue={params.recipientName}
             type="text"
             component={renderRecipientNameField}
             style={{ marginTop: 10 }}
@@ -1873,6 +1826,7 @@ function AddPaymentForm(props) {
             label=""
             id="recipientPhoneNumber"
             name="recipientPhoneNumber"
+            //defaultValue={params.recipientPhoneNumber}
             type="text"
             component={renderRecipientPhoneNumberField}
             style={{ marginTop: 10 }}
@@ -1882,6 +1836,7 @@ function AddPaymentForm(props) {
             label=""
             id="recipientAddress"
             name="recipientAddress"
+            //defaultValue={params.recipientAddress}
             type="text"
             component={renderRecipientAddressField}
             style={{ marginTop: 10 }}
@@ -1920,6 +1875,12 @@ function AddPaymentForm(props) {
                 label=""
                 id="totalDeliveryCost"
                 name="totalDeliveryCost"
+                // defaultValue={
+                //   params.totalDeliveryCost
+                //     ? params.totalDeliveryCost
+                //         .toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
+                //     : 0
+                // }
                 type="text"
                 component={renderTotalDeliveryCostField}
               />
@@ -1929,28 +1890,40 @@ function AddPaymentForm(props) {
                 label=""
                 id="totalProductCost"
                 name="totalProductCost"
+                //defaultValue={totalProductCost}
                 type="text"
                 component={renderTotalProductCostField}
               />
             </Grid>
+
             <Grid item style={{ width: "33%", marginLeft: 10 }}>
               <Field
                 label=""
                 id="status"
                 name="status"
+                //defaultValue={params.status}
                 type="text"
                 component={renderOrderStatusField}
               />
             </Grid>
           </Grid>
+          <Field
+            label=""
+            id="productCurrency"
+            name="productCurrency"
+            //defaultValue={params.orderedPrice}
+            type="text"
+            component={renderProductCurrencyField}
+          />
           <Grid container direction="row" style={{ marginTop: 20 }}>
             <Grid item style={{ width: 250 }}>
               <Field
                 label=""
-                id="orderPaymentStatus"
-                name="orderPaymentStatus"
+                id="paymentStatus"
+                name="paymentStatus"
+                defaultValue={paymentStatus}
                 type="text"
-                component={renderOrderPaymentStatusField}
+                component={renderPaymentStatusField}
               />
             </Grid>
             <Grid item style={{ width: 240, marginLeft: 10 }}>
@@ -1958,6 +1931,7 @@ function AddPaymentForm(props) {
                 label=""
                 id="paymentMethod"
                 name="paymentMethod"
+                defaultValue={paymentMethod}
                 type="text"
                 component={renderPaymentMethodField}
               />
@@ -1993,7 +1967,7 @@ function AddPaymentForm(props) {
             id="paymentConfirmation"
             name="paymentConfirmation"
             type="text"
-            component={renderPaymentStatusField}
+            component={renderProcessingPaymentStatusField}
           />
 
           <Button

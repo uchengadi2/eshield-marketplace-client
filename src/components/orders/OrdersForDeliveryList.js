@@ -171,12 +171,18 @@ class OrdersForDeliveryList extends React.Component {
     let rows = [];
     let counter = 0;
     const columns = [
-      { field: "numbering", headerName: "S/n", width: 100 },
-      { field: "dateOrdered", headerName: "Date Ordered", width: 150 },
-      { field: "orderNumber", headerName: "Order Number", width: 200 },
-      { field: "productName", headerName: "Ordered Product", width: 200 },
-      { field: "orderedQuantity", headerName: "Ordered Quantity", width: 150 },
-      { field: "status", headerName: "Status", width: 150 },
+      { field: "numbering", headerName: "S/n", width: 70 },
+      { field: "transactionDate", headerName: "Date Ordered", width: 150 },
+      { field: "orderNumber", headerName: "Order Number", width: 150 },
+      {
+        field: "totalProductCost",
+        headerName: "Total Product Cost",
+        width: 150,
+      },
+
+      { field: "paymentStatus", headerName: "Payment Status", width: 150 },
+      { field: "paymentMethod", headerName: "Payment Method", width: 150 },
+      { field: "status", headerName: "Status", width: 100 },
       // {
       //   field: "consignmentCountry",
       //   headerName: "Source Country",
@@ -196,6 +202,7 @@ class OrdersForDeliveryList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <EditRoundedIcon
+              style={{ cursor: "pointer" }}
               onClick={() => [
                 this.setState({
                   editOpen: true,
@@ -253,7 +260,7 @@ class OrdersForDeliveryList extends React.Component {
           <strong>
             {/* {params.value.getFullYear()} */}
             <DeleteRoundedIcon
-              style={{ color: "red" }}
+              style={{ color: "red", cursor: "pointer" }}
               onClick={() => [
                 this.setState({ deleteOpen: true, id: params.id }),
                 history.push(`/orders/ordersfordelivery/delete/${params.id}`),
@@ -268,31 +275,31 @@ class OrdersForDeliveryList extends React.Component {
         numbering: ++counter,
         id: order.id,
         orderNumber: order.orderNumber,
-        dateOrdered: order.dateOrdered,
-        orderedQuantity: order.orderedQuantity,
-        status: order.status,
-        cartId: order.cartId,
-        productName: order.product.name,
-        product: order.product.id,
-        sku: order.product.sku,
-        productVendor: order.productVendor,
-        quantityAdddedToCart: order.quantityAdddedToCart,
-        orderedPrice: order.orderedPrice,
+        totalProductWeight: order.totalProductWeight,
         productCurrency: order.productCurrency,
-        productLocation: order.productLocation,
-        locationCountry: order.locationCountry,
-        totalDeliveryCost: order.totalDeliveryCost,
-        totalProductCost: order.totalProductCost,
+        status: order.status,
+        totalDeliveryCost: order.totalDeliveryCost
+          ? order.totalDeliveryCost
+              .toFixed(2)
+              .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+          : 0,
+        totalProductCost: order.totalProductCost
+          ? order.totalProductCost
+              .toFixed(2)
+              .replace(/\d(?=(\d{3})+\.)/g, "$&,")
+          : 0,
         recipientName: order.recipientName,
         recipientPhoneNumber: order.recipientPhoneNumber,
+
         recipientAddress: order.recipientAddress,
         recipientState: order.recipientState,
         recipientCountry: order.recipientCountry,
-        dateAddedToCart: order.dateAddedToCart,
+        transactionDate: order.transactionDate,
         orderedBy: order.orderedBy,
+
         paymentStatus: order.paymentStatus,
         paymentMethod: order.paymentMethod,
-        status: order.status,
+
         rejectionReason: order.rejectionReason,
       };
       rows.push(row);
