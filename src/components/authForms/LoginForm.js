@@ -166,50 +166,6 @@ const LoginForm = (props) => {
   };
   let count = 0;
   const onSubmit = (formValues) => {
-    // setLoading(true);
-
-    // if (!formValues["email"] || !formValues["password"]) {
-    //   handleFailedLoginInSnackbar(
-    //     "Please enter your email and password login credentials and try again"
-    //   );
-    //   setLoading(false);
-    //   return;
-    // }
-
-    // if (!validateEmail(formValues["email"])) {
-    //   handleFailedLoginInSnackbar(
-    //     "You just entered an invalid email address. Please correct it and try again"
-    //   );
-    //   setLoading(false);
-
-    //   return;
-    // }
-
-    // if (formValues) {
-    //   const createForm = async () => {
-    //     api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
-    //     const response = await api.post(`/users/login`, formValues);
-    //     console.log("login response:", response);
-
-    //     if (response.data.status === "success") {
-    //       //props.onSubmit(formValues);
-    //       ++count;
-    //       console.log("successfully logged in");
-    //       //setLoading(false);
-    //     } else {
-    //       props.handleFailedLoginInSnackbar("Incorrect Username or Password");
-    //     }
-    //   };
-    //   createForm().catch((err) => {
-    //     handleFailedLoginInSnackbar("Incorrect Username or Password");
-    //     setLoading(false);
-    //     console.log("err:", err.message);
-    //   });
-    // }
-
-    // props.onSubmit(formValues);
-    // setLoading(true);
-
     setLoading(false);
     // console.log("the url params at login:", params);
 
@@ -234,6 +190,14 @@ const LoginForm = (props) => {
       const createForm = async () => {
         // api.defaults.headers.common["Authorization"] = `Bearer ${props.token}`;
         const response = await api.post(`/users/login`, formValues);
+
+        if (response.data.data.user.type !== "staff") {
+          handleFailedLoginInSnackbar(
+            "Please login with your staff credentials"
+          );
+          setLoading(false);
+          return;
+        }
 
         if (response.status === 200) {
           const token = {
