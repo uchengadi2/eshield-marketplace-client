@@ -24,6 +24,7 @@ class OrdersList extends React.Component {
       deleteOpen: false,
       cancelOpen: false,
       assignOpen: false,
+      orderOpen: false,
       id: null,
       params: {},
       alert: {
@@ -54,6 +55,11 @@ class OrdersList extends React.Component {
   handleEditDialogOpenStatus = () => {
     // history.push("/categories/new");
     this.setState({ editOpen: false });
+  };
+
+  handleAssignDialogOpenStatus = () => {
+    // history.push("/categories/new");
+    this.setState({ assignOpen: false });
   };
 
   handleSuccessfulEditSnackbar = (message) => {
@@ -165,9 +171,11 @@ class OrdersList extends React.Component {
         >
           <DialogContent>
             <OrderAssignmentFormContainer
+              style={{ marginTop: 100 }}
               token={this.props.token}
               params={this.state.params}
               handleEditDialogOpenStatus={this.handleEditDialogOpenStatus}
+              handleAssignDialogOpenStatus={this.handleAssignDialogOpenStatus}
             />
           </DialogContent>
         </Dialog>
@@ -179,17 +187,17 @@ class OrdersList extends React.Component {
     let rows = [];
     let counter = 0;
     const columns = [
-      { field: "numbering", headerName: "S/n", width: 70 },
-      { field: "transactionDate", headerName: "Date Ordered", width: 150 },
-      { field: "orderNumber", headerName: "Order Number", width: 150 },
+      { field: "numbering", headerName: "S/n", width: 60 },
+      { field: "transactionDate", headerName: "Date Ordered", width: 160 },
+      { field: "orderNumber", headerName: "Order Number", width: 160 },
       {
         field: "totalProductCost",
         headerName: "Total Product Cost",
-        width: 150,
+        width: 130,
       },
 
-      { field: "paymentStatus", headerName: "Payment Status", width: 150 },
-      { field: "paymentMethod", headerName: "Payment Method", width: 150 },
+      { field: "paymentStatus", headerName: "Payment Status", width: 130 },
+      { field: "paymentMethod", headerName: "Payment Method", width: 130 },
       { field: "status", headerName: "Status", width: 100 },
 
       // {
@@ -242,24 +250,28 @@ class OrdersList extends React.Component {
       //     </strong>
       //   ),
       // },
-      // {
-      //   field: "assignorder",
-      //   headerName: "",
-      //   width: 30,
-      //   description: "Assign Order",
-      //   renderCell: (params) => (
-      //     <strong>
-      //       {/* {params.value.getFullYear()} */}
-      //       <AssignmentIcon
-      //         style={{ color: "black" }}
-      //         onClick={() => [
-      //           this.setState({ assignOpen: true, id: params.id }),
-      //           history.push(`/orders/assign/${params.id}`),
-      //         ]}
-      //       />
-      //     </strong>
-      //   ),
-      // },
+      {
+        field: "assignorder",
+        headerName: "",
+        width: 30,
+        description: "Assign Order",
+        renderCell: (params) => (
+          <strong>
+            {/* {params.value.getFullYear()} */}
+            <AssignmentIcon
+              style={{ color: "black", cursor: "pointer" }}
+              onClick={() => [
+                this.setState({
+                  assignOpen: true,
+                  id: params.id,
+                  params: params.row,
+                }),
+                history.push(`/orders/freshorders/items/${params.id}`),
+              ]}
+            />
+          </strong>
+        ),
+      },
       {
         field: "deleteaction",
         headerName: "",

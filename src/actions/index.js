@@ -1911,7 +1911,7 @@ export const fetchTransactions = (tokens, status) => {
   data.defaults.headers.common["Authorization"] = `Bearer ${tokens}`;
   return async (dispatch) => {
     const response = await data.get("/transactions", {
-      params: { status: status },
+      // params: { status: status },
     });
 
     dispatch({ type: FETCH_TRANSACTIONS, payload: response.data.data.data });

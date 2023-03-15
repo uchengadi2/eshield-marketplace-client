@@ -17,13 +17,17 @@ class OrderAssignmentFormContainer extends React.Component {
   onSubmit = (formValues) => {
     this.props.assignOrder(formValues, this.props.token);
     this.props.handleDialogOpenStatus();
-
-    console.log("the form values areeeee:", formValues);
   };
   render() {
     return (
       <div>
-        <AssignOrderForm onSubmit={this.onSubmit} token={this.props.token}/>
+        <AssignOrderForm
+          onSubmit={this.onSubmit}
+          token={this.props.token}
+          params={this.props.params}
+          handleEditDialogOpenStatus={this.props.handleEditDialogOpenStatus}
+          handleAssignDialogOpenStatus={this.props.handleAssignDialogOpenStatus}
+        />
       </div>
     );
   }

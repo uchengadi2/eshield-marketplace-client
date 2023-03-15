@@ -1135,8 +1135,6 @@ function OrderEditForm(props) {
 
   const dispatch = useDispatch();
 
-  console.log("sku:", params.sku);
-
   useEffect(() => {
     const fetchData = async () => {
       let allData = [];
